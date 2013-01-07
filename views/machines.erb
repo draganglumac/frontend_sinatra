@@ -1,0 +1,15 @@
+<h2> Machines in database</h2>
+
+
+<table id="machine_table"class="table">
+	<tr>
+	<td>Machine Id</td><td>Machine Callsign</td><td>Machine Ip</td><td>Supported platforms</td><td>iphone4</td><td>iphone4s</td><td>iphone5</td><td>ipadmini</td><td>ipad4</td>
+	</tr>
+	
+<%for row in @machine_available %>
+	<tr>
+	<td><%=row["machine_id"]%></td><td><%=row["machine_callsign"]%></td><td><%=row["machine_ip"]%></td><td><%=row["supported_platforms"]%></td><td><%=row["iphone4"]%></td><td><%=row["iphone4s"]%></td><td><%=row["iphone5"]%></td><td><%=row["ipadmini"]%></td><td><%=row["ipad4"]%></td>
+</tr>
+<% end %>
+</table>
+

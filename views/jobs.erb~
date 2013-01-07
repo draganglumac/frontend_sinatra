@@ -1,0 +1,39 @@
+<%= @error %>
+<form action="/job" method="post" enctype="multipart/form-data">
+
+<p>Configuration file</p>
+<span class="btn btn-file"><input type="file" /></span>
+<p>Selected machine</p>
+
+<select name="machine_id">
+<%for row in @machine_available %>
+<option value=<%=row %>><%=row %></option>
+<% end %>
+</select>
+
+<p>Job name</p>
+<input type="text" name="lname"><br/>
+<br/>
+<br/>
+<input type="submit",value="submit"class="btn btn-primary"/>
+</form>
+
+<h2>Current jobs</h2>
+<span style="color:red;">Warning: Job name will need to be consistant through out as it is used to form a directory for your job!</span>
+<table id="job_table" class="table">
+	<tr>
+	<td>Id</td><td>Name</td><td>Time stamp</td><td>Machine id</td><td>command</td><td>Run Job</td>
+	</tr>
+	
+<%for row in @jobs_done %>
+	<tr>
+	<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=row["machines_machine_id"]%></td><td><%=row["command"]%></td><td>
+	<form method="post" action="/job/restart/<%=row["id"]%>"> 
+    <input type="hidden" name="_method" value="submit">
+    <button type="submit"class="btn">Go</button>
+	</form>
+	</td>
+	</tr>
+<% end %>
+</table>
+

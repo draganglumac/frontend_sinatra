@@ -1,0 +1,85 @@
+
+<!--<h1>Automation stack frontend</h1>-->
+<!--<h2><%= @info %></h2>-->
+<!--<form method="get" action="/job">-->
+<!--<input type="submit" value="New Job" name="job_button" id="job_button" title="New Job" class="buttoncss"/>-->
+<!--</form>-->
+
+<!--<form method="get" action="/machines">-->
+<!--<input type="submit" value="View machines" name="machines_button" id="machines_button" title="View machines" class="buttoncss"/>-->
+<!--</form>-->
+
+<!--<form method="get" action="/results">-->
+<!--<input type="submit" value="View results" name="results_button" id="results_button" title="View results" class="buttoncss"/>-->
+<!--</form>-->
+
+<!--<form method="get" action="/admin">-->
+<!--<input type="submit" value="View admin" name="admin_button" id="admin_button" title="View admin" class="buttoncss"/>-->
+<!--</form>-->
+
+<!--<form method="get" action="/analytics">-->
+<!--<input type="submit" value="View analytics" name="analytics_button" id="analytics_button" title="View analytics" class="buttoncss"/>-->
+<!--</form>-->
+
+<!--<script>-->
+<!--     var time = new Date().getTime();-->
+<!--     $(document.body).bind("mousemove keypress", function(e) {-->
+<!--         time = new Date().getTime();-->
+<!--     });-->
+
+<!--     function refresh() {-->
+<!--         if(new Date().getTime() - time >= 10000) -->
+<!--             window.location.reload(true);-->
+<!--         else -->
+<!--             setTimeout(refresh, 10000);-->
+<!--     }-->
+
+<!--     setTimeout(refresh, 10000);-->
+<!--</script>-->
+
+
+
+<!--<div style="margin-left:35px;">-->
+
+<div class="hero-unit">
+
+        <h1>Automation stack</h1>
+        <p>Welcome to the Automation stack frontend</p>
+        <p>
+        <form method="get" action="/job">
+        <input type="submit" value="New Job &raquo;" name="job_button" id="job_button" title="New Job" class="btn btn-primary btn-large"/>
+        </form>
+        </p>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>Machines</h2>
+          <p>View a list of available machines and configurations.</p>
+          <form method="get" action="/machines">
+        <input type="submit" value="View machines &raquo;" name="job_button" id="job_button" title="New Job" class="btn"/>
+        </form>
+          </p>
+        </div>
+        <div class="span4">
+          <h2>Results</h2>
+          <p>View results from previous jobs</p>
+          <p>
+          <form method="get" action="/results">
+        <input type="submit" value="View results &raquo;" name="job_button" id="job_button" title="New Job" class="btn"/>
+        </form>
+          </p>
+       </div>
+        <div class="span4">
+          <h2>Analytics</h2>
+          <p>View graphs of system performance</p>
+          <p>
+          <form method="get" action="/analytics">
+        <input type="submit" value="View results &raquo;" name="job_button" id="job_button" title="New Job" class="btn"/>
+        </form>
+        </p>
+        </div>
+
+      </div>
+

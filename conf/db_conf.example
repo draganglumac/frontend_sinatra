@@ -1,4 +1,7 @@
-host=
-username=
-password=
-database=
+# 1) Copy this file into db.conf, and 
+# 2) Replace the values on the right hand side of : with the actual values
+
+host : your_hostname
+username : your_database_user
+password : password_for_your_database_user
+database : database_name

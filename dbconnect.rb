@@ -1,11 +1,29 @@
 require 'mysql2'
+require 'yaml'
 
 class Dbconnect
-	@@client = 0
 	
-	def self.query(inputquery)
-		@client = Mysql2::Client.new(:host => "172.20.141.82", :username => "dummy",:password =>  "dummy", :database => "AUTOMATION", :async => true)
-#		@client = Mysql2::Client.new(:host => "localhost", :username => "dummy",:password =>  "dummy", :database => "AUTOMATION", :async => true)
+	def initialize
+	  begin
+      dbconfig = YAML.load_file("conf/db.conf")
+
+      @host = dbconfig[:host]
+      @user = dbconfig[:username]
+      @password = dbconfig[:password]
+      @database = dbconfig[:database]
+    rescue
+      print "\n"
+      print "ERROR: It appears that you either don't have conf/db.conf file or that it couldn't be opened.\n"
+      print "If you need to create the file then the easiest thing to do is to copy conf/db_conf.example,\n"
+      print "rename the copy to db.conf, and change the values to match your MySQL database configuration.\n"
+      print "\n"
+      
+      raise
+    end
+  end
+  
+	def query(inputquery)
+		client = Mysql2::Client.new(:host => @host, :username => @user, :password =>  @password, :database => @database, :async => true)
 		results = @client.query(inputquery)
 		return results
 	end

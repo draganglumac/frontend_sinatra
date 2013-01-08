@@ -38,8 +38,8 @@ class Jobman
 			
 		end
 	end
-	def initialize
-		self.main_loop
-	end
+  # def initialize
+  #   self.main_loop
+  # end
 end
 

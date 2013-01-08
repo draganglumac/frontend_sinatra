@@ -168,7 +168,7 @@ end
 end
 
 Thread.start{
-Jobman.new
+Jobman.new.main_loop
 }
 App.new
 

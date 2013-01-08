@@ -1,11 +1,26 @@
 require 'hound'
 require 'tempfile'
+require 'yaml'
+
 class Jobman
-@@timewait = 10
+  
+  def initialize
+    begin
+      config = YAML.load_file("conf/general.conf")
+    
+      @timewait = config['timewait'] && 10
+      @satellite_port = config['satellite_port'] && 9099
+    rescue
+      @timewait = 10
+      @satellite_port = 9099
+    end
+    
+    print "@timewait = #{@timewait}, @satellite_port = #{@satellite_port}"
+  end
 
 	def main_loop
 		while true
-			sleep @@timewait
+			sleep @timewait
 			puts "Checking jobs..."
 			incomplete = Hound.get_unstarted_jobs
 			if incomplete.size > 0
@@ -28,7 +43,7 @@ class Jobman
 					tmp.close
 				#lets feed this information to our satellite
 
-					puts request = "satellite -m SEND -h #{m.first['machine_ip']} -p 9099 -i #{tmp.path} -j #{entry['id']}"
+					puts request = "satellite -m SEND -h #{m.first['machine_ip']} -p #{@satellite_port} -i #{tmp.path} -j #{entry['id']}"
 					system request
 					
 					#Lets now update the job progress 
@@ -38,8 +53,6 @@ class Jobman
 			
 		end
 	end
-  # def initialize
-  #   self.main_loop
-  # end
+
 end
 

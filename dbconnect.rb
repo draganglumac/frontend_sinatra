@@ -7,10 +7,12 @@ class Dbconnect
 	  begin
       dbconfig = YAML.load_file("conf/db.conf")
 
-      @host = dbconfig[:host]
-      @user = dbconfig[:username]
-      @password = dbconfig[:password]
-      @database = dbconfig[:database]
+      @host = dbconfig['host']
+      @user = dbconfig['username']
+      @password = dbconfig['password']
+      @database = dbconfig['database']
+      
+      print "[DEBUG] @host = #{@host}, @user = #{@user}, @password = #{@password}, @database = #{@database}\n"
     rescue
       print "\n"
       print "ERROR: It appears that you either don't have conf/db.conf file or that it couldn't be opened.\n"
@@ -24,7 +26,7 @@ class Dbconnect
   
 	def query(inputquery)
 		client = Mysql2::Client.new(:host => @host, :username => @user, :password =>  @password, :database => @database, :async => true)
-		results = @client.query(inputquery)
+		results = client.query(inputquery)
 		return results
 	end
 end

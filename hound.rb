@@ -39,6 +39,9 @@ class Hound
   def self.directquery(query)
     return @@dbconnect.query(query)
   end
+  def self.set_result(job_id,result,time)
+	@@dbconnect.query("INSERT INTO `AUTOMATION`.`results` (`id`,`DATETIME`,`testresult`,`jobs_id`,`jobs_machines_machine_id`)VALUES(NULL,CURRENT_TIMESTAMP,'#{result}',#{job_id});")
+  end
   def self.truncate_results
     @@dbconnect.query("TRUNCATE TABLE `AUTOMATION`.`results`")
   end

@@ -19,7 +19,7 @@ class App
     def protected!
       unless authorized?
         response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-        throw(:halt, [401, "<link rel='stylesheet' href='default.css' type='text/css' /> <form method=get' action='/home'>
+        throw(:halt, [401, "<link rel='stylesheet' href='css/bootstrap.css' type='text/css' /> <form method=get' action='/home'>
           <input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
           </form><h2>Not authorized</h2>\n"])
         end
@@ -87,6 +87,10 @@ class App
     Hound.add_visitor(request.ip)
     erb :home
   end
+  #resource page
+  get '/resources' do
+  erb :resources
+  end
   #new job page
   get '/job' do
     @machine_available = Hound.getmachineids
@@ -149,28 +153,27 @@ class App
     File.open(params[:id], 'w+') do |file|
       file.write(request.body.read)
     end
-
     Dir.chdir(cwd)
+    puts "Lets now update the results table to set it to completed..."
+    Hound.set_result(params[:id  ],"PASS","timeplaceholder")
   end
   #/uploads/hudsoniPhoneExample/cuke.html
-  post '/results/:id' do
+	post '/results/:id' do
     job_name = ""
     Hound.directquery("select name from `AUTOMATION`.`jobs` where id=#{params[:id]}").each do |row|
       #Just FYI, this select should only ever return 1 entry but its a hash so has to be enumerated as direct key purchase doesn't seem to do anything... though my ruby is pretty awful'
       job_name = row
-    end
-    puts "Job name is #{job_name['name']}"
-    send_file("public/uploads/#{job_name['name']}/cuke.html")
-  end
+	end
+	puts "Job name is #{job_name['name']}"
+	send_file("public/uploads/#{job_name['name']}/cuke.html")
+	end
   get '/contact' do
     erb "<h2>Please direct questions to <a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a> - Creator & maintainer</h2>"
   end
 end
 
-Thread.start {
-  Jobman.new.main_loop
-}
 
 App.new
-
-
+Thread.new{
+	Jobman.new.main_loop
+}

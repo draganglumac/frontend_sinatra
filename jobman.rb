@@ -21,7 +21,7 @@ class Jobman
 	def main_loop
 		while true
 			sleep @timewait
-			puts "Checking jobs..."
+			#puts "Checking jobs..."
 			incomplete = Hound.get_unstarted_jobs
 			if incomplete.size > 0
 				puts "Awaiting completion"
@@ -42,10 +42,8 @@ class Jobman
 					tmp << "#{entry['command']}"
 					tmp.close
 				#lets feed this information to our satellite
-
 					puts request = "satellite -m SEND -h #{m.first['machine_ip']} -p #{@satellite_port} -i #{tmp.path} -j #{entry['id']}"
 					system request
-					
 					#Lets now update the job progress 
 					Hound.set_job_progress(entry['id'])
 				end

@@ -89,7 +89,7 @@ class App
   end
   #resource page
   get '/resources' do
-  erb :resources
+  erb :installer
   end
   #new job page
   get '/job' do
@@ -168,7 +168,7 @@ class App
 	send_file("public/uploads/#{job_name['name']}/cuke.html")
 	end
   get '/contact' do
-    erb "<h2>Please direct questions to <a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a> - Creator & maintainer</h2>"
+    erb "<h2><a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a></h2>"
   end
 end
 

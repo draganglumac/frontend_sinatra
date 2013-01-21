@@ -1,4 +1,4 @@
-require 'hound'
+require_relative 'hound'
 require 'tempfile'
 require 'yaml'
 

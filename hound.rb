@@ -1,4 +1,4 @@
-require 'dbconnect'
+require_relative 'dbconnect'
 class Hound
   @@dbconnect = Dbconnect.new
   

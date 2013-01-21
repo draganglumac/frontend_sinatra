@@ -1,10 +1,10 @@
+
 require 'rubygems'
 require 'sinatra'
 require 'erb'
-require 'jobman'
-require 'hound'
+require_relative 'jobman'
+require_relative 'hound'
 require 'find'
-require 'sinatra/graph'
 include FileUtils::Verbose
 set :port, 8091
 set :bind, '0.0.0.0'
@@ -109,7 +109,12 @@ class App
     cp(tempfile.path, "public/uploads/#{filename}")
     string = File.open(tempfile.path, 'rb') { |file| file.read }
     puts string
-    machine_num = params[:machine_id].split("machine_id")
+    #machine_num = params[:machine_id].split("machine_id")
+    
+    #There is a difference here between ruby versions, be aware
+    machine_num = params[:machine_id]
+
+    puts "MACHINE NUMBER #{machine_num}"
     Hound.add_job(machine_num,params[:lname],string)
     redirect '/job'
   end

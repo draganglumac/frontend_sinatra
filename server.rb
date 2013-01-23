@@ -1,4 +1,3 @@
-
 require 'rubygems'
 require 'sinatra'
 require 'erb'
@@ -11,7 +10,6 @@ set :bind, '0.0.0.0'
 set :environment, :development
 set :public_folder, 'public'
 
-class App 
   @@connections = []
   #instantiate our database connection
   #Entry page
@@ -70,7 +68,7 @@ class App
   post '/admin/sql/delete' do
     Hound.purgedb
   end
-  get '/home' do
+  get '/home' do  
     redirect '/'
   end
   post '/admin/results/delete' do
@@ -175,10 +173,3 @@ class App
   get '/contact' do
     erb "<h2><a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a></h2>"
   end
-end
-
-
-App.new
-Thread.new{
-	Jobman.new.main_loop
-}

@@ -158,7 +158,7 @@ set :public_folder, 'public'
     end
     Dir.chdir(cwd)
     puts "Lets now update the results table to set it to completed..."
-    Hound.set_result(params[:id  ],"PASS","timeplaceholder")
+    Hound.set_result(params[:dir  ],"PASS","timeplaceholder")
   end
   #/uploads/hudsoniPhoneExample/cuke.html
 	post '/results/:id' do

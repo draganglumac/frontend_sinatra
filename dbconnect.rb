@@ -27,6 +27,7 @@ class Dbconnect
 	def query(inputquery)
 		client = Mysql2::Client.new(:host => @host, :username => @user, :password =>  @password, :database => @database, :async => true)
 		results = client.query(inputquery)
+    
 		return results
 	end
 end

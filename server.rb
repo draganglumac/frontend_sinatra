@@ -161,6 +161,9 @@ put '/upload/:dir/:id' do
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
   Dir.chdir(directory_name)
   nwd = Dir.pwd
+  #we are using cuke.html as our default naming convention for files...
+  #This isn't something that is sustainable but is used currently
+  #so that results has something it can look for when it builds the path
   puts "Switched into project directory #{nwd}"
   File.open(params[:id], 'w+') do |file|
     file.write(request.body.read)

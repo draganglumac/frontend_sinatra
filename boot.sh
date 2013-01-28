@@ -8,5 +8,5 @@ rackup &
 else
 echo "Sinatra is already running"
 echo "Killing Sinatra now..."
-`sudo killall -9 rackup`
+sudo killall -9 ruby
 fi

@@ -4,7 +4,7 @@ ps -ef | grep -v grep | grep ruby
 
 if [ $? -eq 1 ]
 then 
-`rackup &`
+rackup &
 else
 echo "Sinatra is already running"
 echo "Killing Sinatra now..."

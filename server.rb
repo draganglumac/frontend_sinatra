@@ -63,7 +63,34 @@ delete '/admin/delete/jobs/:id' do
   redirect '/admin'
 end
 post '/admin' do
-  Hound.add_machine(params[:post])
+
+  puts params[:post]
+
+  @iphone4 = 0
+  @iphone4s = 0
+  @iphone5 = 0
+  @ipadmini = 0
+  @ipad4 = 0
+
+
+  if(params[:post][:iphone4_check])
+   @iphone4 = 1
+  end
+  if(params[:post][:iphone4s_check])
+   @iphone4s = 1
+  end
+  if(params[:post][:iphone5_check])
+   @iphone5 = 1
+  end
+  if(params[:post][:ipadmini_check])
+   @ipadmini = 1
+  end
+    if(params[:post][:ipad4_check])
+   @ipad4 = 1
+  end
+
+
+  #Hound.add_machine(params[:post])
   @admin_pending_jobs = Hound.get_jobs
   @machine_available = Hound.get_machines
   erb :admin

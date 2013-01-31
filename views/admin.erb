@@ -32,85 +32,87 @@
 <% end %>
 </table>
 
-<h2>Add new machine</h2>
 
-<form action="/admin" method="post">
-<table class="table ">
-	<tr>
-		<td>Machine Callsign</td><td>Machine Ip</td><td>Supported platforms</td>
-	</tr>
+  <form action="/admin" method="post" class="form-horizontal">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Add new machine</legend>
+      </div>
+    <div class="control-group">
 
-	<tr>
-		<td><input type="text" name="post[callsign_form]"/></td>
-		<td><input type="text" name="post[machine_ip_form]"/></td>
-		<td><input type="text" name="post[supported_platforms_form]"/></td>
-		<td> 
-	</tr>
-</table>
+          <!-- Text input-->
+          <label class="control-label" for="input01">Machine callsign</label>
+          <div class="controls">
+            <input type="text" placeholder="'goose'" class="input-xlarge" name="post[callsign_form]">
+            <p class="help-block"></p>
+          </div>
+        </div>
 
+    <div class="control-group">
 
-<table class="table ">
-	<tr>
-		<td>iphone4</td><td>iphone4s</td><td>iphone5</td><td>ipadmini</td><td>ipad4</td><td>Add</td>
-	</tr>
-	<td>
-		<select name="post[iphone4_select]">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
- 		</select>
-	</td>
- <td> 
-<select name="post[iphone4s_select]">
-<option value="0">No</option>
-<option value="1">Yes</option>
- </select></td>
- <td>
-  <select name="post[iphone5_select]">
-<option value="0">No</option>
-<option value="1">Yes</option>
- </select>
- </td>
-  <td>
-  <select name="post[ipadmini_select">
-<option value="0">No</option>
-<option value="1">Yes</option>
- </select>
- </td>
- <td>
-  <select name="post[ipad4_select]">
-<option value="0">No</option>
-<option value="1">Yes</option>
- </select>
- </td>
+          <!-- Text input-->
+          <label class="control-label" for="input01">Machine IP</label>
+          <div class="controls">
+            <input type="text" placeholder="127.0.0.1" class="input-xlarge" name="post[machine_ip_form]">
+            <p class="help-block"></p>
+          </div>
+        </div>
 
- <td><input type="submit",value="submit"class="btn"/></td>
-</tr>
+    
 
-</table>
-</form>
+    <div class="control-group">
 
-<br/>
-<h2>All jobs</h2>
-<table class="table">
-<tr><td>Job id</td><td>Name</td><td>Time submitted</td><td>Machine id</td><td>Status</td><td></td>
-</tr>
-<%for row in @admin_pending_jobs %>
+          <!-- Text input-->
+          <label class="control-label" for="input01">Supported Platforms</label>
+          <div class="controls">
+            <input type="text" placeholder="'ios'" name="post[supported_platforms]" class="input-xlarge">
+            <p class="help-block"></p>
+          </div>
+        </div>
 
 
-<tr>
-<td><%=row["id"]%></td>
-<td><%=row["name"]%></td>
-<td><%=row["TIMESTAMP"]%></td><td><%=row["machines_machine_id"]%></td>
-<td><%=row["status"]%></td>
-	<td>
-	<form method="post" action="/admin/delete/jobs/<%=row["id"]%>"> 
-    <input type="hidden" name="_method" value="delete">
-    <button type="submit"class="btn">Delete</button>
-	</form>
-</td>
-</tr>
-<%end%>
-</table>
+    <div class="control-group">
+          <label class="control-label">Inline Checkboxes</label>
+
+          <!-- Multiple Checkboxes -->
+          <div class="controls">
+      <!-- Inline Checkboxes -->
+      <label class="checkbox inline">
+        <input type="checkbox" value="iPhone4" name="post[iphone4_check]">
+        iPhone4
+      </label>
+      <label class="checkbox inline">
+        <input type="checkbox" value="iPhone4s" name="post[iphone4s_check]">
+        iPhone4s
+      </label>
+      <label class="checkbox inline">
+        <input type="checkbox" value="iPhone5" name="post[iphone5_check]">
+        iPhone5
+      </label>
+      <label class="checkbox inline">
+        <input type="checkbox" value="iPadmini" name="post[ipadmini_check]">
+        iPadmini
+      </label>
+      <label class="checkbox inline">
+        <input type="checkbox" value="iPad4" name="post[ipad4_check]">
+        iPad4
+      </label>
+  </div>
+
+        </div>
+
+    <div class="control-group">
+          <label class="control-label">Add Machine</label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Submit</button>
+          </div>
+        </div>
+
+    </fieldset>
+  </form>
+
 
 
 

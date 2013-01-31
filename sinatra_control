@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ps -ef | grep -v grep | grep ruby
 
 if [ $? -eq 1 ]

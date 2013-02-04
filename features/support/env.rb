@@ -1,13 +1,12 @@
-ENV['RACK_ENV'] = 'test'
-
-require_relative "../../server.rb"
-
+ENV['RACK_ENV'] = 'test'  
+require 'sinatra'      
 require 'capybara'
-require 'capybara/cucumber'
-require 'wrong'
+require 'spinach/capybara' 
 
+require_relative '../../server'
+
+Spinach::FeatureSteps.send(:include, Spinach::FeatureSteps::Capybara)
 Capybara.app = Sinatra::Application
 
-World do
-  include Capybara::DSL
-end
+
+

@@ -7,12 +7,11 @@ gem "rack", ">= 1.4.2"
 gem "mysql2", ">= 0.3.11"
 gem "thin", ">= 1.5.0"     
 
-
-
-group :testing do
-  gem "spinach"
-  gem "riot"
-  gem "wrong  "
-  gem "capybara"
-  gem "melee"
+group :test do
+  gem 'capybara'
+  gem 'spinach'
+  gem 'wrong'
+  gem 'riot'
+  gem 'melee'
+  gem 'rr'
 end

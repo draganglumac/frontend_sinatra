@@ -1,14 +1,25 @@
-require 'rubygems'
+$: << "src"
+
+require 'bundler/setup'
 require 'sinatra'
-require 'erb'
-require_relative 'jobman'
-require_relative 'hound'
+
+require 'jobman'
+require 'hound'
 require 'find'
 include FileUtils::Verbose
-set :port, 8091
-set :bind, '0.0.0.0'
-set :environment, :development
+
+#set :port, 8091
+#set :bind, '0.0.0.0'
+#set :environment, :development
 set :public_folder, 'public'
+set :views ,'views'   
+                           
+                      
+
+before do
+  env['rack.logger'] = Logger.new("features/ui.log") if ENV['RACK_ENV']=="test"
+end
+
 
 @@connections = []
 #instantiate our database connection
@@ -210,7 +221,16 @@ post '/results/:id' do
 	end
 	puts "Job name is #{job_name['name']}"
 	send_file("public/uploads/#{job_name['name']}/cuke.html")
-end
+end 
+
+
 get '/contact' do
-	erb "<h2><a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a></h2>"
+	erb :contact
+end
+
+post '/contact' do
+  ["delaney.burke@bsky.com","alex.jones@bskyb.com"].each do |email|
+    
+    logger.info "email sent to #{email} ok !"
+  end
 end

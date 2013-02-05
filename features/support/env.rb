@@ -2,7 +2,8 @@ ENV['RACK_ENV'] = 'test'
 require 'sinatra'      
 require 'wrong'
 require 'capybara'
-require 'spinach/capybara' 
+require 'spinach/capybara'      
+require 'pry'
 
 require_relative '../../server'
 

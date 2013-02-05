@@ -14,4 +14,8 @@ group :test do
   gem 'riot'
   gem 'melee'
   gem 'rr'
+end    
+
+group :development do
+  gem 'pry'
 end

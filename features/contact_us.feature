@@ -14,7 +14,6 @@ Feature: Contact us
       And a low priority
     When I send the contact request
     Then the messages should be sent to the list of Administrators
-     And the priority should be in the subject of the mail
      And I should see confirmation that the message has been sent
           
      

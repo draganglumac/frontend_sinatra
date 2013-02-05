@@ -2,25 +2,38 @@ $: << "src"
 
 require 'bundler/setup'
 require 'sinatra'
-
+require 'sinatra/flash'
 require 'jobman'
 require 'hound'
-require 'find'
+require 'find'  
+
+require "logger"
+require "pony"
+require 'configatron' 
+require 'beacon'
+
 include FileUtils::Verbose
 
 #set :port, 8091
 #set :bind, '0.0.0.0'
 #set :environment, :development
 set :public_folder, 'public'
-set :views ,'views'   
-                           
-                      
+set :views ,'views'
 
-before do
-  env['rack.logger'] = Logger.new("features/ui.log") if ENV['RACK_ENV']=="test"
+enable :sessions
+
+
+
+configure :development do
+  Pony.options = {
+    :via => :smtp,
+    :via_options => {
+      :address => '127.0.0.1',
+      :port => '1025'
+    }
+  }
 end
-
-
+                           
 @@connections = []
 #instantiate our database connection
 #Entry page
@@ -229,8 +242,8 @@ get '/contact' do
 end
 
 post '/contact' do
-  ["delaney.burke@bsky.com","alex.jones@bskyb.com"].each do |email|
-    
-    logger.info "email sent to #{email} ok !"
-  end
+  beacon = Beacon.new
+  beacon.deliver(params[:subject],params[:priority],params[:description]) 
+  flash[:info] = "thank you! your request has been sent"
+  redirect '/contact'
 end

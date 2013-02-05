@@ -1,15 +1,38 @@
-require 'rubygems'
-require 'sinatra'
-require 'erb'
-require_relative 'jobman'
-require_relative 'hound'
-require 'find'
-include FileUtils::Verbose
-set :port, 8091
-set :bind, '0.0.0.0'
-set :environment, :development
-set :public_folder, 'public'
+$: << "src"
 
+require 'bundler/setup'
+require 'sinatra'
+require 'sinatra/flash'
+require 'jobman'
+require 'hound'
+require 'find'  
+
+require "logger"
+require "pony"
+require 'configatron' 
+require 'beacon'
+
+include FileUtils::Verbose
+
+#set :port, 8091
+#set :bind, '0.0.0.0'
+#set :environment, :development
+set :public_folder, 'public'
+set :views ,'views'
+
+enable :sessions  
+
+configure :test do
+  
+  Pony.options = {
+    :via => :smtp,
+    :via_options => {
+      :address => '127.0.0.1',
+      :port => '1025'
+    }
+  }
+end
+                           
 @@connections = []
 #instantiate our database connection
 #Entry page
@@ -210,7 +233,16 @@ post '/results/:id' do
 	end
 	puts "Job name is #{job_name['name']}"
 	send_file("public/uploads/#{job_name['name']}/cuke.html")
-end
+end 
+
+
 get '/contact' do
-	erb "<h2><a href='mailto:alex.jones2@bskyb.com'>Alex Jones</a></h2>"
+	erb :contact
+end
+
+post '/contact' do
+  beacon = Beacon.new
+  beacon.deliver(params[:subject],params[:priority],params[:description]) 
+  flash[:info] = "thank you! your request has been sent"
+  redirect '/contact'
 end

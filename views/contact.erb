@@ -1,61 +1,52 @@
-<FORM class="form-horizontal">
-    <FIELDSET>
-      <DIV id="legend" class="">
-        Form Name
-      </DIV>
+<form class="form-horizontal" method="POST">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Contact us</legend>
+      </div>
     
 
-   
-
-   <DIV class="control-group">
+    <div class="control-group">
 
           <!-- Text input-->
-          <LABEL class="control-label" for="input01">Title</LABEL>
-          <DIV class="controls">
-            <INPUT type="text" placeholder="Feedback form" class="input-xlarge">
-            <P class="help-block">Subject title</P>
-          </DIV>
-        </DIV>
+          <label class="control-label" for="subject">Subject:</label>
+          <div class="controls">
+            <input type="text" placeholder="subject" class="input-xlarge" name="subject">
+            <p class="help-block"></p>
+          </div>
+        </div>
 
-   <DIV class="control-group">
-          <LABEL class="control-label">Priority</LABEL>
-          <DIV class="controls">
-      <!-- Inline Radios -->
-      <LABEL class="radio inline">
-        <INPUT type="radio" value="Low" name="undefined" checked="checked">
-        Low
-      </LABEL>
-      <LABEL class="radio inline">
-        <INPUT type="radio" value="Medium" name="undefined">
-        Medium
-      </LABEL>
-      <LABEL class="radio inline">
-        <INPUT type="radio" value="High" name="undefined">
-        High
-      </LABEL>
-  </DIV>
-        </DIV>
+    
 
-   <DIV class="control-group">
+    <div class="control-group">
+
+          <!-- Select Basic -->
+          <label class="control-label">Priority:</label>
+          <div class="controls">
+            <select class="input-xlarge" name="priority">
+      <option>low</option>
+      <option>med</option>
+      <option>high</option></select>
+          </div>
+
+        </div>
+
+    <div class="control-group">
 
           <!-- Textarea -->
-          <LABEL class="control-label">Textarea</LABEL>
-          <DIV class="controls">
-            <DIV class="textarea">
-                  <TEXTAREA type="" class=""> </TEXTAREA>
-            </DIV>
-          </DIV>
-        </DIV>
+          <label class="control-label">Description:</label>
+          <div class="controls">
+            <div class="textarea">
+                  <textarea type="" class="" style="margin: 0px; width: 365px; height: 150px;" name="description"> </textarea>
+            </div>
+          </div>
+        </div>
 
-   <DIV class="control-group">
-          <LABEL class="control-label">Finish</LABEL>
+    <div class="control-group">
+          <label class="control-label"></label>
 
           <!-- Button -->
-          <DIV class="controls">
-            <BUTTON class="btn undefined">Send</BUTTON>
-          </DIV>
-        </DIV>
-
-   </FIELDSET>
-  </FORM>
-           
+          <div class="controls">
+            <button class="btn btn-primary" name="send">Send</button>&nbsp;<button class="btn btn-danger">Cancel</button>    
+          </div>
+        </div>
+  </form>

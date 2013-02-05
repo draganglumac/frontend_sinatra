@@ -20,11 +20,10 @@ include FileUtils::Verbose
 set :public_folder, 'public'
 set :views ,'views'
 
-enable :sessions
+enable :sessions  
 
-
-
-configure :development do
+configure :test do
+  
   Pony.options = {
     :via => :smtp,
     :via_options => {

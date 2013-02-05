@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function check_all_rubies()
 {
 	version_message=`ruby --version`

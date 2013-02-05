@@ -23,4 +23,5 @@ end
 
 group :development do
   gem 'pry'
+  gem 'powder'
 end

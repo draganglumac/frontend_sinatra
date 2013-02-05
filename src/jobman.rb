@@ -31,7 +31,7 @@ class Jobman
 
 				puts "JOB------------"
 				puts "Job id #{entry['id']}"
-				puts "Machine IP #{entry['machines_machine_id']}"
+				puts "Machine ID #{entry['machines_machine_id']}"
 
 				#This is because the result is returned to us as an array of hashes..
 				puts m.first["machine_ip"]

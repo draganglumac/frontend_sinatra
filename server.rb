@@ -14,9 +14,9 @@ require 'beacon'
 
 include FileUtils::Verbose
 
-#set :port, 8091
-#set :bind, '0.0.0.0'
-#set :environment, :development
+set :port, 8091
+set :bind, '0.0.0.0'
+set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
 
@@ -240,9 +240,16 @@ get '/contact' do
 	erb :contact
 end
 
-post '/contact' do
-  beacon = Beacon.new
-  beacon.deliver(params[:subject],params[:priority],params[:description]) 
-  flash[:info] = "thank you! your request has been sent"
+post '/contact' do    
+  
+  if params[:send]
+    beacon = Beacon.new
+    beacon.deliver(params[:subject],params[:priority],params[:description]) 
+    flash[:info] = "thank you! your request has been sent"
+  else
+    flash[:info] = "canceled !!"
+  end
+  
   redirect '/contact'
+  
 end

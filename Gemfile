@@ -22,6 +22,7 @@ group :test do
 end    
 
 group :development do
-  gem 'pry'
+  gem 'pry'  
+  gem 'pry-remote'
   gem 'powder'
 end

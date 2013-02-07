@@ -10,9 +10,15 @@ require 'find'
 require "logger"
 require "pony"
 require 'configatron' 
-require 'beacon'
+require 'beacon'  
+require 'devices'
+require 'machines'
 
-include FileUtils::Verbose
+
+require "pry-remote"
+
+include FileUtils::Verbose   
+include Devices::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'
@@ -56,7 +62,18 @@ helpers do
 			dir_array << File.basename(f, ".*")
 		end
 		return dir_array
-	end  
+	end 
+	
+	def suported_platorm(machine)
+	  case machine.supported_platforms
+	  when "ios"
+	    return "/images/ios.png"
+	  when "android"
+	    return "/images/android.png"
+	  end
+	  
+	  raise "oooops! #{machine.supported_platforms} is not supported !"
+	end
 end
 #admin panel
 get '/admin' do
@@ -182,8 +199,9 @@ post '/job/restart/:jobnum' do
 	redirect '/'
 end
 #view machine page
-get '/machines' do
-	@machine_available = Hound.get_machines
+get '/machines' do                              
+  devices = Devices::Repository.new
+  @machines = Machines::Repository.new(devices)
 	erb :machines
 end
 #results page

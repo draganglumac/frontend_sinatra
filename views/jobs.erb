@@ -1,28 +1,6 @@
 <%= @error %>
-<form action="/job" method="post" enctype="multipart/form-data">
 
-<p>Configuration file</p>
-<input type="file" class=""name="file" placeholder="Your configuration"/>
 
-<p>Selected machine</p>
-
-<select name="machine_id">
-
-<%for row in @machine_available %>
-
-<option value=<%=row["machine_id"]%>>
-<%=row["machine_id"]%>
-</option>
-<% end %>
-
-</select>
-
-<p>Job name</p>
-<input type="text" name="lname"><br/>
-<br/>
-<br/>
-<input type="submit",value="submit"class="btn btn-primary"/>
-</form>
 
 <h2>Current jobs</h2>
 <span style="color:red;">Warning: Job name will need to be consistant through out as it is used to form a directory for your job!</span>

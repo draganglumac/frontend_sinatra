@@ -4,12 +4,16 @@
         <h1>Automation stack</h1>
         <p>Welcome to the Automation stack frontend</p>
         <p>
-        <form method="get" action="/job">
+        <form method="get" action="/newjob">
         <input type="submit" value="New Job &raquo;" name="job_button" id="job_button" title="New Job" class="btn btn-primary btn-large"/>
         </form>
         </p>
       </div>
-
+      <div class="alert alert-info">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h4>Welcome</h4>
+          Welcome to the Development version of the Automation Stack
+      </div>
       <!-- Example row of columns -->
       <div class="row">
         <div class="span4">
@@ -51,6 +55,15 @@
         </p>
         </div>
 
+      <div class="row">
+            <div class="span4">
+          <h2>Jobs</h2>
+          <p>View current jobs</p>
+          <p>
+          <form method="get" action="/job">
+        <input type="submit" value="View jobs &raquo;" name="job_button" id="job_button" title="New Job" class="btn"/>
+        </form>
+        </p>
       </div>
-     
+  </div> 
 

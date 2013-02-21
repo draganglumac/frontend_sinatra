@@ -4,9 +4,10 @@ require 'yaml'
 class Dbconnect
 
 	def initialize
-		begin
+		begin                        
+		  
 			dbconfig = YAML.load_file("conf/db.conf")
-
+			
 			@host = dbconfig['host']
 			@user = dbconfig['username']
 			@password = dbconfig['password']

@@ -77,7 +77,7 @@ class Hound
 	end
 	#analytics
 	def self.add_visitor(ip)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
+		#@@dbconnect.query("INSERT INTO `AUTOMATION`.`analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
 	end
 	def self.get_visitors
 		return @@dbconnect.query("select * from `AUTOMATION`.`analytics`")

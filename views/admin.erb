@@ -34,7 +34,7 @@
 	  <td>
 	    <form method="post" action="/admin/delete/<%=row["machine_id"]%>"> 
         <input type="hidden" name="_method" value="delete">
-        <button type="submit"class="btn">Delete</button>
+        <button type="submit"class="btn" id="<%=row["call_sign"]%>">Delete</button>
     	</form> 
 	  </td>
 	</tr>
@@ -79,14 +79,17 @@
               <option value="-1">
                 Please choose
               </option>
+                         
               
+            <% if @platforms %>
             <%for row in @platforms %>
 
             <option value=<%=row["id"]%>>
             <%=row["name"]%>
             </option>
             <% end %>
-
+                            
+            <%end%>
             </select>
             
           </div>

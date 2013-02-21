@@ -80,6 +80,7 @@ get '/admin' do
 	protected!
 	@admin_pending_jobs = Hound.get_jobs
 	@machine_available = Hound.get_machines
+	@platforms = Hound.get_platforms
 	erb :admin
 end
 

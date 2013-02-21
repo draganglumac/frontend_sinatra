@@ -4,7 +4,13 @@ class Hound
 
 	def self.get_machines
 		return @@dbconnect.query("SELECT * FROM machines")
+	end    
+	
+	def self.get_platforms()
+	  return @@dbconnect.query("SELECT * FROM platform")
 	end
+	
+	
 	def self.get_jobs
 		return @@dbconnect.query("SELECT * from `jobs`")
 	end

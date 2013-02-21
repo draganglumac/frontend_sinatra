@@ -26,10 +26,10 @@
 	
 <%for row in @machine_available %>
 	<tr>
-	  <td><%=row["machine_id"]%></td>
-	  <td><%=row["machine_callsign"]%></td>
-	  <td><%=row["machine_ip"]%></td>
-	  <td><%=row["supported_platforms"]%></td>
+	  <td><%=row["id"]%></td>
+	  <td><%=row["call_sign"]%></td>
+	  <td><%=row["ip_address"]%></td>
+	  <td><%=row["platform_id"]%></td>
 	  
 	  <td>
 	    <form method="post" action="/admin/delete/<%=row["machine_id"]%>"> 
@@ -50,9 +50,9 @@
     <div class="control-group">
 
           <!-- Text input-->
-          <label class="control-label" for="input01">Machine callsign</label>
+          <label class="control-label" for="call_sign">Machine callsign</label>
           <div class="controls">
-            <input type="text" placeholder="'goose'" class="input-xlarge" name="post[callsign_form]">
+            <input type="text" placeholder="'goose'" class="input-xlarge" name="call_sign" id="call_sign">
             <p class="help-block"></p>
           </div>
         </div>
@@ -60,9 +60,9 @@
     <div class="control-group">
 
           <!-- Text input-->
-          <label class="control-label" for="input01">Machine IP</label>
+          <label class="control-label" for="ip_address">Machine IP</label>
           <div class="controls">
-            <input type="text" placeholder="127.0.0.1" class="input-xlarge" name="post[machine_ip_form]">
+            <input type="text" placeholder="127.0.0.1" class="input-xlarge" name="ip_address" id="ip_address">
             <p class="help-block"></p>
           </div>
         </div>
@@ -72,10 +72,10 @@
     <div class="control-group">
 
           <!-- Text input-->
-          <label class="control-label" for="input01">Supported Platforms</label>
+          <label class="control-label" for="platform_id">Supported Platforms</label>
           <div class="controls"> 
             
-            <select name="post[supported_platforms]">
+            <select name="platform_id" id="platform_id">
               <option value="-1">
                 Please choose
               </option>
@@ -99,7 +99,7 @@
 
           <!-- Button -->
           <div class="controls">
-            <button class="btn btn-success">Submit</button>
+            <button class="btn btn-success">Add Machine</button>
           </div>
         </div>
 

@@ -104,41 +104,7 @@ delete '/admin/delete/jobs/:id' do
 	redirect '/admin'
 end
 post '/admin' do
-
-	#I would like to make a note that I am not happy with this current method of capturing and sending to SQL. It is very difficult to expand upon and will be extremely brittle"
-	puts params[:post]
-
-	@iphone4 = 0
-	@iphone4s = 0
-	@iphone5 = 0
-	@ipadmini = 0
-	@ipad4 = 0
-
-	if(params[:post][:iphone4_check])
-		@iphone4 = 1
-	end
-	if(params[:post][:iphone4s_check])
-		@iphone4s = 1
-	end
-	if(params[:post][:iphone5_check])
-		@iphone5 = 1
-	end
-	if(params[:post][:ipadmini_check])
-		@ipadmini = 1
-	end
-	if(params[:post][:ipad4_check])
-		@ipad4 = 1
-	end
-
-	puts "OUTPUT -> #{params[:post][:callsign_form]}"
-	puts "OUTPUT -> #{params[:post][:machine_ip_form]}"
-	puts "OUTPUT -> #{params[:post][:supported_platforms]}"
-
-	Hound.add_machines_long(params[:post][:callsign_form],params[:post][:machine_ip_form],params[:post][:supported_platforms],@iphone4,@iphone4s,@iphone5,@ipadmini,@ipad4)
-
-
-
-	#Hound.add_machine(params[:post])
+  Hound.add_machine(params)
 	@admin_pending_jobs = Hound.get_jobs
 	@machine_available = Hound.get_machines
 	erb :admin

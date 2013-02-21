@@ -1,4 +1,14 @@
 require_relative 'dbconnect'
+
+
+
+ENV["AUTOMATION_STACK_DATABASE"] = "AUTOMATIONTEST"
+ENV["AUTOMATION_STACK_DATABASE_HOST"] = "10.65.80.46"
+ENV["AUTOMATION_STACK_DATABASE_USERNAME"] = "dummy"
+ENV["AUTOMATION_STACK_DATABASE_PASSWORD"] = "dummy"                       
+
+DB = Sequel.mysql2(ENV["AUTOMATION_STACK_DATABASE"],:host =>ENV["AUTOMATION_STACK_DATABASE_HOST"],:username => ENV["AUTOMATION_STACK_DATABASE_USERNAME"],:password =>ENV["AUTOMATION_STACK_DATABASE_PASSWORD"]) 
+
 class Hound
 	@@dbconnect = Dbconnect.new
 
@@ -62,9 +72,8 @@ class Hound
 		@@dbconnect.query("INSERT INTO `AUTOMATION`.`machines` (`machine_id`, `machine_callsign`, `machine_ip`, `supported_platforms`, `iphone4`, `iphone4s`, `iphone5`, `ipadmini`, `ipad4`)  VALUES (NULL,'#{callsign}','#{ip}','#{platforms}', #{iphone4}, #{iphone4s},#{iphone5}, #{ipadmini}, #{ipad4})")
 
 	end
-	def self.add_machine(inputraw)
-		
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`machines` (`machine_id`, `machine_callsign`, `machine_ip`, `supported_platforms`, `iphone4`, `iphone4s`, `iphone5`, `ipadmini`, `ipad4`)  VALUES (NULL,'#{inputraw['callsign_form']}','#{inputraw['machine_ip_form']}','#{inputraw['supported_platforms_form']}', #{inputraw['iphone4_select']}, #{inputraw['iphone4s_select']},#{inputraw['iphone5_select']}, #{inputraw['ipadmini_select']}, #{inputraw['ipad4_select']})")
+	def self.add_machine(machine)
+	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address] 
 	end
 	#analytics
 	def self.add_visitor(ip)

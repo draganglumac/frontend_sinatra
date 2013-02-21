@@ -1,4 +1,5 @@
-require 'mysql2'
+require 'mysql2' 
+require "sequel"
 require 'yaml'
 
 class Dbconnect

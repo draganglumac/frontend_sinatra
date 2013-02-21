@@ -10,8 +10,8 @@
 
 <%for row in @machine_available %>
 
-<option value=<%=row["machine_id"]%>>
-<%=row["machine_id"]%>
+<option value=<%=row["id"]%>>
+<%=row["id"]%>
 </option>
 <% end %>
 
@@ -33,7 +33,7 @@
 	
 <%for row in @jobs_done %>
 	<tr>
-	<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=row["machines_machine_id"]%></td><td><%=row["command"]%></td><td>
+	<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=row["id"]%></td><td><%=row["command"]%></td><td>
 	<form method="post" action="/job/restart/<%=row["id"]%>"> 
     <input type="hidden" name="_method" value="submit">
     <button type="submit"class="btn">Go</button>

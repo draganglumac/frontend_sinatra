@@ -188,7 +188,7 @@ post '/job' do
 	#machine_num = params[:machine_id].split("machine_id")
 
 	#There is a difference here between ruby versions, be aware
-	machine_num = params[:machine_id]
+	machine_num = params[:id]
 
 	puts "MACHINE NUMBER #{machine_num}"
 	Hound.add_job(machine_num,params[:lname],string)

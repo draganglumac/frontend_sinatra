@@ -21,7 +21,7 @@ class Hound
 		return @@dbconnect.query("SELECT * FROM results")
 	end
 	def self.getmachineids
-		return @@dbconnect.query("SELECT `machine_id` from `machines`")
+		return @@dbconnect.query("SELECT `id` from `machines`")
 	end
 	def self.remove_machine(inputraw)
 		@@dbconnect.query("DELETE FROM `AUTOMATION`.`machines` WHERE `machine_id`=#{inputraw}")

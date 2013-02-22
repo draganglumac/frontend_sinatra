@@ -1,4 +1,4 @@
-ENV['RACK_ENV'] == "test"
+ENV['RACK_ENV'] == :test
 
 require "riot"  
 require "logger"
@@ -12,4 +12,5 @@ Pony.options = {
     :port => '1025'
   }
 }
+
 require_relative "../src/beacon"

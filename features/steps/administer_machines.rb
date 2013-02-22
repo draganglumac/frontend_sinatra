@@ -14,8 +14,6 @@ class Spinach::Features::AdministerMachines < Spinach::FeatureSteps
  
   step 'the machine should appear in the list of available machine' do
    has_content? @maverick 
-   #clean up
-   
   end                
   
   step 'I delete the machine' do        
@@ -24,6 +22,7 @@ class Spinach::Features::AdministerMachines < Spinach::FeatureSteps
   
   
   step 'the machine should not appear in the list of available machine' do
+    raise "ooops not on correct page" unless current_path =="/admin"
     !has_content? @unwnted_machine
   end
   

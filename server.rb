@@ -28,7 +28,7 @@ set :views ,'views'
 
 enable :sessions  
 
-configure :test do
+configure :test,:development do
   
   Pony.options = {
     :via => :smtp,

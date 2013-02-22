@@ -39,8 +39,9 @@ class Hound
 	def self.getmachineids
 		return @@dbconnect.query("SELECT `id` from `machines`")
 	end
-	def self.remove_machine(inputraw)
-		@@dbconnect.query("DELETE FROM `AUTOMATION`.`machines` WHERE `machine_id`=#{inputraw}")
+	def self.remove_machine(id)                                   
+	  obj = DB[:machines].where(:id => id)
+		obj.delete
 	end
 	def self.remove_job(job_id)
 		@@dbconnect.query("DELETE FROM `AUTOMATION`.`jobs` WHERE `id`=#{job_id}")
@@ -73,7 +74,7 @@ class Hound
 
 	end
 	def self.add_machine(machine)
-	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address] 
+	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]
 	end
 	#analytics
 	def self.add_visitor(ip)

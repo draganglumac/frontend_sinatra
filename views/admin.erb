@@ -26,8 +26,8 @@
 	
 <%for row in @machine_available %>
 	<tr>
-	  <td><%=row["id"]%></td>
-	  <td><%=row["call_sign"]%></td>
+	  <td><%=row["id"]%></a></td>
+	  <td><a href="machine/<%=row['id']%>"><%=row["call_sign"]%></a></td>
 	  <td><%=row["ip_address"]%></td>
 	  <td><%=row["platform_id"]%></td>
 	  

@@ -44,7 +44,14 @@ module Machines
       
     end
   end
+
+
+  module Routes
   
-  
+    get '/machine/:id' do
+      erb :machine_show
+    end
+    
+  end
   
 end

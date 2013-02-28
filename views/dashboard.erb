@@ -42,7 +42,7 @@
     </div>
     <div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
       <div class="accordion-inner">
-        <p><%=job['trigger_time']%></p>
+        <p><%=Time.at(job['trigger_time'])%></p>
       </div>
     </div>
   </div> <div class="alert alert-success">

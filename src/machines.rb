@@ -1,3 +1,5 @@
+require_relative "./model"
+
 module Machines
   
   class Machine                                          
@@ -5,15 +7,20 @@ module Machines
       @devices = []
     end
     
-    attr_accessor :id,:call_sign,:ip,:supported_platforms,:devices
+    attr_accessor :id,:call_sign,:ip_address,:platform_id,:devices
+
+    def platform_name
+      name = Hound.get_platform_name_from_id self.platform_id
+    end
     
-  end                                                    
+  end                  
+
   
   
   class Repository
     
-    def initialize(devices)
-      @devices = devices
+    def initialize()
+      
     end
     
     def all
@@ -22,19 +29,10 @@ module Machines
       Hound.get_machines.each do |machine|
         m = Machine.new
         
-        m.id = machine["machine_id"]
-        m.call_sign = machine["machine_callsign"]
-        m.ip = machine["machine_ip"]
-        m.supported_platforms = machine["supported_platforms"]
-                                           
-        
-        m.devices << @devices.find_by_name("iphone4") if machine["iphone4"] == 1
-        m.devices << @devices.find_by_name("iphone4s") if machine["iphone4s"] == 1
-        m.devices << @devices.find_by_name("iphone5") if machine["iphone5"] == 1
-        m.devices << @devices.find_by_name("ipadmini") if machine["ipadmini"] == 1
-        m.devices << @devices.find_by_name("ipad4") if machine["ipad4"] == 1
-        
-        
+        m.id = machine["id"]
+        m.call_sign = machine["call_sign"]
+        m.ip_address = machine["ip_address"]
+        m.platform_id = machine["platform_id"]
         
         machines << m
 
@@ -43,12 +41,23 @@ module Machines
       machines
       
     end
+    def get id
+      all.find { |machine| machine.id == id.to_i }
+    end
   end
 
 
   module Routes
   
     get '/machine/:id' do
+      machines  = Repository.new
+      @machine = machines.get(params["id"])
+
+      @platforms = Hound.get_platforms
+      
+      @machine.devices = []
+
+
       erb :machine_show
     end
     

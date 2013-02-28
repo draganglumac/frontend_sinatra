@@ -19,7 +19,20 @@ class Hound
 	def self.get_platforms()
 	  return @@dbconnect.query("SELECT * FROM platform")
 	end
-	
+
+	def self.get_platform_name_from_id platform_id
+		DB[:platform].where(:id => platform_id).first[:name]
+	end
+
+	def self.add_device device
+		id = DB[:devices].insert :model => device.model, :serial_number => device.serial_number, :type => device.type, :platform_id => device.platform_id 
+		id
+	end
+
+	def self.connect_device(device_id,machine_id)
+		DB[:connected_devices].insert :machines_id => machine_id, :devices_id => device_id 
+	end
+
 	
 	def self.get_jobs
 		return @@dbconnect.query("SELECT * from `jobs`")

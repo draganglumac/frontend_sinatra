@@ -1,1 +1,38 @@
-show
+<h1><%=@machine.call_sign%>
+
+<h3>Ip Address: <%=@machine.ip_address%>
+<h3>Surported Platform: <%=@machine.platform_name%>
+
+
+<hr>
+
+
+<%=partial :device_form%>
+
+
+
+<% if !@machine.devices.empty? %>
+<table>
+	<caption>Devices</caption>
+	<thead>
+		<tr>
+			<th>model</th>
+			<th>serial number</th>
+			<th>type</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			
+			  <% for device in @machine.devices %>
+			    <td><%=device.model%></td>
+			    <td><%=device.serial_number%></td>
+			    <td><%=device.type%></td>
+			  <% end %>
+			
+		</tr>
+	</tbody>
+</table>
+<% else %>
+
+<% end %>

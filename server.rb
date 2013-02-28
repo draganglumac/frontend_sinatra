@@ -44,6 +44,27 @@ end
 #Entry page
 
 helpers do
+
+	def partial(page, options={})
+     erb page, options.merge!(:layout => false)
+  	end
+
+	def partial(template, *args)
+
+    options = args.extract_options! if args.is
+    options.merge!(:layout => false)
+    if collection = options.delete(:collection) then
+      collection.inject([]) do |buffer, member|
+        buffer << haml(template, options.merge(
+                                  :layout => false, 
+                                  :locals => {template.to_sym => member}
+                                )
+                     )
+      end.join("\n")
+    else
+      erb(template, options)
+    end
+  end
 	def protected!
 		unless authorized?
 			response['WWW-Authenticate'] = %(Basic realm="Restricted Area")

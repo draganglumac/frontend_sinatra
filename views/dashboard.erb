@@ -1,0 +1,39 @@
+
+
+<%for job in @current_jobs%>
+<div class="hero-unit">
+  <h2><%=job["name"]%></h2>
+  <p>Job first originated <%=job["TIMESTAMP"]%></p>
+
+  <div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse<%=job['name']%><%=job['id']%>">
+          View build commands
+        </a>
+      </div>
+      <div id="collapse<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <p><%=job['command']%></p>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
+        View job trigger time
+      </a>
+    </div>
+    <div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <p><%=job['trigger_time']%></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% end %>

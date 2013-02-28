@@ -28,12 +28,12 @@
 <span style="color:red;">Warning: Job name will need to be consistant through out as it is used to form a directory for your job!</span>
 <table id="job_table" class="table">
 	<tr>
-	<td>Id</td><td>Name</td><td>Time stamp</td><td>Machine id</td><td>command</td><td>Run Job</td>
+        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Machine id</td><td>command</td><td>Run Job</td>
 	</tr>
 	
 <%for row in @jobs_done %>
 	<tr>
-	<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=row["id"]%></td><td><%=row["command"]%></td><td>
+        <td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=row["trigger_time"]%></td><td><%=row["id"]%></td><td><%=row["command"]%></td><td>
 	<form method="post" action="/job/restart/<%=row["id"]%>"> 
     <input type="hidden" name="_method" value="submit">
     <button type="submit"class="btn">Go</button>

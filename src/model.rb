@@ -1,3 +1,6 @@
+DB = Sequel.mysql2("AUTOMATION",:host  => "10.65.80.46", :username => "dummy", :password => "dummy")
+Sequel::Model.db = DB
+
 module AutomationStack
 
 	module Application
@@ -11,7 +14,7 @@ module AutomationStack
 
 	module Infrastructure
 
-	class Machines < Sequel::Model
+	class Machine < Sequel::Model
 			one_to_many :jobs
 			many_to_one :Platform
 			one_to_many :connected_devices

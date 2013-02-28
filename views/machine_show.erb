@@ -11,7 +11,7 @@
 
 
 
-<% if !@machine.devices.empty? %>
+<% if !@machine.connected_devices.empty? %>
 <table>
 	<caption>Devices</caption>
 	<thead>
@@ -24,7 +24,7 @@
 	<tbody>
 		<tr>
 			
-			  <% for device in @machine.devices %>
+			  <% for device in @machine.connected_devices %>
 			    <td><%=device.model%></td>
 			    <td><%=device.serial_number%></td>
 			    <td><%=device.type%></td>

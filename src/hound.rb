@@ -1,13 +1,8 @@
 require_relative 'dbconnect'
 
+                      
 
 
-ENV["AUTOMATION_STACK_DATABASE"] = "AUTOMATIONTEST"
-ENV["AUTOMATION_STACK_DATABASE_HOST"] = "10.65.80.46"
-ENV["AUTOMATION_STACK_DATABASE_USERNAME"] = "dummy"
-ENV["AUTOMATION_STACK_DATABASE_PASSWORD"] = "dummy"                       
-
-DB = Sequel.mysql2(ENV["AUTOMATION_STACK_DATABASE"],:host =>ENV["AUTOMATION_STACK_DATABASE_HOST"],:username => ENV["AUTOMATION_STACK_DATABASE_USERNAME"],:password =>ENV["AUTOMATION_STACK_DATABASE_PASSWORD"]) 
 
 class Hound
 	@@dbconnect = Dbconnect.new
@@ -17,11 +12,11 @@ class Hound
 	end    
 	
 	def self.get_platforms()
-	  return @@dbconnect.query("SELECT * FROM platform")
+	  return @@dbconnect.query("SELECT * FROM platforms")
 	end
 
 	def self.get_platform_name_from_id platform_id
-		DB[:platform].where(:id => platform_id).first[:name]
+		DB[:platforms].where(:id => platform_id).first[:name]
 	end
 
 	def self.add_device device

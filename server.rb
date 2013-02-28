@@ -28,8 +28,14 @@ set :views ,'views'
 
 enable :sessions  
 
+
+
 configure :test,:development do
+
+
   
+  
+
   Pony.options = {
     :via => :smtp,
     :via_options => {
@@ -49,22 +55,6 @@ helpers do
      erb page, options.merge!(:layout => false)
   	end
 
-	def partial(template, *args)
-
-    options = args.extract_options! if args.is
-    options.merge!(:layout => false)
-    if collection = options.delete(:collection) then
-      collection.inject([]) do |buffer, member|
-        buffer << haml(template, options.merge(
-                                  :layout => false, 
-                                  :locals => {template.to_sym => member}
-                                )
-                     )
-      end.join("\n")
-    else
-      erb(template, options)
-    end
-  end
 	def protected!
 		unless authorized?
 			response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -101,7 +91,7 @@ get '/admin' do
 	protected!
 	@admin_pending_jobs = Hound.get_jobs
 	@machine_available = Hound.get_machines
-	@platforms = Hound.get_platforms
+	@platforms = AutomationStack::Infrastructure::Platform.all
 	erb :admin
 end
 

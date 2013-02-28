@@ -1,0 +1,80 @@
+<form class="form-horizontal" action="/device" method="post">
+	<input type="hidden" name="machine_id" value="<%=@machine.id%>">
+
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Register a device</legend>
+      </div>
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">Model:</label>
+          <div class="controls">
+            <input type="text" placeholder="iphone/galaxy" class="input-xlarge" name="model">
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">Serial Number:</label>
+          <div class="controls">
+            <input type="text" placeholder="apple001" class="input-xlarge" name="serial_number">
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Select Basic -->
+          <label class="control-label">type:</label>
+          <div class="controls">
+            <select class="input-xlarge" name="type">
+      <option>Please Choose</option>
+      <option>phone</option>
+      <option>tablet</option></select>
+          </div>
+
+        </div>
+
+    
+
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="platform_id">Supported Platforms</label>
+          <div class="controls"> 
+            
+            <select name="platform_id" id="platform_id" name="platform_id">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @platforms %>
+            <%for row in @platforms %>
+
+            <option value=<%=row["id"]%> >
+              <%=row["name"]%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+          <label class="control-label"></label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Register Device</button>
+          </div>
+        </div>
+
+    </fieldset>
+  </form>

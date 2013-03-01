@@ -15,14 +15,13 @@ module Machines
 
   	get '/machines/new' do
   		@platforms = AutomationStack::Infrastructure::Platform.all
+      @manufacturers = AutomationStack::Infrastructure::Manufacturer.all
+      @device_types = AutomationStack::Infrastructure::DeviceType.all
   		erb :'machines/new'
   	end
 
     get '/machines/:id' do
       @machine  = AutomationStack::Infrastructure::Machine[params[:id]]
-      @platforms = AutomationStack::Infrastructure::Platform.all
-      @manufacturers = AutomationStack::Infrastructure::Manufacturer.all
-      @device_types = AutomationStack::Infrastructure::DeviceType.all
       erb :'machines/show'
     end
 

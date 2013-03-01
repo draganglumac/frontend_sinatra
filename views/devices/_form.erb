@@ -1,9 +1,11 @@
-  <form class="form-horizontal" action="/device" method="post">
-	<input type="hidden" name="machine_id" value="<%=@machine.id%>">
+  <form class="form-horizontal" action="/devices" method="post">
+    <% if @machine %>
+	   <input type="hidden" name="machine_id" value="<%=@machine.id%>">
+    <%end%>
 
     <fieldset>
       <div id="legend" class="">
-        <legend class="">Register a device</legend>
+        <legend class="">Add a new device</legend>
       </div>
     <div class="control-group">
 

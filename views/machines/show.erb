@@ -1,19 +1,20 @@
 <h1><%=@machine.call_sign%>
 
 <h3>Ip Address: <%=@machine.ip_address%>
-<h3>Surported Platform: <%=@machine.platform.name%>
+<h3>Surported Platform: <%=@machine.platform.name%></h3>
 
 
 <hr>
 
 
-<%=partial :device_form%>
 
 
+
+
+<h4>Connected Devices</h4>
 
 <% if !@machine.connected_devices.empty? %>
-<table>
-	<caption>Devices</caption>
+<table class="table">
 	<thead>
 		<tr>
 			<th>model</th>

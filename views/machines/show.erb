@@ -9,6 +9,44 @@
 
 
 
+<form action="/connected_devices" method="post">
+	<input type="hidden" name="connected_device[machine_id]" value="<%=@machine.id%>">
+	<div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="platform_id">Available Devices</label>
+          <div class="controls"> 
+            
+            <select name="connected_device[device_id]" id="device_id">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @devices %>
+            <%for device in @devices %>
+
+            <option value=<%=device.id%>>
+            <%=device.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>
+	<div class="control-group">
+          <label class="control-label"></label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Register Device</button>
+          </div>
+        </div>
+
+        
+</form>
 
 
 <h4>Connected Devices</h4>

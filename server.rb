@@ -13,6 +13,7 @@ require 'configatron'
 require 'beacon'  
 require 'devices'
 require 'machines'
+require 'connected_devices'
 
 
 require "pry-remote"
@@ -20,6 +21,7 @@ require "pry-remote"
 include FileUtils::Verbose   
 include Devices::Routes
 include Machines::Routes
+include ConnectedDevices::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'

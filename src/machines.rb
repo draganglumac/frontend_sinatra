@@ -22,6 +22,7 @@ module Machines
 
     get '/machines/:id' do
       @machine  = AutomationStack::Infrastructure::Machine[params[:id]]
+      @devices =AutomationStack::Infrastructure::Device.all
       erb :'machines/show'
     end
 

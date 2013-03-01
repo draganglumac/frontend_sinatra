@@ -1,11 +1,3 @@
-module ConnectedDevices
-  class Repository
-    def self.link(device_id,machine_id)
-      
-      AutomationStack::Infrastructure::ConnectedDevice.create :device_id => device_id,:machine_id => machine_id 
-    end
-  end
-end
 module Devices
 
   module Routes

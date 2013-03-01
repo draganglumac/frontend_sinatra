@@ -13,103 +13,36 @@
 </form>
 </td>
 </tr>
-</table>                                                 
-
-<table id="machine_table" class="table">
-	<tr>
-	  <td>Machine Id</td>
-	  <td>Machine Callsign</td>
-	  <td>Machine Ip</td>
-	  <td>Supported platforms</td>
-	  <td></td>
-	</tr>
-	
-<%for row in @machine_available %>
-	<tr>
-	  <td><%=row["id"]%></a></td>
-	  <td><a href="machine/<%=row['id']%>"><%=row["call_sign"]%></a></td>
-	  <td><%=row["ip_address"]%></td>
-	  <td><%=row["platform_id"]%></td>
-	  
-	  <td>
-	    <form method="post" action="/admin/delete/<%=row["id"]%>"> 
-        <input type="hidden" name="_method" value="delete">
-        <button type="submit"class="btn" id="<%=row["call_sign"]%>">Delete</button>
-    	</form> 
-	  </td>
-	</tr>
-<% end %>
 </table>
 
+<br/>
 
-  <form action="/admin" method="post" class="form-horizontal">
-    <fieldset>
-      <div id="legend" class="">
-        <legend class="">Add new machine</legend>
-      </div>
-    <div class="control-group">
+<div class="control-group">
+  <div class="controls">
+    <a href="/machine/new"><button class="btn btn-default">Add new Machine</button></a>
+  </div>
+</div>                                                 
 
-          <!-- Text input-->
-          <label class="control-label" for="call_sign">Machine callsign</label>
-          <div class="controls">
-            <input type="text" placeholder="'goose'" class="input-xlarge" name="call_sign" id="call_sign">
-            <p class="help-block"></p>
-          </div>
-        </div>
-
-    <div class="control-group">
-
-          <!-- Text input-->
-          <label class="control-label" for="ip_address">Machine IP</label>
-          <div class="controls">
-            <input type="text" placeholder="127.0.0.1" class="input-xlarge" name="ip_address" id="ip_address">
-            <p class="help-block"></p>
-          </div>
-        </div>
-
+<table id="machine_table" class="table">
+  <tr>
+    <td>Machine Callsign</td>
+    <td>Machine Ip</td>
+    <td>Supported platforms</td>
+    <td></td>
+  </tr>
+  
+<%for row in @machines %>
+  <tr>
+    <td><a href="machine/<%=row.id%>"><%=row.call_sign%></a></td>
+    <td><%=row.ip_address%></td>
+    <td><%=row.platform.name%></td>
     
-
-    <div class="control-group">
-
-          <!-- Text input-->
-          <label class="control-label" for="platform_id">Supported Platforms</label>
-          <div class="controls"> 
-            
-            <select name="platform_id" id="platform_id">
-              <option value="-1">
-                Please choose
-              </option>
-                         
-              
-            <% if @platforms %>
-            <%for row in @platforms %>
-
-            <option value=<%=row.id%>>
-            <%=row.name%>
-            </option>
-            <% end %>
-                            
-            <%end%>
-            </select>
-            
-          </div>
-        </div>
-
-
-    
-    <div class="control-group">
-          <label class="control-label">Add Machine</label>
-
-          <!-- Button -->
-          <div class="controls">
-            <button class="btn btn-success">Add Machine</button>
-          </div>
-        </div>
-
-    </fieldset>
-  </form>
-
-
-
-
-
+    <td>
+      <form method="post" action="/admin/delete/<%=row["id"]%>"> 
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit"class="btn" id="<%=row["call_sign"]%>">Delete</button>
+      </form> 
+    </td>
+  </tr>
+<% end %>
+</table>

@@ -16,7 +16,7 @@ module AutomationStack
 
 	class Machine < Sequel::Model
 			one_to_many :jobs
-			many_to_one :Platform
+			many_to_one :platform
 			one_to_many :connected_devices
 		end
 
@@ -29,14 +29,27 @@ module AutomationStack
 			one_to_many :machines
 		end
 
-		class ConnectedDevices < Sequel::Model
-			many_to_one :machine
+		class ConnectedDevice < Sequel::Model
+			many_to_one  :machine
 			many_to_one :device
 		end
 
 
-		class Devices < Sequel::Model
-			
+		class Manufacturer < Sequel::Model
+			one_to_many :devices
+
+		end
+
+		class DeviceType<Sequel::Model
+			one_to_many :devices
+		end
+		
+
+
+		class Device < Sequel::Model
+			many_to_one :platform
+			many_to_one :device_type
+			many_to_one :manufacturer
 		end
 
 		class Jobs < Sequel::Model

@@ -90,8 +90,7 @@ end
 get '/admin' do
 	protected!
 	@admin_pending_jobs = Hound.get_jobs
-	@machine_available = Hound.get_machines
-	@platforms = AutomationStack::Infrastructure::Platform.all
+	@machines  = AutomationStack::Infrastructure::Machine.all
 	erb :admin
 end
 
@@ -101,11 +100,6 @@ get '/admin/getapp/:file' do |file|
 	send_file(file, :disposition => 'attachment', :filename => File.basename(file))
 end
 
-delete '/admin/delete/:id' do
-	Hound.remove_machine(params[:id])
-	@machine_available = Hound.get_machines
-	redirect '/admin'
-end
 
 delete '/admin/delete/jobs/:id' do
 	id = params[:id]
@@ -116,9 +110,9 @@ delete '/admin/delete/jobs/:id' do
 end
 post '/admin' do
   Hound.add_machine(params)
-	@admin_pending_jobs = Hound.get_jobs
-	@machine_available = Hound.get_machines
-	erb :admin
+  @admin_pending_jobs = Hound.get_jobs
+  @machine_available = Hound.get_machines
+  erb :admin
 end
 #admin delete sqldb_butto
 post '/admin/sql/delete' do

@@ -1,0 +1,66 @@
+<form action="/machine" method="post" class="form-horizontal">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Add new machine</legend>
+      </div>
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="call_sign">Machine callsign</label>
+          <div class="controls">
+            <input type="text" placeholder="'goose'" class="input-xlarge" name="call_sign" id="call_sign">
+            <p class="help-block"></p>
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="ip_address">Machine IP</label>
+          <div class="controls">
+            <input type="text" placeholder="127.0.0.1" class="input-xlarge" name="ip_address" id="ip_address">
+            <p class="help-block"></p>
+          </div>
+        </div>
+
+    
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="platform_id">Supported Platforms</label>
+          <div class="controls"> 
+            
+            <select name="platform_id" id="platform_id">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @platforms %>
+            <%for row in @platforms %>
+
+            <option value=<%=row.id%>>
+            <%=row.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>
+
+
+    
+    <div class="control-group">
+          <label class="control-label">Add Machine</label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Add Machine</button>
+          </div>
+        </div>
+
+    </fieldset>
+  </form>

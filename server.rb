@@ -144,7 +144,7 @@ get '/resources' do
 end
 #new job page
 get '/job' do
-	@machine_available = Hound.getmachineids
+	@machines  = AutomationStack::Infrastructure::Machine.all
 	@jobs_done = Hound.get_jobs
 	erb :jobs
 end
@@ -152,7 +152,7 @@ end
 post '/job' do
 	if params[:file].nil?
 		@error = "<p style='color:red;'>Need input file</p>"
-		@machine_available = Hound.getmachineids
+		
 		return erb :jobs
 	end
 	tempfile = params[:file][:tempfile] 
@@ -163,7 +163,7 @@ post '/job' do
 	#machine_num = params[:machine_id].split("machine_id")
 
 	#There is a difference here between ruby versions, be aware
-	machine_num = params[:id]
+	machine_num = params[:machine_id]
 
 	puts "MACHINE NUMBER #{machine_num}"
 	Hound.add_job(machine_num,params[:lname],string)

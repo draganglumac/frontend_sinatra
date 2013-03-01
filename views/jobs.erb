@@ -8,10 +8,10 @@
 
 <select name="machine_id">
 
-<%for row in @machine_available %>
+<%for row in @machines %>
 
-<option value=<%=row["id"]%>>
-<%=row["id"]%>
+<option value=<%=row.id%>>
+<%=row.call_sign%>
 </option>
 <% end %>
 

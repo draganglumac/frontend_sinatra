@@ -1,0 +1,24 @@
+<% if @machines %>
+<table id="machine_table" class="table">
+	<tr>
+	  <td>Machine Callsign</td>
+	  <td>Machine Ip</td>
+	  <td>Supported platforms</td>
+	  <td></td>
+	</tr>
+	
+<%for row in @machines %>
+	<tr>
+	  <td><a href="/machines/<%=row.id%>"><%=row.call_sign%></a></td>
+	  <td><%=row.ip_address%></td>
+	  <td><%=row.platform.name%></td>
+	  
+	  <td>
+	    <form method="post" action="/machines/<%=row.id%>/delete"> 
+        	<button type="submit"class="btn" id="">Delete</button>
+    	</form> 
+	  </td>
+	</tr>
+<% end %>
+</table>
+<%end%>

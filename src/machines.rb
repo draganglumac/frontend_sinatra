@@ -4,17 +4,17 @@ module Machines
 
   module Routes
   	
-  	get '/machine' do
+  	get '/machines' do
   		@machines  = AutomationStack::Infrastructure::Machine.all
   		erb :'machines/index'
   	end
 
-  	get '/machine/new' do
+  	get '/machines/new' do
   		@platforms = AutomationStack::Infrastructure::Platform.all
   		erb :'machines/new'
   	end
 
-    get '/machine/:id' do
+    get '/machines/:id' do
       @machine  = AutomationStack::Infrastructure::Machine[params[:id]]
       @platforms = AutomationStack::Infrastructure::Platform.all
       @manufacturers = AutomationStack::Infrastructure::Manufacturer.all
@@ -22,17 +22,17 @@ module Machines
       erb :'machines/show'
     end
 
-    post '/machine/:id/delete' do
+    post '/machines/:id/delete' do
     	Hound.remove_machine(params[:id])
-		redirect "/machine"
+		redirect "/machines"
     end
 
 
-    post '/machine' do
+    post '/machines' do
       Hound.add_machine(params)
   	  @admin_pending_jobs = Hound.get_jobs
   	  @machine_available = Hound.get_machines
-  	  redirect "/machine"
+  	  redirect "/machines"
     end
     
   end

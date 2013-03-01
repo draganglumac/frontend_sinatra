@@ -29,6 +29,7 @@ module Machines
 
 
     post '/machines' do
+      redirect "/machines" if params[:cancel]
       Hound.add_machine(params)
   	  @admin_pending_jobs = Hound.get_jobs
   	  @machine_available = Hound.get_machines

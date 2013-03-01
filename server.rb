@@ -223,9 +223,12 @@ post '/results/:id' do
 	end
 	puts "Job name is #{job_name['name']}"
 	send_file("public/uploads/#{job_name['name']}/cuke.html")
-end 
-
-
+end
+#system dashboard
+get '/dashboard' do
+    @current_jobs=Hound.get_jobs 
+    erb :dashboard
+end
 get '/contact' do
 	erb :contact
 end

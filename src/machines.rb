@@ -4,6 +4,10 @@ module Machines
 
   module Routes
   	
+    before do
+      protected!
+    end
+
   	get '/machines' do
   		@machines  = AutomationStack::Infrastructure::Machine.all
   		erb :'machines/index'

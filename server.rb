@@ -19,6 +19,7 @@ require "pry-remote"
 
 include FileUtils::Verbose   
 include Devices::Routes
+include Machines::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'

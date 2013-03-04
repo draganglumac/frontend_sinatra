@@ -23,12 +23,9 @@ class Hound
 		id = DB[:devices].insert :model => device.model, :serial_number => device.serial_number, :type => device.type, :platform_id => device.platform_id 
 		id
 	end
-
 	def self.connect_device(device_id,machine_id)
 		DB[:connected_devices].insert :machines_id => machine_id, :devices_id => device_id 
 	end
-
-	
 	def self.get_jobs
 		return @@dbconnect.query("SELECT * from `jobs`")
 	end
@@ -74,7 +71,7 @@ class Hound
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
 	def self.add_job(job_name,machine_id,command,trigger_time)
-        DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE' 
     end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]

@@ -1,3 +1,4 @@
+
 <%= @error %>
 <form action="/job" method="post" enctype="multipart/form-data">
 
@@ -21,8 +22,32 @@
 <input type="text" name="lname">
 <br>
 <p>Trigger time</p>
-<input type="text" name="ltrigger">
-<br/>
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+   <link rel="stylesheet" type="text/css" media="screen"
+    href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+ <div id="datetimepicker" class="input-append date">
+      <input type="text"  name="ltrigger"></input>
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+      </span>
+    </div>
+    <script type="text/javascript"
+     src="jquery.min.js">
+    </script> 
+    <script type="text/javascript"
+     src="/js/bootstrap.min.js">
+    </script>
+    <script type="text/javascript"
+     src="/js/bootstrap-datetimepicker.min.js">
+    </script>
+    <script type="text/javascript">
+
+      $('#datetimepicker').datetimepicker({
+        format: 'dd/MM/yyyy hh:mm:ss'
+      });
+    </script>
+
+<br />
 <input type="submit",value="submit"class="btn btn-primary"/>
 </form>
 
@@ -44,4 +69,3 @@
 	</tr>
 <% end %>
 </table>
-

@@ -151,9 +151,9 @@ end
 #Posting new job
 post '/job' do
 	if params[:file].nil?
-		@error = "<p style='color:red;'>Need input file</p>"
-		
-		return erb :jobs
+		@error = "<p style='color:red;'>Need input file</p>"	
+		puts "NO FILE"
+		redirect '/job'
 	end
 	tempfile = params[:file][:tempfile] 
 	filename = params[:file][:filename] 
@@ -163,15 +163,17 @@ post '/job' do
 	#machine_num = params[:machine_id].split("machine_id")
 
 	#There is a difference here between ruby versions, be aware
-	machine_num = params[:machine_id]
-
+	  machine_num = params[:machine_id]
+    #'dd/MM/yyyy hh:mm:ss'
+    trigger = params[:ltrigger] 
+    trigger << ".000000"
+    trigger = Time.parse(trigger).to_i
     puts "JOB NAME #{params[:lname]}"
-	puts "MACHINE NUMBER #{machine_num}"
-	puts "OUTPUT STRING IS #{string}"
-    puts "TRIGGER TIME IS #{params[:ltrigger]}"
+	  puts "MACHINE NUMBER #{machine_num}"
+	  puts "OUTPUT STRING IS #{string}"
+    puts "TRIGGER TIME IS #{trigger}"
     
-    Hound.add_job(params[:lname],machine_num,string,params[:ltrigger])
-  #  Hound.add_job(machine_num,params[:lname],string,params[:ltrigger])
+    Hound.add_job(machine_num,params[:lname],string,trigger)
     redirect '/job'
 end
 post '/job/restart/:jobnum' do

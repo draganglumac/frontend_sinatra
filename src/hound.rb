@@ -73,13 +73,9 @@ class Hound
 	def self.purgedb
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
-	def self.add_job(machine_num,job_name,command)
-		DB[:jobs].insert :name => job_name, :machine_id => machine_num, :command => command,:status =>'INCOMPLETE'
-	end
-	def self.add_machines_long(callsign,ip,platforms,iphone4,iphone4s,iphone5,ipadmini,ipad4)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`machines` (`machine_id`, `machine_callsign`, `machine_ip`, `supported_platforms`, `iphone4`, `iphone4s`, `iphone5`, `ipadmini`, `ipad4`)  VALUES (NULL,'#{callsign}','#{ip}','#{platforms}', #{iphone4}, #{iphone4s},#{iphone5}, #{ipadmini}, #{ipad4})")
-
-	end
+	def self.add_job(job_name,machine_id,command,trigger_time)
+        DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time
+    end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]
 	end

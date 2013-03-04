@@ -159,15 +159,20 @@ post '/job' do
 	filename = params[:file][:filename] 
 	cp(tempfile.path, "public/uploads/#{filename}")
 	string = File.open(tempfile.path, 'rb') { |file| file.read }
-	puts string
+	#puts string
 	#machine_num = params[:machine_id].split("machine_id")
 
 	#There is a difference here between ruby versions, be aware
 	machine_num = params[:machine_id]
 
+    puts "JOB NAME #{params[:lname]}"
 	puts "MACHINE NUMBER #{machine_num}"
-	Hound.add_job(machine_num,params[:lname],string)
-	redirect '/job'
+	puts "OUTPUT STRING IS #{string}"
+    puts "TRIGGER TIME IS #{params[:ltrigger]}"
+    
+    Hound.add_job(params[:lname],machine_num,string,params[:ltrigger])
+  #  Hound.add_job(machine_num,params[:lname],string,params[:ltrigger])
+    redirect '/job'
 end
 post '/job/restart/:jobnum' do
 	Hound.set_job_restart(params[:jobnum])

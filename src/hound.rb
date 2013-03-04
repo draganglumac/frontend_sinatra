@@ -71,7 +71,11 @@ class Hound
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
 	def self.add_job(job_name,machine_id,command,trigger_time)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE' 
+    #DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE' 
+   
+    @@dbconnect.query("INSERT INTO `AUTOMATION`.`jobs` (`id`,`name`,`TIMESTAMP`,`command`,`status`,`machine_id`,`trigger_time`) VALUES (NULL,
+        '#{job_name}',CURRENT_TIMESTAMP,'#{command}','INCOMPLETE','#{machine_id}','#{trigger_time}')")
+   
     end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]

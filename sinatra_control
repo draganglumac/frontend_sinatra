@@ -6,10 +6,9 @@ if [ -e sinatra.lock ]; then
     echo "lock file exists"
     spid=`cat sinatra.lock`
     kill $spid
-   rm w:w 
-else
+    rm sinatra.lock 
+fi
    rackup &
    SPID=$! 
-   $SPID >> sinatra.lock 
+   echo "$SPID" >> sinatra.lock 
    echo "Stored pid"
-fi

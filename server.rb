@@ -156,13 +156,17 @@ get '/job' do
 end
 #Posting new job
 post '/job' do
-    if params[:file].nil?
+    puts params
+    if params[:file_source].nil?
         @error = "<p style='color:red;'>Need input file</p>"    
         puts "NO FILE"
         redirect '/job'
     end
-    tempfile = params[:file][:tempfile] 
-    filename = params[:file][:filename] 
+    
+    puts params[:file_source][:filename]
+    
+    tempfile = params[:file_source][:tempfile] 
+    filename = params[:file_source][:filename] 
     cp(tempfile.path, "public/uploads/#{filename}")
     string = File.open(tempfile.path, 'rb') { |file| file.read }
     #puts string

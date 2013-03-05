@@ -1,0 +1,131 @@
+  <form class="form-horizontal" action="/devices" method="post">
+    <% if @machine %>
+	   <input type="hidden" name="machine_id" value="<%=@machine.id%>">
+    <%end%>
+
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Add a new device</legend>
+      </div>
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">Tag:</label>
+          <div class="controls">
+            <input type="text" placeholder="SM052" class="input-xlarge" name="device[tag]">
+            
+          </div>
+        </div>
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">Model:</label>
+          <div class="controls">
+            <input type="text" placeholder="iphone/galaxy" class="input-xlarge" name="device[name]">
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">Serial Number:</label>
+          <div class="controls">
+            <input type="text" placeholder="apple001" class="input-xlarge" name="device[serial_number]">
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="manufcatr_id">Manufacturer</label>
+          <div class="controls"> 
+            
+            <select  id="manufacture_id" name="device[manufacturer_id]">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @manufacturers %>
+            <%for row in @manufacturers %>
+
+            <option value=<%=row.id%> >
+              <%=row.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>    
+
+  
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="device_type_id">Device Type</label>
+          <div class="controls"> 
+            
+            <select  id="device_type_id" name="device[device_type_id]">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @device_types %>
+            <%for row in @device_types %>
+
+            <option value=<%=row.id%> >
+              <%=row.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>    
+
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="platform_id">Supported Platforms</label>
+          <div class="controls"> 
+            
+            <select  id="platform_id" name="device[platform_id]">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @platforms %>
+            <%for row in @platforms %>
+
+            <option value=<%=row.id%> >
+              <%=row.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+          <label class="control-label"></label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Register Device</button>
+          </div>
+        </div>
+
+        
+
+    </fieldset>
+  </form>

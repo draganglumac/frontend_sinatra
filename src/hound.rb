@@ -1,9 +1,30 @@
 require_relative 'dbconnect'
+
+                      
+
+
+
 class Hound
 	@@dbconnect = Dbconnect.new
 
 	def self.get_machines
 		return @@dbconnect.query("SELECT * FROM machines")
+	end    
+	
+	def self.get_platforms()
+	  return @@dbconnect.query("SELECT * FROM platforms")
+	end
+
+	def self.get_platform_name_from_id platform_id
+		DB[:platforms].where(:id => platform_id).first[:name]
+	end
+
+	def self.add_device device
+		id = DB[:devices].insert :model => device.model, :serial_number => device.serial_number, :type => device.type, :platform_id => device.platform_id 
+		id
+	end
+	def self.connect_device(device_id,machine_id)
+		DB[:connected_devices].insert :machines_id => machine_id, :devices_id => device_id 
 	end
 	def self.get_jobs
 		return @@dbconnect.query("SELECT * from `jobs`")
@@ -21,10 +42,11 @@ class Hound
 		return @@dbconnect.query("SELECT * FROM results")
 	end
 	def self.getmachineids
-		return @@dbconnect.query("SELECT `machine_id` from `machines`")
+		return @@dbconnect.query("SELECT `id` from `machines`")
 	end
-	def self.remove_machine(inputraw)
-		@@dbconnect.query("DELETE FROM `AUTOMATION`.`machines` WHERE `machine_id`=#{inputraw}")
+	def self.remove_machine(id)                                   
+	  obj = DB[:machines].where(:id => id)
+		obj.delete
 	end
 	def self.remove_job(job_id)
 		@@dbconnect.query("DELETE FROM `AUTOMATION`.`jobs` WHERE `id`=#{job_id}")
@@ -48,21 +70,19 @@ class Hound
 	def self.purgedb
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
-	def self.add_job(machine_num,job_name,command)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`jobs` (`id`,`name`,`TIMESTAMP`,`machines_machine_id`,`command`) VALUES (NULL,
-    '#{job_name}',CURRENT_TIMESTAMP,'#{machine_num}','#{command}')")
-	end
-	def self.add_machines_long(callsign,ip,platforms,iphone4,iphone4s,iphone5,ipadmini,ipad4)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`machines` (`machine_id`, `machine_callsign`, `machine_ip`, `supported_platforms`, `iphone4`, `iphone4s`, `iphone5`, `ipadmini`, `ipad4`)  VALUES (NULL,'#{callsign}','#{ip}','#{platforms}', #{iphone4}, #{iphone4s},#{iphone5}, #{ipadmini}, #{ipad4})")
-
-	end
-	def self.add_machine(inputraw)
-		
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`machines` (`machine_id`, `machine_callsign`, `machine_ip`, `supported_platforms`, `iphone4`, `iphone4s`, `iphone5`, `ipadmini`, `ipad4`)  VALUES (NULL,'#{inputraw['callsign_form']}','#{inputraw['machine_ip_form']}','#{inputraw['supported_platforms_form']}', #{inputraw['iphone4_select']}, #{inputraw['iphone4s_select']},#{inputraw['iphone5_select']}, #{inputraw['ipadmini_select']}, #{inputraw['ipad4_select']})")
+	def self.add_job(machine_id,job_name,command,trigger_time)
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE' 
+   
+#    @@dbconnect.query("INSERT INTO `AUTOMATION`.`jobs` (`id`,`name`,`TIMESTAMP`,`command`,`status`,`machine_id`,`trigger_time`) VALUES (NULL,
+ #       '#{job_name}',CURRENT_TIMESTAMP,'#{command}','INCOMPLETE','#{machine_id}','#{trigger_time}')")
+   
+    end
+	def self.add_machine(machine)
+	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]
 	end
 	#analytics
 	def self.add_visitor(ip)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
+		#@@dbconnect.query("INSERT INTO `AUTOMATION`.`analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
 	end
 	def self.get_visitors
 		return @@dbconnect.query("select * from `AUTOMATION`.`analytics`")

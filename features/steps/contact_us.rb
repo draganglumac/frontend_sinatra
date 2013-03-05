@@ -26,8 +26,8 @@ class Spinach::Features::ContactUs < Spinach::FeatureSteps
     
     log=File.read(Beacon::LOG_FILE)
     
-      Beacon.new().emails.each do |email|
-        raise "could not find #{email}" unless log.include? email
+    Beacon.new().emails.each do |email|
+      raise "could not find #{email}" unless log.include? email
     end
     
   end

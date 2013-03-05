@@ -1,3 +1,4 @@
+
 $: << "src"
 
 require 'bundler/setup'
@@ -10,9 +11,18 @@ require 'find'
 require "logger"
 require "pony"
 require 'configatron' 
-require 'beacon'
+require 'beacon'  
+require 'devices'
+require 'machines'
+require 'connected_devices'
 
-include FileUtils::Verbose
+
+require "pry-remote"
+
+include FileUtils::Verbose   
+include Devices::Routes
+include Machines::Routes
+include ConnectedDevices::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'
@@ -22,22 +32,33 @@ set :views ,'views'
 
 enable :sessions  
 
-configure :test do
 
-    Pony.options = {
-        :via => :smtp,
-        :via_options => {
-        :address => '127.0.0.1',
-        :port => '1025'
+
+configure :test,:development do
+
+
+  
+  
+
+  Pony.options = {
+    :via => :smtp,
+    :via_options => {
+      :address => '127.0.0.1',
+      :port => '1025'
     }
-    }
+  }
 end
-
+                           
 @@connections = []
 #instantiate our database connection
 #Entry page
 
 helpers do
+
+    def partial(page, options={})
+     erb page, options.merge!(:layout => false)
+    end
+
     def protected!
         unless authorized?
             response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -45,6 +66,11 @@ helpers do
     <input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
     </form><h2>Not authorized</h2>\n"])
         end
+        session["is_admin"] = true;
+    end
+
+    def can_edit?
+        session["is_admin"] == true;
     end
     def authorized?
         @auth ||=  Rack::Auth::Basic::Request.new(request.env)
@@ -56,13 +82,24 @@ helpers do
             dir_array << File.basename(f, ".*")
         end
         return dir_array
-    end  
+    end 
+    
+    def suported_platorm(machine)
+      case machine.supported_platforms
+      when "ios"
+        return "/images/ios.png"
+      when "android"
+        return "/images/android.png"
+      end
+      
+      raise "oooops! #{machine.supported_platforms} is not supported !"
+    end
 end
 #admin panel
 get '/admin' do
     protected!
     @admin_pending_jobs = Hound.get_jobs
-    @machine_available = Hound.get_machines
+    @machines  = AutomationStack::Infrastructure::Machine.all
     erb :admin
 end
 
@@ -72,11 +109,6 @@ get '/admin/getapp/:file' do |file|
     send_file(file, :disposition => 'attachment', :filename => File.basename(file))
 end
 
-delete '/admin/delete/:id' do
-    Hound.remove_machine(params[:id])
-    @machine_available = Hound.get_machines
-    redirect '/admin'
-end
 
 delete '/admin/delete/jobs/:id' do
     id = params[:id]
@@ -86,44 +118,10 @@ delete '/admin/delete/jobs/:id' do
     redirect '/admin'
 end
 post '/admin' do
-
-    #I would like to make a note that I am not happy with this current method of capturing and sending to SQL. It is very difficult to expand upon and will be extremely brittle"
-    puts params[:post]
-
-    @iphone4 = 0
-    @iphone4s = 0
-    @iphone5 = 0
-    @ipadmini = 0
-    @ipad4 = 0
-
-    if(params[:post][:iphone4_check])
-        @iphone4 = 1
-    end
-    if(params[:post][:iphone4s_check])
-        @iphone4s = 1
-    end
-    if(params[:post][:iphone5_check])
-        @iphone5 = 1
-    end
-    if(params[:post][:ipadmini_check])
-        @ipadmini = 1
-    end
-    if(params[:post][:ipad4_check])
-        @ipad4 = 1
-    end
-
-    puts "OUTPUT -> #{params[:post][:callsign_form]}"
-    puts "OUTPUT -> #{params[:post][:machine_ip_form]}"
-    puts "OUTPUT -> #{params[:post][:supported_platforms]}"
-
-    Hound.add_machines_long(params[:post][:callsign_form],params[:post][:machine_ip_form],params[:post][:supported_platforms],@iphone4,@iphone4s,@iphone5,@ipadmini,@ipad4)
-
-
-
-    #Hound.add_machine(params[:post])
-    @admin_pending_jobs = Hound.get_jobs
-    @machine_available = Hound.get_machines
-    erb :admin
+  Hound.add_machine(params)
+  @admin_pending_jobs = Hound.get_jobs
+  @machine_available = Hound.get_machines
+  erb :admin
 end
 #admin delete sqldb_butto
 post '/admin/sql/delete' do
@@ -151,41 +149,47 @@ get '/resources' do
     erb :installer
 end
 #new job page
-get '/newjob' do
-    erb :newjob
+get '/job' do
+    @machines  = AutomationStack::Infrastructure::Machine.all
+    @jobs_done = Hound.get_jobs
+    erb :jobs
 end
 #Posting new job
-post '/newjob' do
+post '/job' do
     if params[:file].nil?
-        @machine_available = Hound.getmachineids
-        return erb :jobs
+        @error = "<p style='color:red;'>Need input file</p>"    
+        puts "NO FILE"
+        redirect '/job'
     end
     tempfile = params[:file][:tempfile] 
     filename = params[:file][:filename] 
     cp(tempfile.path, "public/uploads/#{filename}")
     string = File.open(tempfile.path, 'rb') { |file| file.read }
-    puts string
+    #puts string
     #machine_num = params[:machine_id].split("machine_id")
 
     #There is a difference here between ruby versions, be aware
-    machine_num = params[:machine_id]
-
+      machine_num = params[:machine_id]
+    #'dd/MM/yyyy hh:mm:ss'
+    trigger = params[:ltrigger] 
+    trigger << ".000000"
+    trigger = Time.parse(trigger).to_i
+    puts "JOB NAME #{params[:lname]}"
     puts "MACHINE NUMBER #{machine_num}"
-    Hound.add_job(machine_num,params[:lname],string)
+    puts "OUTPUT STRING IS #{string}"
+    puts "TRIGGER TIME IS #{trigger}"
+    
+    Hound.add_job(machine_num,params[:lname],string,trigger)
     redirect '/job'
-end
-get '/job' do
-    @machine_available = Hound.getmachineids
-    @jobs_done = Hound.get_jobs
-    erb :jobs
 end
 post '/job/restart/:jobnum' do
     Hound.set_job_restart(params[:jobnum])
     redirect '/'
 end
 #view machine page
-get '/machines' do
-    @machine_available = Hound.get_machines
+get '/machines' do                              
+  devices = Devices::Repository.new
+  @machines = Machines::Repository.new(devices)
     erb :machines
 end
 #results page
@@ -235,21 +239,26 @@ post '/results/:id' do
     end
     puts "Job name is #{job_name['name']}"
     send_file("public/uploads/#{job_name['name']}/cuke.html")
-end 
+end
+#system dashboard
+get '/dashboard' do
+    @current_jobs=Hound.get_jobs 
+    erb :dashboard
+end
 get '/contact' do
     erb :contact
 end
 
 post '/contact' do    
-
-    if params[:send]
-        beacon = Beacon.new
-        beacon.deliver(params[:subject],params[:priority],params[:description]) 
-        flash[:info] = "thank you! your request has been sent"
-    else
-        flash[:info] = "canceled !!"
-    end
-
-    redirect '/contact'
-
+  
+  if params[:send]
+    beacon = Beacon.new
+    beacon.deliver(params[:subject],params[:priority],params[:description]) 
+    flash[:info] = "thank you! your request has been sent"
+  else
+    flash[:info] = "canceled !!"
+  end
+  
+  redirect '/contact'
+  
 end

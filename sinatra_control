@@ -1,11 +1,14 @@
 #!/bin/bash
-ps -ef | grep -v grep | grep ruby
 
-if [ $? -eq 1 ]
-then 
-rackup &
-else
-echo "Sinatra is already running"
-echo "Killing Sinatra now..."
-sudo killall -9 ruby
+#ps -ef | grep -v grep | grep ruby
+
+if [ -e sinatra.lock ]; then
+    echo "lock file exists"
+    spid=`cat sinatra.lock`
+    kill $spid
+    rm sinatra.lock 
 fi
+   rackup &
+   SPID=$! 
+   echo "$SPID" >> sinatra.lock 
+   echo "Stored pid"

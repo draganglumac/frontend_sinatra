@@ -1,0 +1,13 @@
+<% if !@devices.all.empty? %>
+  <ul>
+  <% for device in @devices.all %>
+      <li>
+        <%=device.name%><br/>
+        <img src=<%="/images/devices/#{device.image}"%> alt="">
+      </li>
+  <% end %>
+  </ul>
+<% else %>
+  
+<% end %>
+  

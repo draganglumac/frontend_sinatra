@@ -1,0 +1,83 @@
+<h1><%=@machine.call_sign%>
+
+<h3>Ip Address: <%=@machine.ip_address%>
+<h3>Surported Platform: <%=@machine.platform.name%></h3>
+
+
+<hr>
+
+
+
+
+<form action="/connected_devices" method="post">
+	<input type="hidden" name="connected_device[machine_id]" value="<%=@machine.id%>">
+	<div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="platform_id">Available Devices</label>
+          <div class="controls"> 
+            
+            <select name="connected_device[device_id]" id="device_id">
+              <option value="-1">
+                Please choose
+              </option>
+                         
+              
+            <% if @devices %>
+            <%for device in @devices %>
+
+            <option value=<%=device.id%>>
+            <%=device.name%>
+            </option>
+            <% end %>
+                            
+            <%end%>
+            </select>
+            
+          </div>
+        </div>
+	<div class="control-group">
+          <label class="control-label"></label>
+
+          <!-- Button -->
+          <div class="controls">
+            <button class="btn btn-success">Register Device</button>
+          </div>
+        </div>
+
+        
+</form>
+
+
+<h4>Connected Devices</h4>
+
+<% if !@machine.connected_devices.empty? %>
+<table class="table">
+	<thead>
+		<tr>
+			<th>model</th>
+			<th>manufacturer</th>
+			<th>serial number</th>
+			<th>type</th>
+		</tr>
+	</thead>
+	<tbody>
+		 <% for row in @machine.connected_devices %>
+		<tr>
+			
+			 
+			  	
+			    <td><%=row.device.name%></td>
+			    <td><%=row.device.manufacturer.name%></td>
+			    <td><%=row.device.serial_number%></td>
+			    <td><%=row.device.device_type.name%></td>
+			 
+			  
+			
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+<% else %>
+
+<% end %>

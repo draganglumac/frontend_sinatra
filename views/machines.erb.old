@@ -1,0 +1,25 @@
+<h2> Machines in database</h2>
+
+<br/>                                       
+
+<% if !@machines.all.empty? %>
+  <% for machine in @machines.all %>
+  
+    <fieldset>
+      <legend><h2><%=machine.call_sign%> @ <%=machine.ip%></h2></legend> 
+      
+      <img src="<%=suported_platorm(machine)%>" alt=""> 
+      
+      <% if !machine.devices.blank? %>
+        <% for device in machine.devices %>
+          <span><img src=<%="/images/devices/#{device.image}"%> alt=""></span>
+        <% end %>
+      <% else %>
+      <% end %>
+    </fieldset>
+    <br/>
+  <% end %>
+<% else %>
+  
+<% end %>
+

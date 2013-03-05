@@ -1,5 +1,10 @@
 
 <%= @error %>
+<form action="/job" method="post" enctype="multipart/form-data">
+
+<p>Configuration file</p>
+<input type="file" class=""name="file" placeholder="Your configuration"/>
+
 <p>Selected machine</p>
 
 <select name="machine_id">

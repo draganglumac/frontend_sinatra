@@ -15,7 +15,7 @@
 	  
 	  <td>
 	    <form method="post" action="/machines/<%=row.id%>/delete"> 
-        	<button type="submit"class="btn" id="">Delete</button>
+        	<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
     	</form> 
 	  </td>
 	</tr>

@@ -65,6 +65,11 @@ helpers do
 	<input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
 	</form><h2>Not authorized</h2>\n"])
 		end
+		session["is_admin"] = true;
+	end
+
+	def can_edit?
+		session["is_admin"] == true;
 	end
 	def authorized?
 		@auth ||=  Rack::Auth::Basic::Request.new(request.env)
@@ -169,8 +174,8 @@ post '/job' do
     trigger << ".000000"
     trigger = Time.parse(trigger).to_i
     puts "JOB NAME #{params[:lname]}"
-	  puts "MACHINE NUMBER #{machine_num}"
-	  puts "OUTPUT STRING IS #{string}"
+	puts "MACHINE NUMBER #{machine_num}"
+	puts "OUTPUT STRING IS #{string}"
     puts "TRIGGER TIME IS #{trigger}"
     
     Hound.add_job(machine_num,params[:lname],string,trigger)

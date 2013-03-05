@@ -4,8 +4,8 @@ module Machines
 
   module Routes
   	
-    before do
-      protected!
+    before '/machines' do
+     
     end
 
   	get '/machines' do
@@ -28,7 +28,7 @@ module Machines
 
     post '/machines/:id/delete' do
     	Hound.remove_machine(params[:id])
-		redirect "/machines"
+		  redirect "/machines"
     end
 
 

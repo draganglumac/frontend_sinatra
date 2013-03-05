@@ -2,8 +2,8 @@ module Devices
 
   module Routes
     
-    before do
-      protected!
+    before '/devices' do
+      
     end
 
     get '/devices' do

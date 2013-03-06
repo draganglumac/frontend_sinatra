@@ -172,6 +172,15 @@ post '/job' do
     #puts string
     #machine_num = params[:machine_id].split("machine_id")
 
+    recursion=0
+
+    if params[:is_private] == "0"
+        puts "NO RECURSION SET, SINGLE RUN MODE"
+        recursion=0
+    else
+        puts "RECURSION HAS BEEN SET, RECURSIVE MODE"
+        recursion=1
+    end
     #There is a difference here between ruby versions, be aware
       machine_num = params[:machine_id]
     #'dd/MM/yyyy hh:mm:ss'
@@ -183,7 +192,7 @@ post '/job' do
     puts "OUTPUT STRING IS #{string}"
     puts "TRIGGER TIME IS #{trigger}"
     
-    Hound.add_job(machine_num,params[:lname],string,trigger)
+    Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
     redirect '/job'
 end
 post '/job/restart/:jobnum' do

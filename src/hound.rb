@@ -1,9 +1,5 @@
 require_relative 'dbconnect'
 
-                      
-
-
-
 class Hound
 	@@dbconnect = Dbconnect.new
 
@@ -30,13 +26,13 @@ class Hound
 		return @@dbconnect.query("SELECT * from `jobs`")
 	end
 	def self.get_complete_jobs
-		return @@dbconnect.query("select * from `AUTOMATION`.`jobs` where `status` = 'COMPLETE' limit 10")
+		return @@dbconnect.query("select * from `jobs` where `status` = 'COMPLETE' limit 10")
 	end
 	def self.get_incomplete_jobs
-		return @@dbconnect.query("select * from `AUTOMATION`.`jobs` where `status` = 'INPROGRESS'")
+		return @@dbconnect.query("select * from `jobs` where `status` = 'INPROGRESS'")
 	end
 	def self.get_unstarted_jobs
-		return @@dbconnect.query("select * from `AUTOMATION`.`jobs` where `status` = 'INCOMPLETE'")
+		return @@dbconnect.query("select * from `jobs` where `status` = 'INCOMPLETE'")
 	end
 	def self.get_results
 		return @@dbconnect.query("SELECT * FROM results")
@@ -49,42 +45,38 @@ class Hound
 		obj.delete
 	end
 	def self.remove_job(job_id)
-		@@dbconnect.query("DELETE FROM `AUTOMATION`.`jobs` WHERE `id`=#{job_id}")
+		@@dbconnect.query("DELETE FROM `jobs` WHERE `id`=#{job_id}")
 	end
 	def self.set_job_progress(job_id)
 		puts "SETTING JOB PROGRESS BACK TO INPROG"
-		@@dbconnect.query("UPDATE `AUTOMATION`.`jobs` SET status='INPROGRESS' WHERE id=#{job_id}")
+		@@dbconnect.query("UPDATE `jobs` SET status='INPROGRESS' WHERE id=#{job_id}")
 	end
 	def self.set_job_restart(job_id)
-		@@dbconnect.query("UPDATE `AUTOMATION`.`jobs` SET status='INCOMPLETE' WHERE id=#{job_id}")
+		@@dbconnect.query("UPDATE `jobs` SET status='INCOMPLETE' WHERE id=#{job_id}")
 	end
 	def self.directquery(query)
 		return @@dbconnect.query(query)
 	end
 	def self.set_result(job_id,result,time)
-		@@dbconnect.query("INSERT INTO `AUTOMATION`.`results` (`id`,`DATETIME`,`testresult`,`jobs_id`,`jobs_machines_machine_id`)VALUES(NULL,CURRENT_TIMESTAMP,'#{result}',#{job_id});")
+		@@dbconnect.query("INSERT INTO `results` (`id`,`DATETIME`,`testresult`,`jobs_id`,`jobs_machines_machine_id`)VALUES(NULL,CURRENT_TIMESTAMP,'#{result}',#{job_id});")
 	end
 	def self.truncate_results
-		@@dbconnect.query("TRUNCATE TABLE `AUTOMATION`.`results`")
+		@@dbconnect.query("TRUNCATE TABLE `results`")
 	end
 	def self.purgedb
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
 	def self.add_job(machine_id,job_name,command,trigger_time)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE' 
-   
-#    @@dbconnect.query("INSERT INTO `AUTOMATION`.`jobs` (`id`,`name`,`TIMESTAMP`,`command`,`status`,`machine_id`,`trigger_time`) VALUES (NULL,
- #       '#{job_name}',CURRENT_TIMESTAMP,'#{command}','INCOMPLETE','#{machine_id}','#{trigger_time}')")
-   
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE'
     end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]
 	end
 	#analytics
 	def self.add_visitor(ip)
-		#@@dbconnect.query("INSERT INTO `AUTOMATION`.`analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
+		#@@dbconnect.query("INSERT INTO `analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
 	end
 	def self.get_visitors
-		return @@dbconnect.query("select * from `AUTOMATION`.`analytics`")
+		return @@dbconnect.query("select * from `analytics`")
 	end
 end

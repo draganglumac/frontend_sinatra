@@ -4,5 +4,10 @@ module ConnectedDevices
 			AutomationStack::Infrastructure::ConnectedDevice.create params[:connected_device]
 			redirect back
 		end
+
+		get '/connected_devices/:id/delete' do
+			AutomationStack::Infrastructure::ConnectedDevice[params[:id]].delete
+			redirect back
+		end
 	end
 end

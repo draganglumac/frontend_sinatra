@@ -48,12 +48,21 @@
             <ul class="nav">
               <li><a href="/">Home</a></li>
               <li><a href="/contact">Contact</a></li>
-              
-              <li><a href="/admin">Admin</a></li>
+              <li><% if current_user %>
+                  <p><%=current_user.username%> <a href="/session/destroy">logout</a><p>
+                <%else%>
+                  <form action="/session" method="post" accept-charset="utf-8">
+                    <p>Username: <input name="username" value=""> Password: <input type="password" name="password" value=""> <input type="submit" value="login ">   
+                    
+                  </form>
+                  
+                <%end%>
+</li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
 
+        
       </div>
     </div>
 

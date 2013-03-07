@@ -9,15 +9,14 @@ gem "sequel"
 gem "thin", ">= 1.5.0"     
 gem "pony" 
 gem "sinatra-flash"  
-gem "configatron"  
-
-
+gem "configatron"
 
 group :test do
   gem 'capybara'
   gem 'spinach'
   gem 'wrong'
   gem 'riot'
+  gem 'riot-rack'
   gem 'melee'
   gem 'rr'
 end    

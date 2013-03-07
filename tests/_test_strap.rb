@@ -1,9 +1,16 @@
 ENV['RACK_ENV'] == :test
 
+require "rubygems"
 require "riot"  
+require "riot-rack"
+
+
 require "logger"
 require "pony"
+require "pry"
 require "configatron"
+require "sinatra"
+
 
 Pony.options = {
   :via => :smtp,
@@ -14,3 +21,4 @@ Pony.options = {
 }
 
 require_relative "../src/beacon"
+require_relative "../src/sessions"

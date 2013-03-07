@@ -35,7 +35,7 @@ set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
 
-enable :sessions  
+ enable :sessions  
 
 configure :test,:development do
   Pony.options = {
@@ -69,8 +69,6 @@ helpers do
     <input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
     </form><h2>Not authorized</h2>\n"])
         end
-        
-        session["is_admin"] = authorized?;
         
         redirect "/"
     end

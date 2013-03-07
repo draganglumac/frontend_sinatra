@@ -12,10 +12,7 @@ module Sessions
 		CONF= "conf/admin.conf"
 		def self.get_by_username_and_password username,password
 			users = File.read(CONF).split("\n").map { |line| line.split(":")  }.map { |data| User.new(data[0],data[1])}
-
-			if users.find { |user| user.username == username and user.password == password}
-				users.first
-			end
+			return users.find { |user| user.username == username and user.password == password}
 		end
 	end
 

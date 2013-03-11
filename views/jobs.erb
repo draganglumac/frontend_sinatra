@@ -87,7 +87,7 @@
 <div class="alert alert-error">Warning: Job name will need to be consistant through out as it is used to form a directory for your job!</div>
 <table id="job_table" class="table">
 	<tr>
-        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td>
+        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td><td>Toggle recursion</td>
 	</tr>
 	
 <%for row in @jobs_done %>
@@ -98,6 +98,20 @@
     <button type="submit"class="btn">Go</button>
 	</form>
 	</td>
+  <td>
+      <%if row["recursion"].eql?(1)%>
+      <form method="post" action="/job/recursion/disable/<%=row["id"]%>"> 
+       <input type="hidden" name="_method" value="submit">
+        <button type="submit"class="btn">Disable</button>
+      </form>
+  <%end%>
+    <%if row["recursion"].eql?(0)%>
+        <form method="post" action="/job/recursion/enable/<%=row["id"]%>"> 
+        <input type="hidden" name="_method" value="submit">
+        <button type="submit"class="btn">Enable</button>
+      </form>
+    <%end%>
+  </td>
 	</tr>
 <% end %>
 </table>

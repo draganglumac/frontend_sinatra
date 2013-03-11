@@ -195,6 +195,14 @@ post '/job' do
     Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
     redirect '/job'
 end
+post '/job/recursion/disable/:id' do
+    Hound.disable_recursion(params[:id])
+    redirect back
+end
+post '/job/recursion/enable/:id' do
+    Hound.enable_recursion(params[:id])
+    redirect back
+end
 post '/job/restart/:jobnum' do
     Hound.set_job_restart(params[:jobnum])
     redirect '/'

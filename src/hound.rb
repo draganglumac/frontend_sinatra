@@ -79,4 +79,10 @@ class Hound
 	def self.get_visitors
 		return @@dbconnect.query("select * from `analytics`")
 	end
+	def self.enable_recursion(id)
+		@@dbconnect.query("update jobs set recursion=1 where id=#{id}")
+	end
+	def self.disable_recursion(id)
+		@@dbconnect.query("update jobs set recursion=0 where id=#{id}")
+	end
 end

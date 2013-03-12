@@ -16,6 +16,11 @@ context "Automation Stack" do
 	      	
 	      end
 	    end
+
+	    context "show" do
+	      setup { get "/machines/1"}
+	      asserts("has goose") { topic.body.include? "goose" }
+	    end
 	     
 	  end
 	end

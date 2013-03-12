@@ -13,6 +13,7 @@ gem "configatron"
 
 
 group :test do
+  gem 'simplecov', :require => false
   gem 'capybara'
   gem 'spinach'
   gem 'wrong'

@@ -121,6 +121,7 @@ get '/resources' do
     erb :installer
 end
 
+
 #results page
 get '/results' do
     @time = Time.new.inspect

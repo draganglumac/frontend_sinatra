@@ -66,8 +66,8 @@ class Hound
 	def self.purgedb
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
-	def self.add_job(machine_id,job_name,command,trigger_time)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE'
+	def self.add_job(machine_id,job_name,command,trigger_time,recursionflag)
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE', :recursion => recursionflag
     end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]
@@ -78,5 +78,11 @@ class Hound
 	end
 	def self.get_visitors
 		return @@dbconnect.query("select * from `analytics`")
+	end
+	def self.enable_recursion(id)
+		@@dbconnect.query("update jobs set recursion=1 where id=#{id}")
+	end
+	def self.disable_recursion(id)
+		@@dbconnect.query("update jobs set recursion=0 where id=#{id}")
 	end
 end

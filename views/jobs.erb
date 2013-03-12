@@ -1,7 +1,7 @@
 
 <%= @error %>
 <form action="/job" method="post" enctype="multipart/form-data">
-
+<div class="well">
 <p>Configuration file</p>
 <div style="position:relative;">
         <a class='btn' href='javascript:;'>
@@ -49,29 +49,69 @@
     <script type="text/javascript">
 
       $('#datetimepicker').datetimepicker({
-        format: 'dd/MM/yyyy hh:mm:ss'
+        format: 'dd/MM/yyyy hh:mm:ss',
+        pickDate: false
       });
+      jQuery(function($) {
+  $('div.btn-group[data-toggle-name=*]').each(function(){
+    var group   = $(this);
+    var form    = group.parents('form').eq(0);
+    var name    = group.attr('data-toggle-name');
+    var hidden  = $('input[name="' + name + '"]', form);
+    $('button', group).each(function(){
+      var button = $(this);
+      button.live('click', function(){
+          hidden.val($(this).val());
+      });
+      if(button.val() == hidden.val()) {
+        button.addClass('active');
+      }
+    });
+  });
+});
     </script>
+<br />
+
+<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
+  <button type="button" value="0" class="btn" data-toggle="button">Single</button>
+  <button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
+</div>
+<br />
+<input type="hidden" name="is_private" value="0" />
 
 <br />
 <input type="submit",value="submit"class="btn btn-primary"/>
 </form>
-
+</div>
 <h2>Current jobs</h2>
 <div class="alert alert-error">Warning: Job name will need to be consistant through out as it is used to form a directory for your job!</div>
 <table id="job_table" class="table">
 	<tr>
-        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Machine id</td><td>command</td><td>Run Job</td>
+        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td><td>Toggle recursion</td>
 	</tr>
 	
 <%for row in @jobs_done %>
 	<tr>
-        <td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=Time.at(row["trigger_time"])%></td><td><%=row["id"]%></td><td><%=row["command"]%></td><td>
+        <td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=Time.at(row["trigger_time"])%></td><td><%=row["recursion"]%></td><td><%=row["status"]%></td><td><%=row["machine_id"]%></td><td><%=row["command"]%></td><td>
 	<form method="post" action="/job/restart/<%=row["id"]%>"> 
     <input type="hidden" name="_method" value="submit">
     <button type="submit"class="btn">Go</button>
 	</form>
 	</td>
+  <td>
+      <%if row["recursion"].eql?(1)%>
+      <form method="post" action="/job/recursion/disable/<%=row["id"]%>"> 
+       <input type="hidden" name="_method" value="submit">
+        <button type="submit"class="btn">Disable</button>
+      </form>
+  <%end%>
+    <%if row["recursion"].eql?(0)%>
+        <form method="post" action="/job/recursion/enable/<%=row["id"]%>"> 
+        <input type="hidden" name="_method" value="submit">
+        <button type="submit"class="btn">Enable</button>
+      </form>
+    <%end%>
+  </td>
 	</tr>
 <% end %>
 </table>

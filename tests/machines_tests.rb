@@ -20,6 +20,7 @@ context "Automation Stack" do
 	    context "show" do
 	      setup { get "/machines/1"}
 	      asserts("has goose") { topic.body.include? "goose" }
+	      asserts("has correct ip address") {topic.body.include? "172.20.160.147" }
 	    end
 	     
 	  end

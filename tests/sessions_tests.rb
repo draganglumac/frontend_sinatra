@@ -19,9 +19,12 @@ context "AutomationStack" do
   		  setup { post '/session',params={:username => "invalid", :password => "sky"}}
   		  asserts("invalid password") { topic.status == 302 and topic.location.include? "login=failed" }
   		end
-  		
-
   	end
+
+  	context "logout" do
+  	  setup { get "/session/destroy" }
+  	  asserts("ok") { topic.redirect? }
+  	end	
   	
   end
   

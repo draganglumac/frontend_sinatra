@@ -61,17 +61,7 @@ helpers do
         session[:current_user]
     end
 
-    def protected!
-        unless authorized?
-            response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-
-            throw(:halt, [401, "<link rel='stylesheet' href='css/bootstrap.css' type='text/css' /> <form method=get' action='/home'>
-    <input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
-    </form><h2>Not authorized</h2>\n"])
-        end
-        
-        redirect "/"
-    end
+    
 
     def can_edit?
         current_user
@@ -81,10 +71,6 @@ helpers do
         can_edit?
     end
     
-    def authorized?
-        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['dummy', 'dummy']
-    end
     def get_files(path)
         dir_array = Array.new
         Find.find(path) do |f|

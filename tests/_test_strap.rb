@@ -1,3 +1,5 @@
+$: << "src"
+
 require 'simplecov'
 SimpleCov.start
 
@@ -15,7 +17,9 @@ require "configatron"
 require "sinatra"
 require "sequel"
 
-require_relative "../src/mysql"
+require "mysql"
+require_relative "./seed"
+
 
 
 Pony.options = {

@@ -1,6 +1,9 @@
 require_relative "_test_strap"
 
 context "AutomationStack" do
+  hookup{
+    'cd ../../backend && rake reset'
+  }
   context "session" do
   	context "valid username and password" do
   	  setup  { post '/session',params={:username => "delaney.burke", :password => "sky"}}

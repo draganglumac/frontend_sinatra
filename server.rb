@@ -70,7 +70,7 @@ helpers do
     def is_admin?
         can_edit?
     end
-    
+        
     def get_files(path)
         dir_array = Array.new
         Find.find(path) do |f|

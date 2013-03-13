@@ -22,11 +22,19 @@ context "Automation Stack" do
 	      asserts("ok") { topic.ok? }
 	    end
 
+	    context "delete" do
+        hookup {}
+	      setup { get "/machines/delete"}
+	      asserts("ok") {
+	      	topic.ok? 
+	      }
+	    end
+
 
 	    context "show" do
 	      setup { get "/machines/1"}
-	      asserts("has goose") { topic.body.include? "goose" }
-	      asserts("has correct ip address") {topic.body.include? "172.20.160.147" }
+	      asserts("has correct name - Ok") { topic.body.include? "goose" }
+	      asserts("has correct ip address - Ok") {topic.body.include? "172.20.160.147" }
 	    end
 	     
 	  end

@@ -116,6 +116,7 @@ DEPENDENCIES
   configatron
   melee
   mysql2 (>= 0.3.11)
+  nokogiri
   pony
   powder
   pry

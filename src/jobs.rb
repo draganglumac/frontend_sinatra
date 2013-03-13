@@ -29,7 +29,7 @@ module Jobs
 
         post '/job' do
             puts params
-            
+                
             if params[:file_source].nil?
                 @error = "<p style='color:red;'>Need input file</p>"    
                 puts "NO FILE"

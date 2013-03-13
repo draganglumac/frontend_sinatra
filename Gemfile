@@ -12,11 +12,13 @@ gem "sinatra-flash"
 gem "configatron"
 
 
+
 group :test do
   gem 'simplecov', :require => false
   gem 'capybara'
   gem 'spinach'
   gem 'wrong'
+  gem 'nokogiri'
   gem 'riot'
   gem 'riot-rack'
   gem 'melee'

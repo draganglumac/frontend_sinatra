@@ -13,6 +13,9 @@ require "pony"
 require "pry"
 require "configatron"
 require "sinatra"
+require "sequel"
+
+require_relative "../src/mysql"
 
 
 Pony.options = {

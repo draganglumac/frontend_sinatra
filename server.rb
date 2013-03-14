@@ -161,6 +161,7 @@ get '/dashboard' do
     @current_jobs=Hound.get_jobs 
     erb :dashboard
 end
+
 get '/contact' do
     erb :contact
 end

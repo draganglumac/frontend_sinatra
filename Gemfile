@@ -23,6 +23,7 @@ group :test do
   gem 'riot-rack'
   gem 'melee'
   gem 'rr'
+  gem 'database_cleaner'
 end    
 
 group :development do

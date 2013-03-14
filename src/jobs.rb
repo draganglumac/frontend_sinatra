@@ -28,7 +28,7 @@ module Jobs
         end
 
         post '/job' do
-            puts params
+            puts params if development?
                 
             if params[:file_source].nil?
                 @error = "<p style='color:red;'>Need input file</p>"    
@@ -36,7 +36,7 @@ module Jobs
                 redirect '/job'
             end
             
-            puts params[:file_source][:filename]
+            puts params[:file_source][:filename] if development?
             
             tempfile = params[:file_source][:tempfile] 
             filename = params[:file_source][:filename] 
@@ -48,10 +48,10 @@ module Jobs
             recursion=0
 
             if params[:is_private] == "0"
-                puts "NO RECURSION SET, SINGLE RUN MODE"
+                puts "NO RECURSION SET, SINGLE RUN MODE" if development?
                 recursion=0
             else
-                puts "RECURSION HAS BEEN SET, RECURSIVE MODE"
+                puts "RECURSION HAS BEEN SET, RECURSIVE MODE" if development?
                 recursion=1
             end
             #There is a difference here between ruby versions, be aware
@@ -60,10 +60,14 @@ module Jobs
             trigger = params[:ltrigger] 
             trigger << ".000000"
             trigger = Time.parse(trigger).to_i
-            puts "JOB NAME #{params[:lname]}"
-            puts "MACHINE NUMBER #{machine_num}"
-            puts "OUTPUT STRING IS #{string}"
-            puts "TRIGGER TIME IS #{trigger}"
+            
+            if development?
+                puts "JOB NAME #{params[:lname]}"
+                puts "MACHINE NUMBER #{machine_num}"
+                puts "OUTPUT STRING IS #{string}"
+                puts "TRIGGER TIME IS #{trigger}"    
+            end
+            
             
             Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
             redirect '/job'

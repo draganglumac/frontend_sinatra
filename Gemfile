@@ -9,17 +9,21 @@ gem "sequel"
 gem "thin", ">= 1.5.0"     
 gem "pony" 
 gem "sinatra-flash"  
-gem "configatron"  
+gem "configatron"
 
 
 
 group :test do
+  gem 'simplecov', :require => false
   gem 'capybara'
   gem 'spinach'
   gem 'wrong'
+  gem 'nokogiri'
   gem 'riot'
+  gem 'riot-rack'
   gem 'melee'
   gem 'rr'
+  gem 'database_cleaner'
 end    
 
 group :development do

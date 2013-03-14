@@ -4,6 +4,9 @@
 
 !function ($) {
 
+  $('string/element/array/function/jQuery object/string, context')
+
+
   $(function(){
 
     // Disable certain links in docs

@@ -33,6 +33,57 @@
   <body>
    
 
+  <div id="sign_in" class="modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      
+    </div>
+    <div class="modal-body">
+     <div id="sign_in_form">
+        <form class="form-horizontal" action="/session" method="POST">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">Login</legend>
+      </div>
+    
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="username">Username:</label>
+          <div class="controls">
+            <input type="text" placeholder="" class="input-xlarge" name="username">
+            
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="password">Password</label>
+          <div class="controls">
+            <input type="text" placeholder="" class="input-xlarge" name ="password">
+            
+          </div>
+        </div>
+
+         <div class="controls">
+            <button class="btn btn-success">Login</button>
+          </div>
+        </div>
+    </fieldset>
+  </form>
+
+    </div>
+    </div>
+    <div class="modal-footer">
+      
+    </div>
+  </div>
+
+
+    
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
 
@@ -48,12 +99,13 @@
             <ul class="nav">
               <li><a href="/">Home</a></li>
               <li><a href="/contact">Contact</a></li>
-              
-              <li><a href="/admin">Admin</a></li>
+              <li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
             </ul>
           </div><!--/.nav-collapse -->
+         
         </div>
 
+        
       </div>
     </div>
 

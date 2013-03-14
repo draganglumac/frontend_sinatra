@@ -3,7 +3,6 @@ require_relative "./model"
 module Machines
 
   module Routes
-  	
     before '/machines' do
      
     end

@@ -15,6 +15,7 @@ GEM
     configatron (2.9.1)
       yamler (>= 0.1.0)
     daemons (1.1.9)
+    database_cleaner (0.9.1)
     diff-lcs (1.1.3)
     eventmachine (1.0.0)
     ffi (1.3.1)
@@ -52,6 +53,10 @@ GEM
     rake (10.0.3)
     riot (0.12.5)
       rr
+    riot-rack (0.0.1)
+      rack
+      rack-test
+      riot
     rr (1.0.4)
     ruby2ruby (2.0.2)
       ruby_parser (~> 3.1)
@@ -67,6 +72,10 @@ GEM
       websocket (~> 1.0.4)
     sequel (3.43.0)
     sexp_processor (4.1.4)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
     sinatra (1.3.3)
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
@@ -106,8 +115,10 @@ PLATFORMS
 DEPENDENCIES
   capybara
   configatron
+  database_cleaner
   melee
   mysql2 (>= 0.3.11)
+  nokogiri
   pony
   powder
   pry
@@ -115,8 +126,10 @@ DEPENDENCIES
   rack (>= 1.4.2)
   rake (>= 10.0.3)
   riot
+  riot-rack
   rr
   sequel
+  simplecov
   sinatra (>= 1.3.3)
   sinatra-flash
   sinatra-graph (>= 0.1.3)

@@ -1,4 +1,3 @@
-
 $: << "src"
 
 require 'bundler/setup'
@@ -15,6 +14,9 @@ require 'beacon'
 require 'devices'
 require 'machines'
 require 'connected_devices'
+require 'admin'
+require 'jobs'
+require 'sessions'
 
 
 require "pry-remote"
@@ -23,6 +25,9 @@ include FileUtils::Verbose
 include Devices::Routes
 include Machines::Routes
 include ConnectedDevices::Routes
+include Admin::Routes
+include Jobs::Routes
+include Sessions::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'
@@ -30,16 +35,9 @@ set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
 
-enable :sessions  
-
-
+ enable :sessions  
 
 configure :test,:development do
-
-
-  
-  
-
   Pony.options = {
     :via => :smtp,
     :via_options => {
@@ -59,23 +57,20 @@ helpers do
      erb page, options.merge!(:layout => false)
     end
 
-    def protected!
-        unless authorized?
-            response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-            throw(:halt, [401, "<link rel='stylesheet' href='css/bootstrap.css' type='text/css' /> <form method=get' action='/home'>
-    <input type='submit' value='Home admin' name='home_button' id='home_button' title='Homer' class='buttoncss' />
-    </form><h2>Not authorized</h2>\n"])
-        end
-        session["is_admin"] = true;
+    def current_user
+        session[:current_user]
     end
 
+    
+
     def can_edit?
-        session["is_admin"] == true;
+        current_user
     end
-    def authorized?
-        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['dummy', 'dummy']
+    
+    def is_admin?
+        can_edit?
     end
+        
     def get_files(path)
         dir_array = Array.new
         Find.find(path) do |f|
@@ -95,49 +90,12 @@ helpers do
       raise "oooops! #{machine.supported_platforms} is not supported !"
     end
 end
-#admin panel
-get '/admin' do
-    protected!
-    @admin_pending_jobs = Hound.get_jobs
-    @machines  = AutomationStack::Infrastructure::Machine.all
-    erb :admin
-end
-
-get '/admin/getapp/:file' do |file|
-    puts "you requested #{params[:file]}"
-    file = File.join('public/', file)
-    send_file(file, :disposition => 'attachment', :filename => File.basename(file))
-end
 
 
-delete '/admin/delete/jobs/:id' do
-    id = params[:id]
-    Hound.remove_job(id);
-    @machine_available = Hound.get_machines
-    @admin_pending_jobs = Hound.get_jobs
-    redirect '/admin'
-end
-post '/admin' do
-  Hound.add_machine(params)
-  @admin_pending_jobs = Hound.get_jobs
-  @machine_available = Hound.get_machines
-  erb :admin
-end
-#admin delete sqldb_butto
-post '/admin/sql/delete' do
-    Hound.purgedb
-end
 get '/home' do  
     redirect '/'
 end
-post '/admin/results/delete' do
-    Hound.truncate_results
-    redirect '/admin'
-end
-post '/admin/jobs/delete' do
-    Hound.truncate_jobs
-    redirect '/admin'
-end
+
 #landing page
 get '/' do
     #@info = "Welcome #{request.ip}"
@@ -148,71 +106,8 @@ end
 get '/resources' do
     erb :installer
 end
-#new job page
-get '/job' do
-    @machines  = AutomationStack::Infrastructure::Machine.all
-    @jobs_done = Hound.get_jobs
-    erb :jobs
-end
-#Posting new job
-post '/job' do
-    puts params
-    if params[:file_source].nil?
-        @error = "<p style='color:red;'>Need input file</p>"    
-        puts "NO FILE"
-        redirect '/job'
-    end
-    
-    puts params[:file_source][:filename]
-    
-    tempfile = params[:file_source][:tempfile] 
-    filename = params[:file_source][:filename] 
-    cp(tempfile.path, "public/uploads/#{filename}")
-    string = File.open(tempfile.path, 'rb') { |file| file.read }
-    #puts string
-    #machine_num = params[:machine_id].split("machine_id")
 
-    recursion=0
 
-    if params[:is_private] == "0"
-        puts "NO RECURSION SET, SINGLE RUN MODE"
-        recursion=0
-    else
-        puts "RECURSION HAS BEEN SET, RECURSIVE MODE"
-        recursion=1
-    end
-    #There is a difference here between ruby versions, be aware
-      machine_num = params[:machine_id]
-    #'dd/MM/yyyy hh:mm:ss'
-    trigger = params[:ltrigger] 
-    trigger << ".000000"
-    trigger = Time.parse(trigger).to_i
-    puts "JOB NAME #{params[:lname]}"
-    puts "MACHINE NUMBER #{machine_num}"
-    puts "OUTPUT STRING IS #{string}"
-    puts "TRIGGER TIME IS #{trigger}"
-    
-    Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
-    redirect '/job'
-end
-post '/job/recursion/disable/:id' do
-    Hound.disable_recursion(params[:id])
-    redirect back
-end
-post '/job/recursion/enable/:id' do
-    Hound.enable_recursion(params[:id])
-    redirect back
-end
-post '/job/restart/:jobnum' do
-    Hound.set_job_restart(params[:jobnum])
-    redirect '/'
-end
-#view machine page
-get '/machines' do                              
-  devices = Devices::Repository.new
-  @machines = Machines::Repository.new(devices)
-    erb :machines
-end
 #results page
 get '/results' do
     @time = Time.new.inspect
@@ -254,7 +149,7 @@ end
 #/uploads/hudsoniPhoneExample/cuke.html
 post '/results/:id' do
     job_name = ""
-    Hound.directquery("select name from `AUTOMATION`.`jobs` where id=#{params[:id]}").each do |row|
+    Hound.directquery("select name from `jobs` where id=#{params[:id]}").each do |row|
         #Just FYI, this select should only ever return 1 entry but its a hash so has to be enumerated as direct key purchase doesn't seem to do anything... though my ruby is pretty awful'
         job_name = row
     end
@@ -266,6 +161,7 @@ get '/dashboard' do
     @current_jobs=Hound.get_jobs 
     erb :dashboard
 end
+
 get '/contact' do
     erb :contact
 end

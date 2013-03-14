@@ -11,23 +11,12 @@ gem "pony"
 gem "sinatra-flash"  
 gem "configatron"
 
-
-
 group :test do
-  gem 'simplecov', :require => false
-  gem 'capybara'
-  gem 'spinach'
-  gem 'wrong'
-  gem 'nokogiri'
-  gem 'riot'
-  gem 'riot-rack'
-  gem 'melee'
-  gem 'rr'
-  gem 'database_cleaner'
-end    
+gem "cucumber"
+gem "capybara"
+end
 
 group :development do
   gem 'pry'  
   gem 'pry-remote'
-  gem 'powder'
 end

@@ -1,6 +1,6 @@
 require "capybara/cucumber"
 require "pry"
-require "wrong"
+
 
 Capybara.default_driver = :selenium
 Capybara.register_driver :selenium do |app|
@@ -11,7 +11,7 @@ Capybara.run_server = false
 Capybara.app_host = 'http://localhost:9292'
 
 
-include Wrong
+
 
 
 

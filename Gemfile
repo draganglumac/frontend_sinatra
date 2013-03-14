@@ -12,8 +12,9 @@ gem "sinatra-flash"
 gem "configatron"
 
 group :test do
-gem "cucumber"
-gem "capybara"
+	gem "cucumber"
+	gem "capybara"
+	gem "wrong"
 end
 
 group :development do

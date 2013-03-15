@@ -1,3 +1,4 @@
+require "sequel"
 require "capybara/cucumber"
 require "pry"
 
@@ -5,10 +6,10 @@ require "pry"
 Capybara.default_driver = :selenium
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, :browser => :firefox)
-end
+end	
 
 Capybara.run_server = false
-Capybara.app_host = 'http://localhost:9292'
+Capybara.app_host = 'http://ui.as.sky.dev'
 
 
 

@@ -1,5 +1,5 @@
-Feature: Administer machines
-	
+Feature: Machines
+
  Background: 
  	Given I am on logged in as admin	
  
@@ -7,7 +7,7 @@ Feature: Administer machines
   When I add a new machine called "iceman"
   Then the machine "iceman" should appear in the list of available machine
  
- Scenario: delete a new machine
+ Scenario: delete a  machine
     And I have an existing machine called "hollywood"
   When I delete the machine "hollywood"
   Then the machine "hollywood" should not appear in the list of available machine

@@ -40,6 +40,6 @@ end
 
 Then(/^the machine "(.*?)" should not appear in the list of available machine$/) do |call_sign|
   within("#machine_table") do
-    raise "Ooooops ! should not be in the list" if all("tr td a").map{|a| a[:text]}.find{|name| name == call_sign}
+    raise "Ooooops ! should not be in the list" if all("tr td a").map{|a| a[:text]}.find{|name| name    == call_sign}
   end
 end

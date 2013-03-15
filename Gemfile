@@ -14,7 +14,6 @@ gem "configatron"
 group :test do
 	gem "cucumber"
 	gem "capybara"
-	
 end
 
 group :development do

@@ -3,7 +3,6 @@ Feature: Contact us
   As a user
   I want to be able to contact the automation stack developers by email
   
-  
   Background:
     Given I am on the automation stack frontend
      And I am on the contact page

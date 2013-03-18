@@ -12,7 +12,6 @@ Scenario: Add a new job
    And I do not want it reoccur
   When I submit a new Job
   Then I should see "the italian" in the list of current jobs
-   And the job should be on the correct machine
 
 
 

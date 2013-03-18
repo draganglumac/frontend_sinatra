@@ -14,7 +14,7 @@ Given(/^I want it to run on the machine "(.*?)"$/) do |machine|
 end
 
 Given(/^I have a valid conf file$/) do
-  @path_to_conf = "features/example.conf"
+  @path_to_conf = "/Users/cococoder/Desktop/sky/automation_stack/ui/features/example.conf"
 end
 
 Given(/^I want the job to start (\d+) minutes from now$/) do |minutes|
@@ -34,10 +34,7 @@ When(/^I submit a new Job$/) do
  click_button 'submit'
 end
 
-Then(/^I should see "(.*?)" in the list of current jobs$/) do |arg1|
-  pending # express the regexp above with the code you wish you had
+Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
+  page.has_text? name
 end
 
-Then(/^the job should be on the correct machine$/) do
-  pending # express the regexp above with the code you wish you had
-end

@@ -45,3 +45,21 @@ end
 Then(/^I should see the "(.*?)" on the list of registered devices$/) do |tag|
   raise "Ooops could not find the #{tag}" unless page.has_text? tag
 end
+
+Given(/^the unwanted device "(.*?)"$/) do |tag|
+  step "the tag \"#{tag}\""
+  step 'the model "Iphone 5s"'
+  step 'the serial number "123456789"'
+  step 'the manufacturer "Apple"'
+  step 'the device type "phone"'
+  step 'the os is "ios"'
+  step 'I register the new device'
+end
+
+When(/^I delete the unwanted device "(.*?)"$/) do |tag|
+  all(".delete").find{|btn|btn["data-id"] == tag}.click
+end
+
+Then(/^I should not see "(.*?)" on the list of registered devices$/) do |tag|
+  raise "Oooops ! failed to delete #{tag}" if page.has_text? tag
+end

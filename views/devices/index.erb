@@ -19,22 +19,19 @@
 	<tbody>
 		 <% for device in @devices%>
 		<tr>
-			
-			 
-			  	
-			    <td><%=device.tag%></td>
-			    <td><%=device.name%></td>
-			    <td><%=device.manufacturer.name%></td>
-			    <td><%=device.serial_number%></td>
-			    <td><%=device.device_type.name%></td>
-			    <td>
-	    <form method="post" action="/devices/<%=device.id%>/delete"> 
-        <%if can_edit?%><button type="submit"class="btn delete" data-id=<%=device.id%> id="">Delete</button><%end%>
-    	</form> 
-	  </td>
-			  
-			
-		</tr>
+		    <td><%=device.tag%></td>
+		    <td><%=device.name%></td>
+		    <td><%=device.manufacturer.name%></td>
+		    <td><%=device.serial_number%></td>
+		    <td><%=device.device_type.name%></td>
+		    <td>
+			    <form method="post" action="/devices/<%=device.id%>/delete"> 
+		        <%if can_edit?%>
+		        	<button type="submit"class="btn delete" data-id=<%=device.tag%> id="">Delete</button>
+		        <%end%>
+		    	</form> 
+		  	</td>	
+	    </tr>
 		<% end %>
 	</tbody>
 </table>

@@ -10,7 +10,7 @@ gem "thin", ">= 1.5.0"
 gem "pony" 
 gem "sinatra-flash"  
 gem "configatron"
-
+gem "mailcatcher", "~> 0.5.11"
 group :test do
 	gem "cucumber"
 	gem "capybara"

@@ -83,8 +83,10 @@ echo "password : $password" >> conf/db.conf
 echo "database : $database" >> conf/db.conf
 
 
-
-
+#add beacon log 
+mkdir tmp
+touch tmp/beacon.log
+#add mailcatch
 
 
 

@@ -9,7 +9,7 @@ Capybara.register_driver :selenium do |app|
 end	
 
 Capybara.run_server = false
-Capybara.app_host = 'http://ui.as.sky.dev'
+Capybara.app_host = 'http://localhost:9292'
 
 
 

@@ -17,6 +17,11 @@ Given(/^I have a valid conf file$/) do
   @path_to_conf = "/Users/cococoder/Desktop/sky/automation_stack/ui/features/example.conf"
 end
 
+Given(/^I have a valid conf file in "(.*?)"$/) do |path|
+  @path_to_conf = path
+end
+
+
 Given(/^I want the job to start (\d+) minutes from now$/) do |minutes|
   @trigger_time = Time.now + (minutes.to_i * 60)
 end
@@ -38,3 +43,10 @@ Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
   page.has_text? name
 end
 
+Then(/^the job should be on the correct machine$/) do
+  within("#job_table") do
+    
+    machine_id = all("tr")[2].all("td")[6].text
+    raise "ooops ! not on correct machine" unless machine_id==1
+  end
+end

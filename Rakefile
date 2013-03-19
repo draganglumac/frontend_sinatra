@@ -12,7 +12,13 @@ task :default => :tests
 namespace :DB do
 	desc "reset"
 	task :reset  do
-		path_to_rake ="../backend"
+		path_to_rake ="../automation_stack_backend"
 		`cd #{path_to_rake} && rake reset`
 	end
+end
+
+desc "cukes"
+task :cukes do
+  system "rackup &"
+  system "cucumber"
 end

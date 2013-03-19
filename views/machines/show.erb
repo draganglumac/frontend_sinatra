@@ -8,7 +8,7 @@
 
 
 
-
+<%if can_edit?%>
 <form action="/connected_devices" method="post">
 	<input type="hidden" name="connected_device[machine_id]" value="<%=@machine.id%>">
 	<div class="control-group">
@@ -47,7 +47,7 @@
 
         
 </form>
-
+<%end%>
 
 <h4>Connected Devices</h4>
 
@@ -72,9 +72,13 @@
 			    <td><%=row.device.manufacturer.name%></td>
 			    <td><%=row.device.serial_number%></td>
 			    <td><%=row.device.device_type.name%></td>
-			    <td><a href="/connected_devices/<%=row.id%>/delete"><button type="button">disconnect</button></a>
-			 
-			  
+          <td>
+            <%if can_edit?%>
+            <a href="/connected_devices/<%=row.id%>/delete" data-id="<%=row.id%>">
+              <button type="button">disconnect</button>
+            </a>
+            <%end%>
+          </td>
 			
 		</tr>
 		<% end %>

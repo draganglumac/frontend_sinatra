@@ -63,6 +63,25 @@ class Hound
 	def self.truncate_results
 		@@dbconnect.query("TRUNCATE TABLE `results`")
 	end
+
+
+
+	def truncate_table name
+		turn_off_foreign_key_checks
+		@@dbconnect.query("TRUNCATE TABLE `#{name}`")
+		turn_on_foreign_key_checks
+	end
+
+	def self.turn_off_foreign_key_checks
+		@@dbconnect.query("SET FOREIGN_KEY_CHECKS=0;")
+	end
+
+
+	def self.turn_on_foreign_key_checks
+		@@dbconnect.query("SET FOREIGN_KEY_CHECKS=1;")
+	end
+
+
 	def self.purgedb
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end

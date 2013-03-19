@@ -1,7 +1,3 @@
-task :verify do
-  exec "spinach"
-end
-
 require 'rake/testtask'
 
 Rake::TestTask.new(:tests) do |t|
@@ -10,3 +6,19 @@ Rake::TestTask.new(:tests) do |t|
 end
 
 task :default => :tests
+
+
+
+namespace :DB do
+	desc "reset"
+	task :reset  do
+		path_to_rake ="../automation_stack_backend"
+		`cd #{path_to_rake} && rake reset`
+	end
+end
+
+desc "cukes"
+task :cukes do
+  system "rackup &"
+  system "cucumber"
+end

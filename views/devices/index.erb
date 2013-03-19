@@ -1,6 +1,6 @@
 <div class="control-group">
   <div class="controls">
-    <%if can_edit?%><a href="/devices/new"><button class="btn btn-default">Add new Device</button></a><%end%>
+    <%if can_edit?%><a href="/devices/new" id="add-new-device"><button class="btn btn-default">Add new Device</button></a><%end%>
   </div>
 </div>                                                 
 <br/>
@@ -29,7 +29,7 @@
 			    <td><%=device.device_type.name%></td>
 			    <td>
 	    <form method="post" action="/devices/<%=device.id%>/delete"> 
-        	<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
+        <%if can_edit?%><button type="submit"class="btn delete" data-id=<%=device.id%> id="">Delete</button><%end%>
     	</form> 
 	  </td>
 			  

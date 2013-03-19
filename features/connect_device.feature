@@ -8,7 +8,7 @@ Background:
 
 Scenario: Connect a device to a machine
 	Given I am looking at "hollywood" machine
-	When I connect the "unconnected" device to the "goose" machine
+	When I connect the "unconnected" device to the "hollywood" machine
 	Then I should see "unconnected" device in my list of connected devices
   
 

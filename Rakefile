@@ -17,8 +17,12 @@ namespace :DB do
 	end
 end
 
+desc "Task description"
+task :task_name => [:dependent, :tasks] do
+  
+end
 desc "cukes"
-task :cukes do
+task :cukes => ["DB:reset"]do
   system "rackup &"
   system "cucumber"
 end

@@ -26,6 +26,7 @@ Then(/^the machine "(.*?)" should appear in the list of available machine$/) do 
 end
 
 Given(/^I have an existing machine called "(.*?)"$/) do |call_sign|
+  visit("/") 
   step "I add a new machine called \"#{call_sign}\""
 end
 

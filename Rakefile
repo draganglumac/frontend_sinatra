@@ -12,7 +12,7 @@ task :default => :tests
 namespace :DB do
 	desc "reset"
 	task :reset  do
-		path_to_rake ="/Users/cococoder/Desktop/sky/automation_stack/backend"
+		path_to_rake ="../backend"
 		`cd #{path_to_rake} && rake reset`
 	end
 end

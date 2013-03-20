@@ -1,15 +1,5 @@
 #!/bin/bash
 
-function check_ruby()
-{
-	version=`rvm -v`
-	if [ $? -ne 0 ]; then
-	`\curl -L https://get.rvm.io | bash -s stable --ruby`
-	source ~/.bash_profile
-	`rvm install ruby-1.9.3 --with-gcc=gcc`
-	rvm use ruby-1.9.3
-	fi
-}
 function check_all_rubies()
 {
 	version_message=`ruby --version`
@@ -61,7 +51,6 @@ function check_and_update_gems()
 		gem install calabash-cucumber
 	fi
 }
-check_ruby
 check_all_rubies
 check_and_update_gems
 bundle install
@@ -84,7 +73,7 @@ echo "database : $database" >> conf/db.conf
 
 
 #add beacon log 
-mkdir tmp
+mkdir -p tmp
 touch tmp/beacon.log
 #add mailcatch
 

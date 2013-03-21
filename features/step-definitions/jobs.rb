@@ -13,9 +13,6 @@ Given(/^I want it to run on the machine "(.*?)"$/) do |machine|
   @machine_name = machine
 end
 
-Given(/^I have a valid conf file$/) do
-  @path_to_conf = "/Users/cococoder/Desktop/sky/automation_stack/ui/features/example.conf"
-end
 
 Given(/^I have a valid conf file in "(.*?)"$/) do |path|
   @path_to_conf = path
@@ -31,6 +28,7 @@ Given(/^I do not want it reoccur$/) do
 end
 
 When(/^I submit a new Job$/) do
+ binding.pry
  attach_file("lfile", @path_to_conf)
  select @machine_name, :from => 'machine_id'
  fill_in 'lname', :with => @name_of_job
@@ -50,3 +48,22 @@ Then(/^the job should be on the correct machine$/) do
     raise "ooops ! not on correct machine" unless machine_id==1
   end
 end
+
+
+Given(/^the existing job "(.*?)"$/) do |name|
+   step "I want to create a job called \"#{name}\""
+   step "I want it to run on the machine \"goose\""
+   step "I have a valid conf file in \"features/support/example.conf\""
+   step "I want the job to start 2 minutes from now"
+   step "I do not want it reoccur"
+   step "I submit a new Job"
+end
+
+When(/^I delete the job$/) do
+    pending # express the regexp above with the code you wish you had
+end
+
+Then(/^I should not see the "(.*?)" in the list of current jobs$/) do |arg1|
+    pending # express the regexp above with the code you wish you had
+end
+

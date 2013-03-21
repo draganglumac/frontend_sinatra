@@ -13,6 +13,12 @@ Scenario: Add a new job
   When I submit a new Job
   Then I should see "the italian" in the list of current jobs
 
+Scenario: delete a job
+  Given the existing job "unwanted"
+  When I delete the job
+  Then I should not see the "unwanted" in the list of current jobs
+
+
 
 
 

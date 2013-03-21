@@ -28,7 +28,7 @@ Given(/^I do not want it reoccur$/) do
 end
 
 When(/^I submit a new Job$/) do
- binding.pry
+
  attach_file("lfile", @path_to_conf)
  select @machine_name, :from => 'machine_id'
  fill_in 'lname', :with => @name_of_job

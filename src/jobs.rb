@@ -27,6 +27,10 @@ module Jobs
             redirect '/'
         end
 
+        post '/job/:id/delete' do
+            binding.pry
+        end
+
         post '/job' do
             puts params if development?
                 

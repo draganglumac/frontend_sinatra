@@ -1,3 +1,3 @@
 After do |scenario|
-	`rake DB:reset`	
+	`rake db:reset`	
 end

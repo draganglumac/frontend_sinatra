@@ -65,7 +65,7 @@ end
 
 When(/^I delete the job$/) do
   within("#job_table") do 
-    binding.pry
+     all("tr")[2].all("td")[10].all("button").first.click
   end
 
 

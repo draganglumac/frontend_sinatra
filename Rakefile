@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'pry'
 
 Rake::TestTask.new(:tests) do |t|
     t.test_files = FileList['tests/*_tests.rb']
@@ -9,7 +10,7 @@ task :default => :tests
 
 
 
-namespace :DB do
+namespace :db do
     desc "reset"
     task :reset  do
         path_to_rake ="../automation_stack_backend"
@@ -22,8 +23,8 @@ task :task_name => [:dependent, :tasks] do
 
 end
 desc "cukes"
-task :cukes => ["DB:reset"]do
+task :cukes => ["db:reset"]do
     `mailcatcher`
-    system "rackup &"
+    system "./sinatra_control"
     system "cucumber --tags ~@coco"
 end

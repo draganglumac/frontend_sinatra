@@ -65,8 +65,6 @@ end
 
 When(/^I delete the job$/) do
 
-  step "I am viewing the current list of jobs"
-
   within("#job_table") do 
      all("tr")[2].all("td")[10].all("button").first.click
   end

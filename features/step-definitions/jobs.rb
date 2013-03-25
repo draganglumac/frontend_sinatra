@@ -15,7 +15,8 @@ end
 
 
 Given(/^I have a valid conf file in "(.*?)"$/) do |path|
-  @path_to_conf = path
+  @path_to_conf ="/Users/cococoder/Desktop/sky/automation_stack/frontend_sinatra/features/support/example.conf"
+  
 end
 
 
@@ -38,12 +39,12 @@ When(/^I submit a new Job$/) do
 end
 
 Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
-  page.has_text? name
+  binding.pry
+  raise "Oooops! could not find #{name} in the list of current jobs" unless page.has_text? name
 end
 
 Then(/^the job should be on the correct machine$/) do
-  within("#job_table") do
-    
+  within("#job_table") do 
     machine_id = all("tr")[2].all("td")[6].text
     raise "ooops ! not on correct machine" unless machine_id==1
   end
@@ -60,7 +61,11 @@ Given(/^the existing job "(.*?)"$/) do |name|
 end
 
 When(/^I delete the job$/) do
-    pending # express the regexp above with the code you wish you had
+  within("#job_table") do 
+    binding.pry
+  end
+
+
 end
 
 Then(/^I should not see the "(.*?)" in the list of current jobs$/) do |arg1|

@@ -25,5 +25,5 @@ desc "cukes"
 task :cukes => ["DB:reset"]do
     `mailcatcher`
     system "rackup &"
-    system "cucumber"
+    system "cucumber --tags ~@coco"
 end

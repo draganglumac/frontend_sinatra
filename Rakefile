@@ -22,9 +22,22 @@ desc "Task description"
 task :task_name => [:dependent, :tasks] do
 
 end
-desc "cukes"
-task :cukes => ["db:reset"]do
+
+
+namespace :cukes do
+ 
+desc "all"
+task :all => ["db:reset"]do
     `mailcatcher`
     system "./sinatra_control"
     system "cucumber --tags ~@coco"
 end
+
+task :wip => ["db:reset"]do
+    `mailcatcher`
+    system "./sinatra_control"
+    system "cucumber --tags @coco"
+end
+
+end
+

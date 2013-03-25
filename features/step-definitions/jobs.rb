@@ -64,6 +64,9 @@ Given(/^the existing job "(.*?)"$/) do |name|
 end
 
 When(/^I delete the job$/) do
+
+  step "I am viewing the current list of jobs"
+
   within("#job_table") do 
      all("tr")[2].all("td")[10].all("button").first.click
   end
@@ -71,7 +74,7 @@ When(/^I delete the job$/) do
 
 end
 
-Then(/^I should not see the "(.*?)" in the list of current jobs$/) do |arg1|
-    pending # express the regexp above with the code you wish you had
+Then(/^I should not see the "(.*?)" in the list of current jobs$/) do |name|
+  raise "Ooooops #{name} job was not deleted" if page.has_text? name
 end
 

@@ -28,7 +28,9 @@ module Jobs
         end
 
         post '/job/:id/delete' do
-            binding.pry
+            job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+            job.delete
+            redirect '/job'
         end
 
         post '/job' do

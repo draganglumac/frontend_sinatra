@@ -30,13 +30,13 @@ desc "all"
 task :all => ["db:reset"]do
     `mailcatcher`
     system "./sinatra_control"
-    system "cucumber --tags ~@coco"
+    system "cucumber --tags ~@wip"
 end
 
 task :wip => ["db:reset"]do
     `mailcatcher`
     system "./sinatra_control"
-    system "cucumber --tags @coco"
+    system "cucumber --tags @wip"
 end
 
 end

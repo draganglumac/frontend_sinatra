@@ -39,8 +39,11 @@ When(/^I submit a new Job$/) do
 end
 
 Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
-  binding.pry
-  raise "Oooops! could not find #{name} in the list of current jobs" unless page.has_text? name
+
+  within("#job_table") do 
+    job_name = all("tr")[2].all("td")[1].text
+    raise "Oooops! could not find #{name} in the list of current jobs" unless job_name == name
+  end
 end
 
 Then(/^the job should be on the correct machine$/) do

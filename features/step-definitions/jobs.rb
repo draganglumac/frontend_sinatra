@@ -58,16 +58,28 @@ Given(/^the existing job "(.*?)"$/) do |name|
    step "I submit a new Job"
 end
 
-When(/^I delete the job$/) do
 
-  find("#job_table")
-  
-  within("#job_table") do 
-     all("tr")[2].all("td")[10].all("button").first.click
-  end
-
-
+def find_index_of_table(name)
+  all("table").map{|table|table["id"]}.index name
 end
+
+def find_index_of_column(table_index,name)
+ all("table")[0].all("tr").first.all("td").map{|td|td.text}.index name
+end
+
+def find_row(table,name)
+ all("table")[table].all("tr").find{|tr|tr.all("td").map{|td|td.text}.include? name } 
+end
+
+
+
+When(/^I delete the job "(.*?)"$/) do |name|
+  jobs_table = find_index_of_table("job_table")
+  unwanted_row = find_row(jobs_table,name)
+  delete_column = find_index_of_column(jobs_table,"")
+  unwanted_row.all("td")[delete_column].all("button").first.click
+end
+
 
 Then(/^I should not see the "(.*?)" in the list of current jobs$/) do |name|
   raise "Ooooops #{name} job was not deleted" if page.has_text? name

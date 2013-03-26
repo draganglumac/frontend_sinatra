@@ -1,3 +1,4 @@
+@wip
 Feature: Jobs
   
 Background: 
@@ -15,7 +16,7 @@ Scenario: Add a new job
 
 Scenario: delete a job
   Given the existing job "unwanted"
-  When I delete the job
+  When I delete the job "unwanted"
   Then I should not see the "unwanted" in the list of current jobs
 
 

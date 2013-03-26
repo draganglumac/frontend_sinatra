@@ -1,4 +1,18 @@
 # encoding: utf-8
+
+def find_index_of_table(name)
+  all("table").map{|table|table["id"]}.index name
+end
+
+def find_index_of_column(table_index,name)
+ all("table")[0].all("tr").first.all("td").map{|td|td.text}.index name
+end
+
+def find_row(table,name)
+ all("table")[table].all("tr").find{|tr|tr.all("td").map{|td|td.text}.include? name } 
+end
+
+
 Given(/^I am viewing the current list of jobs$/) do
   visit("/")
   click_button "New Job »"
@@ -39,13 +53,9 @@ When(/^I submit a new Job$/) do
 end
 
 Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
-  
   find("#job_table")
-
-  within("#job_table") do 
-    job_name = all("tr")[2].all("td")[1].text
-    raise "Oooops! could not find #{name} in the list of current jobs" unless job_name == name
-  end
+  table = find_index_of_table("job_table")
+  raise "Oooops! could not find #{name} in the list of current jobs" unless find_row(table,name)
 end
 
 
@@ -57,20 +67,6 @@ Given(/^the existing job "(.*?)"$/) do |name|
    step "I do not want it reoccur"
    step "I submit a new Job"
 end
-
-
-def find_index_of_table(name)
-  all("table").map{|table|table["id"]}.index name
-end
-
-def find_index_of_column(table_index,name)
- all("table")[0].all("tr").first.all("td").map{|td|td.text}.index name
-end
-
-def find_row(table,name)
- all("table")[table].all("tr").find{|tr|tr.all("td").map{|td|td.text}.include? name } 
-end
-
 
 
 When(/^I delete the job "(.*?)"$/) do |name|

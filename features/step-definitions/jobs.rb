@@ -48,13 +48,6 @@ Then(/^I should see "(.*?)" in the list of current jobs$/) do |name|
   end
 end
 
-Then(/^the job should be on the correct machine$/) do
-  within("#job_table") do 
-    machine_id = all("tr")[2].all("td")[6].text
-    raise "ooops ! not on correct machine" unless machine_id==1
-  end
-end
-
 
 Given(/^the existing job "(.*?)"$/) do |name|
    step "I want to create a job called \"#{name}\""

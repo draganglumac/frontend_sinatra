@@ -53,7 +53,7 @@ module AutomationStack
 			many_to_one :manufacturer
 		end
 
-		class Jobs < Sequel::Model
+		class Job < Sequel::Model
 			many_to_one :job
 			many_to_one :results
 

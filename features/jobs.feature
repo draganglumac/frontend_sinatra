@@ -7,11 +7,17 @@ Background:
 Scenario: Add a new job
   Given I want to create a job called "the italian"
    And I want it to run on the machine "goose"
-   And I have a valid conf file in "features/support/example.conf"
+   And I have a valid conf file in "example.conf"
    And I want the job to start 2 minutes from now
    And I do not want it reoccur
   When I submit a new Job
   Then I should see "the italian" in the list of current jobs
+
+Scenario: delete a job
+  Given the existing job "unwanted"
+  When I delete the job "unwanted"
+  Then I should not see the "unwanted" in the list of current jobs
+
 
 
 

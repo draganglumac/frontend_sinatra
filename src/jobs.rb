@@ -27,12 +27,18 @@ module Jobs
             redirect '/'
         end
 
+        post '/job/:id/delete' do
+            job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+            job.delete
+            redirect '/job'
+        end
+
         post '/job' do
             puts params if development?
                 
             if params[:file_source].nil?
                 @error = "<p style='color:red;'>Need input file</p>"    
-                puts "NO FILE"
+                raise  "NO FILE"
                 redirect '/job'
             end
             

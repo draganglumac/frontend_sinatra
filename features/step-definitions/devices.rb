@@ -2,6 +2,7 @@
 Given(/^I am viewing devices$/) do
   visit("/")
   click_button "View Devices"
+  click_button "Add new Device"
 end
 
 Given(/^the tag "(.*?)"$/) do |tag|
@@ -29,8 +30,6 @@ Given(/^the os is "(.*?)"$/) do |os|
 end
 
 When(/^I register the new device$/) do
-  click_on "add-new-device"
-  
   fill_in "device[tag]",:with => @tag 
   fill_in "device[name]",:with => @model 
   fill_in "device[serial_number]",:with => @serial_number

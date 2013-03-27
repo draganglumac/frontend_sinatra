@@ -124,26 +124,22 @@ get '/analytics' do
     @num_pending_jobs = Hound.get_incomplete_jobs.size.to_i   
     erb :analytics
 end
-put '/upload/:dir/:id' do
-    puts "UPLOADING"
-    cwd = Dir.pwd
-    puts "Current working directory #{cwd}"
-    Dir.chdir("public/uploads")
-    nwd = Dir.pwd
-    puts "Switched directory to #{nwd}"
-    directory_name = params[:dir]
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
-    Dir.chdir(directory_name)
-    nwd = Dir.pwd
-    #we are using cuke.html as our default naming convention for files...
-    #This isn't something that is sustainable but is used currently
-    #so that results has something it can look for when it builds the path
-    puts "Switched into project directory #{nwd}"
-    File.open(params[:id], 'w+') do |file|
-        file.write(request.body.read)
+put '/result/upload/:id' do
+  
+    job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+    
+    Dir.chdir("public/uploads") do
+      Dir.mkdir job.name unless Dir.exists? job.name
+
+      Dir.chdir("#{job.name}") do 
+        File.open("#{Time.now.to_i}.#{params[:result]}", 'w+') do |file|
+            file.write(request.body.read)
+          
+        end 
+      end
+
     end
-    Dir.chdir(cwd)
-    puts "Lets now update the results table to set it to completed..."
+    "ok"
 end
 #/uploads/hudsoniPhoneExample/cuke.html
 post '/results/:id' do

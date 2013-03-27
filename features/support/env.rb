@@ -1,7 +1,11 @@
-require "sequel"
-require "capybara/cucumber"
 require "pry"
 
+$: << File.expand_path("../../../src",__FILE__) 
+
+
+require "sequel"
+require "capybara/cucumber"
+require "model"
 
 Capybara.default_driver = :selenium
 Capybara.register_driver :selenium do |app|

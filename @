@@ -1,13 +1,11 @@
-require "pry"
+$: << File.expand_path("../../src",__FILE__) 
 
-$: << File.expand_path("../../../src",__FILE__) 
-
-
-
+binding.pry
 
 
 require "sequel"
 require "capybara/cucumber"
+require "pry"
 require "model"
 
 Capybara.default_driver = :selenium

@@ -1,9 +1,12 @@
-@wip
 Feature: Upload Results
   In order to communicate test sucess or failure
   As a the saterlite agent
   I want to be able to upload the test results
-  
+
+  Background:
+    Given there is no "upload_test" folder
+    Given the front end is visible
+
   Scenario: upload file
   	Given the "upload_test" job
      And the results file "cukes.html"

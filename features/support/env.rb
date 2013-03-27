@@ -3,9 +3,6 @@ require "pry"
 $: << File.expand_path("../../../src",__FILE__) 
 
 
-
-
-
 require "sequel"
 require "capybara/cucumber"
 require "model"

@@ -1,2 +1,0 @@
-web: rackup config.ru
-

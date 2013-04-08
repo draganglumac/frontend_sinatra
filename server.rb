@@ -137,23 +137,6 @@ post '/upload/:id/:filename' do
 
 			end 
 		end
-	end
-	put '/result/upload/:id' do
-
-		job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-
-		Dir.chdir("public/uploads") do
-			Dir.mkdir job.name unless Dir.exists? job.name
-
-			Dir.chdir("#{job.name}") do 
-				File.open("#{Time.now.to_i}.#{params[:result]}", 'w+') do |file|
-					file.write(request.body.read)
-				end          
-			end 
-		end
-
-	end
-	"ok"
 end
 #/uploads/hudsoniPhoneExample/cuke.html
 post '/results/:id' do

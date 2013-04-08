@@ -17,6 +17,7 @@ require 'connected_devices'
 require 'admin'
 require 'jobs'
 require 'sessions'
+require 'results'
 
 
 require "pry-remote"
@@ -28,6 +29,7 @@ include ConnectedDevices::Routes
 include Admin::Routes
 include Jobs::Routes
 include Sessions::Routes
+include Results::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'
@@ -61,7 +63,9 @@ helpers do
 		session[:current_user]
 	end
 
-
+	def job(jobs_id)
+		AutomationStack::Infrastructure::Job[jobs_id]
+	end
 
 	def can_edit?
 		current_user
@@ -108,12 +112,14 @@ get '/resources' do
 end
 
 
-#results page
-get '/results' do
-	@time = Time.new.inspect
-	@results = Hound.get_results
-	erb :results
-end
+# #results page
+# get '/results' do
+# 	@time = Time.new.inspect
+# 	@results = Hound.get_results
+# 	erb :results
+# end
+
+
 get '/analytics' do
 
 	@num_visitors = Hound.get_visitors
@@ -134,7 +140,6 @@ post '/upload/:id/:filename' do
 		Dir.chdir("#{job.name}") do 
 			File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
 				file.write(request.body.read)
-
 			end 
 		end
 end
@@ -170,4 +175,5 @@ post '/contact' do
 
 	redirect '/contact'
 
+end
 end

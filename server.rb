@@ -59,6 +59,19 @@ helpers do
 		erb page, options.merge!(:layout => false)
 	end
 
+	def link_builder(name)
+		target = "public/uploads"
+
+		Dir.chdir(target) do
+			Dir.chdir(name) do 
+				Dir.glob("**").each do|f|
+					yield  "<a href=\"/uploads/#{name}/#{f}\">#{f}</a>"
+ 				end
+			end
+		end
+	end
+
+	
 	def current_user
 		session[:current_user]
 	end

@@ -14,7 +14,7 @@ module Results
   	end
 
     get '/results/:id' do
-      @results  = AutomationStack::Infrastructure::Result[params[:id]]
+      @result  = AutomationStack::Infrastructure::Result[params[:id]]
       erb :'results/show'
     end    
   end

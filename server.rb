@@ -65,7 +65,9 @@ helpers do
 		Dir.chdir(target) do
 			Dir.chdir(name) do 
 				Dir.glob("**").each do|f|
-					yield  "<a href=\"/uploads/#{name}/#{f}\">#{f}</a>"
+					epoch, filename = f.split('.', 2)
+					display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+					yield  "<a href=\"/uploads/#{name}/#{f}\">#{display_name}</a>"
 				end
 			end
 		end

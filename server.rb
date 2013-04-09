@@ -135,24 +135,17 @@ get '/analytics' do
 end
 
 post '/upload/:id/:filename' do
-	puts 1
 	job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-	puts 2
 	fu = params[:filename]
-	puts 3
 	Dir.chdir("public/uploads") do
-		puts Dir.getwd
 		Dir.mkdir job.name unless Dir.exists? job.name
-
 		Dir.chdir("#{job.name}") do 
-			puts Dir.getwd
 			puts "FILE NAME FOR SAVING IS #{fu}"
 			File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
 				file.write(request.body.read)
 			end
 		end 
 	end
-	puts 4
 	status 200
 end
 #/uploads/hudsoniPhoneExample/cuke.html

@@ -135,47 +135,55 @@ get '/analytics' do
 end
 
 post '/upload/:id/:filename' do
+	puts 1
 	job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+	puts 2
 	fu = params[:filename]
+	puts 3
 	Dir.chdir("public/uploads") do
+		puts Dir.getwd
 		Dir.mkdir job.name unless Dir.exists? job.name
 
 		Dir.chdir("#{job.name}") do 
+			puts Dir.getwd
+			puts "FILE NAME FOR SAVING IS #{fu}"
 			File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
 				file.write(request.body.read)
-			end 
-		end
+			end
+		end 
 	end
-	#/uploads/hudsoniPhoneExample/cuke.html
-	post '/results/:id' do
-		job_name = ""
-		Hound.directquery("select name from `jobs` where id=#{params[:id]}").each do |row|
-			job_name = row
-		end
-		puts "Job name is #{job_name['name']}"
-		send_file("public/uploads/#{job_name['name']}/cuke.html")
+	puts 4
+	status 200
+end
+#/uploads/hudsoniPhoneExample/cuke.html
+post '/results/:id' do
+	job_name = ""
+	Hound.directquery("select name from `jobs` where id=#{params[:id]}").each do |row|
+		job_name = row
 	end
-	#system dashboard
-	get '/dashboard' do
-		@current_jobs=Hound.get_jobs 
-		erb :dashboard
+	puts "Job name is #{job_name['name']}"
+	send_file("public/uploads/#{job_name['name']}/cuke.html")
+end
+#system dashboard
+get '/dashboard' do
+	@current_jobs=Hound.get_jobs 
+	erb :dashboard
+end
+
+get '/contact' do
+	erb :contact
+end
+
+post '/contact' do    
+
+	if params[:send]
+		beacon = Beacon.new
+		beacon.deliver(params[:subject],params[:priority],params[:description]) 
+		flash[:info] = "thank you! your request has been sent"
+	else
+		flash[:info] = "canceled !!"
 	end
 
-	get '/contact' do
-		erb :contact
-	end
+	redirect '/contact'
 
-	post '/contact' do    
-
-		if params[:send]
-			beacon = Beacon.new
-			beacon.deliver(params[:subject],params[:priority],params[:description]) 
-			flash[:info] = "thank you! your request has been sent"
-		else
-			flash[:info] = "canceled !!"
-		end
-
-		redirect '/contact'
-
-	end
 end

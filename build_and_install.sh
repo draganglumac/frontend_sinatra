@@ -56,13 +56,13 @@ check_and_update_gems
 bundle install
 
 echo "Database configuration"
-echo "Please enter HOST IP:"
+echo "Please enter hostname (or ip address) for sql db"
 read host_ip
-echo "Please enter USERNAME:"
+echo "Please enter sql username"
 read username
-echo "Please enter PASSWORD:"
+echo "Please enter sql password"
 read password
-echo "Please enter DATABASE:"
+echo "Please enter sql database"
 read database
 
 touch conf/db.conf

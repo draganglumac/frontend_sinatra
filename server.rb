@@ -66,12 +66,12 @@ helpers do
 			Dir.chdir(name) do 
 				Dir.glob("**").each do|f|
 					yield  "<a href=\"/uploads/#{name}/#{f}\">#{f}</a>"
- 				end
+				end
 			end
 		end
 	end
 
-	
+
 	def current_user
 		session[:current_user]
 	end
@@ -123,16 +123,6 @@ end
 get '/resources' do
 	erb :installer
 end
-
-
-# #results page
-# get '/results' do
-# 	@time = Time.new.inspect
-# 	@results = Hound.get_results
-# 	erb :results
-# end
-
-
 get '/analytics' do
 
 	@num_visitors = Hound.get_visitors
@@ -155,38 +145,37 @@ post '/upload/:id/:filename' do
 				file.write(request.body.read)
 			end 
 		end
-end
-#/uploads/hudsoniPhoneExample/cuke.html
-post '/results/:id' do
-	job_name = ""
-	Hound.directquery("select name from `jobs` where id=#{params[:id]}").each do |row|
-		#Just FYI, this select should only ever return 1 entry but its a hash so has to be enumerated as direct key purchase doesn't seem to do anything... though my ruby is pretty awful'
-		job_name = row
 	end
-	puts "Job name is #{job_name['name']}"
-	send_file("public/uploads/#{job_name['name']}/cuke.html")
-end
-#system dashboard
-get '/dashboard' do
-	@current_jobs=Hound.get_jobs 
-	erb :dashboard
-end
-
-get '/contact' do
-	erb :contact
-end
-
-post '/contact' do    
-
-	if params[:send]
-		beacon = Beacon.new
-		beacon.deliver(params[:subject],params[:priority],params[:description]) 
-		flash[:info] = "thank you! your request has been sent"
-	else
-		flash[:info] = "canceled !!"
+	#/uploads/hudsoniPhoneExample/cuke.html
+	post '/results/:id' do
+		job_name = ""
+		Hound.directquery("select name from `jobs` where id=#{params[:id]}").each do |row|
+			job_name = row
+		end
+		puts "Job name is #{job_name['name']}"
+		send_file("public/uploads/#{job_name['name']}/cuke.html")
+	end
+	#system dashboard
+	get '/dashboard' do
+		@current_jobs=Hound.get_jobs 
+		erb :dashboard
 	end
 
-	redirect '/contact'
+	get '/contact' do
+		erb :contact
+	end
 
-end
+	post '/contact' do    
+
+		if params[:send]
+			beacon = Beacon.new
+			beacon.deliver(params[:subject],params[:priority],params[:description]) 
+			flash[:info] = "thank you! your request has been sent"
+		else
+			flash[:info] = "canceled !!"
+		end
+
+		redirect '/contact'
+
+	end
 end

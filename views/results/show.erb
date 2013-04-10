@@ -1,5 +1,8 @@
-<ul>
-	<%link_builder(job(@result.jobs_id).name) do |link|%>
-		<li><%=link%></li>
-	<%end%>
-</ul>
+<% if !@results.empty? %>
+	<ul>
+		<%link_builder(@results) do |link|%>
+
+			<li><%=link%></li>
+		<%end%>
+	</ul>
+<%end%>

@@ -1,7 +1,8 @@
 <% if !@results.empty? %>
 <ul>
   <% for result in @results %>
-    <li><a href="results/<%=result.id%>"><%=job(result.jobs_id).name%></a></li>
+  
+	  <li><a href="results/<%=result%>"><%=result%></a></li>
   <% end %>	
 </ul>
 <% else %>

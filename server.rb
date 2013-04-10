@@ -65,7 +65,7 @@ helpers do
 		Dir.chdir(target) do
 			if Dir.exist?(name)
 				Dir.chdir(name) do 
-					Dir.glob("**").reverse.each do|f|
+					Dir.glob("*").reverse.each do|f|
 						epoch, filename = f.split('.', 2)
 						display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
 						yield  "<a href=\"/uploads/#{name}/#{f}\">#{display_name}</a>"

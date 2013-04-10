@@ -8,14 +8,18 @@ module Results
     end
 
   	get '/results' do
-  		@results  = AutomationStack::Infrastructure::Result.all.uniq{|result| result.jobs_id}
+  		#@results  = AutomationStack::Infrastructure::Result.all.uniq{|result| result.jobs_id}
+		Dir.chdir("public/uploads") do
+		@results = Dir.glob('*') 
+		end
 
   		erb :'results/index'
   	end
 
-    get '/results/:id' do
-      @result  = AutomationStack::Infrastructure::Result[params[:id]]
-      erb :'results/show'
+    get '/results/:name' do
+      
+		@results = "#{params[:name]}"
+		erb :'results/show'
     end    
   end
   

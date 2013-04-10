@@ -55,6 +55,7 @@
 <table class="table">
 	<thead>
 		<tr>
+			<th>tag</th>
 			<th>model</th>
 			<th>manufacturer</th>
 			<th>serial number</th>
@@ -68,7 +69,8 @@
 			
 			 
 			  	
-			    <td><%=row.device.name%></td>
+				<td><%=row.device.tag%></td>
+				<td><%=row.device.name%></td>
 			    <td><%=row.device.manufacturer.name%></td>
 			    <td><%=row.device.serial_number%></td>
 			    <td><%=row.device.device_type.name%></td>

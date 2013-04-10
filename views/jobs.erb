@@ -1,19 +1,27 @@
 
-<%= @error %>
 <form action="/job" method="post" enctype="multipart/form-data">
+    <% if not @errors.empty? %>
+        <div class="errors">
+            <p>Validation errors:</p>
+            <% @errors.each do |key, value| %>
+                <li><%= value %></li>
+            <% end %>
+        </div>
+        <br>
+    <% end %>    
 <div class="well">
 <p>Configuration file</p>
 <div style="position:relative;">
         <a class='btn' href='javascript:;'>
             Choose File...
-            <input type="file" id="lfile" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+            <input type="file" name="lfile" id="lfile" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
         </a>
         &nbsp;
         <span class='label label-info' id="upload-file-info"></span>
 </div>
 <p>Selected machine</p>
 
-<select name="machine_id">
+<select name="lmachine_id" id="lmachine_id">
 
 <%for row in @machines %>
 
@@ -25,14 +33,14 @@
 </select>
 
 <p>Job name</p>
-<input type="text" name="lname">
+<input type="text" name="lname" id="lname">
 <br>
 <p>Trigger time</p>
 
    <link rel="stylesheet" type="text/css" media="screen"
     href="/css/bootstrap-datetimepicker.min.css">
  <div id="datetimepicker" class="input-append date">
-      <input type="text"  name="ltrigger"></input>
+      <input type="text"  name="ltrigger" id="ltrigger"></input>
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
@@ -80,7 +88,7 @@
 <input type="hidden" name="is_private" value="0" />
 
 <br />
-<input id="submit"type="submit" value="submit"class="btn btn-primary"/>
+<input id="submit"type="submit" xdwonclick="alert('Hi Bob!')" value="submit"class="btn btn-primary"/>
 </form>
 </div>
 <h2>Current jobs</h2>

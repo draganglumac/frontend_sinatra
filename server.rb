@@ -72,7 +72,7 @@ helpers do
 					end
 				end
 			else
-				status 500
+				halt 500, "Internal server error"
 			end
 		end
 	end
@@ -169,6 +169,10 @@ get '/dashboard' do
 	erb :dashboard
 end
 
+get '/overview' do
+	
+	erb :overview
+end
 get '/contact' do
 	erb :contact
 end

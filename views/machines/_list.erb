@@ -4,6 +4,7 @@
 	  <td>Machine Callsign</td>
 	  <td>Machine Ip</td>
 	  <td>Supported platforms</td>
+	  <td>Status</td>
 	  <td></td>
 	</tr>
 	
@@ -12,7 +13,7 @@
 	  <td><a href="/machines/<%=row.id%>"><%=row.call_sign%></a></td>
 	  <td><%=row.ip_address%></td>
 	  <td><%=row.platform.name%></td>
-	  
+      <td><%=row.status%></td>	  
 	  <td>
 	    <form method="post" action="/machines/<%=row.id%>/delete"> 
         	<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>

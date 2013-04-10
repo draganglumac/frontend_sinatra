@@ -4,16 +4,14 @@ module Jobs
             def validate(params)
                 errors = {}
 
-                puts params
-
-                [:lmachine_id, :lname, :ltrigger].each do |key|
+                [:machine_id, :lname, :ltrigger].each do |key|
                     (params[key] || "").strip
                 end
 
-                if params[:lfile].nil?
-                    errors[:lfile] = "Configuration file is required."
+                if params[:file_source].nil?
+                    errors[:file_source] = "Configuration file is required."
                 end 
-                errors[:lmachine_id] = "Selected machine is required." if params[:lmachine_id].empty?
+                errors[:machine_id] = "Selected machine is required." if params[:machine_id].empty?
                 errors[:lname] = "Job name is required." if params[:lname].empty?
                 errors[:ltrigger] = "Trigger time is required." if params[:ltrigger].empty?
 

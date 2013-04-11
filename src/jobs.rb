@@ -18,21 +18,22 @@ module Jobs
                 errors
             end
         end
-        #new ljob page
+        
+        #new job page
         get '/job' do
             @errors    = {}
             @machines  = AutomationStack::Infrastructure::Machine.all
             @jobs_done = Hound.get_jobs
             erb :jobs
         end
+        
         #Posting new jobs
-
 
         post '/job/restart/:jobnum' do
             Hound.set_job_restart(params[:jobnum])
-            redirect '/'
+            redirect '/job'
         end
-
+        
         post '/job/recursion/disable/:id' do
             Hound.disable_recursion(params[:id])
             redirect back
@@ -40,10 +41,6 @@ module Jobs
         post '/job/recursion/enable/:id' do
             Hound.enable_recursion(params[:id])
             redirect back
-        end
-        post '/job/restart/:jobnum' do
-            Hound.set_job_restart(params[:jobnum])
-            redirect '/'
         end
 
         post '/job/:id/delete' do

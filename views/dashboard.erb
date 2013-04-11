@@ -9,7 +9,11 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a tabindex="-1" href="#">Restart</a></li>
+                    <form id="restart-job-<%=job['id']%>" 
+                        method="post" 
+                        action="/dashboard/job/restart/<%=job['id']%>">
+                        <li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
+                    </form>    
                 </ul>
             </div>
 

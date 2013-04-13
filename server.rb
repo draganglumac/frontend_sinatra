@@ -18,7 +18,7 @@ require 'admin'
 require 'jobs'
 require 'sessions'
 require 'results'
-
+require 'dashboard'
 
 require "pry-remote"
 

@@ -52,7 +52,12 @@ class Hound
 		@@dbconnect.query("UPDATE `jobs` SET status='INPROGRESS' WHERE id=#{job_id}")
 	end
 	def self.set_job_restart(job_id)
-		@@dbconnect.query("UPDATE `jobs` SET status='INCOMPLETE' WHERE id=#{job_id}")
+		@@dbconnect.query("UPDATE `jobs` SET status='NOT STARTED' WHERE id=#{job_id}")
+		#get current unix timestamp
+		#update the trigger to the current time stamp
+		#we add two minutes to be sure the local satellite differential doesn't miss the job
+		current_time = Time.now.to_i + 120
+		DB[:jobs].where(:id => job_id).update(:trigger_time =>current_time)
 	end
 	def self.directquery(query)
 		return @@dbconnect.query(query)
@@ -86,7 +91,7 @@ class Hound
 		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
 	def self.add_job(machine_id,job_name,command,trigger_time,recursionflag)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'INCOMPLETE', :recursion => recursionflag
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag
     end
 	def self.add_machine(machine)
 	  DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address]

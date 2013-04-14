@@ -54,9 +54,9 @@
                     Job health CRITICAL
                 </div>
             <%end%>
-            <%if job["status"].eql?("INCOMPLETE")%>
-                <div class="alert alert-success">
-                    Job health GOOD
+            <%if job["status"].eql?("NOT STARTED")%>
+                <div class="alert alert-block">
+                    Job health PENDING
                 </div>
             <%end%>
             <%if job["status"].eql?("COMPLETED")%>
@@ -64,13 +64,11 @@
                     Job health GOOD
                 </div>
             <%end%>
-            <%if job["status"].eql?("INPROGRESS")%>
-                <div class="alert alert-block">
-                    Job health PENDING
+            <%if job["status"].eql?("SCHEDULED")%>
+                <div class="alert alert-success">
+                    Job health GOOD
                 </div>
             <%end%>
-
-
         </div>
     <% end %>
 </div>

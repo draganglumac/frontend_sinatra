@@ -63,7 +63,6 @@ module Jobs
 
 				tempfile = params[:file_source][:tempfile] 
 				filename = params[:file_source][:filename] 
-				cp(tempfile.path, "public/uploads/#{filename}")
 				string = File.open(tempfile.path, 'rb') { |file| file.read }
 				#puts string
 				#machine_num = params[:machine_id].split("machine_id")

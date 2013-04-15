@@ -25,15 +25,6 @@ class Hound
 	def self.get_jobs
 		return @@dbconnect.query("SELECT * from `jobs`")
 	end
-	def self.get_complete_jobs
-		return @@dbconnect.query("select * from `jobs` where `status` = 'COMPLETE' limit 10")
-	end
-	def self.get_incomplete_jobs
-		return @@dbconnect.query("select * from `jobs` where `status` = 'INPROGRESS'")
-	end
-	def self.get_unstarted_jobs
-		return @@dbconnect.query("select * from `jobs` where `status` = 'INCOMPLETE'")
-	end
 	def self.get_results
 		return @@dbconnect.query("SELECT * FROM results")
 	end
@@ -80,15 +71,8 @@ class Hound
 	def self.turn_off_foreign_key_checks
 		@@dbconnect.query("SET FOREIGN_KEY_CHECKS=0;")
 	end
-
-
 	def self.turn_on_foreign_key_checks
 		@@dbconnect.query("SET FOREIGN_KEY_CHECKS=1;")
-	end
-
-
-	def self.purgedb
-		@@dbconnect.query("DROP DATABASE AUTOMATION")
 	end
 	def self.add_job(machine_id,job_name,command,trigger_time,recursionflag)
     DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag
@@ -100,7 +84,6 @@ class Hound
 	def self.add_visitor(ip)
 		#@@dbconnect.query("INSERT INTO `analytics` (`id`,`DATETIME`,`IP`) VALUES (NULL,CURRENT_TIMESTAMP,'#{ip}')")
 	end
-	
 	def self.get_visitors
 		return @@dbconnect.query("select * from `analytics`")
 	end

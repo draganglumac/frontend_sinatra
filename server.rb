@@ -19,7 +19,7 @@ require 'jobs'
 require 'sessions'
 require 'results'
 require 'dashboard'
-
+require 'overview'
 require "pry-remote"
 
 include FileUtils::Verbose   
@@ -129,17 +129,6 @@ end
 get '/resources' do
 	erb :installer
 end
-get '/analytics' do
-
-	@num_visitors = Hound.get_visitors
-	@num_completed_jobs = Hound.get_complete_jobs.size.to_i   
-	#puts @num_completed_jobs
-	@num_unstarted_jobs = Hound.get_unstarted_jobs.size.to_i   
-	#puts @num_unstarted_jobs
-	@num_pending_jobs = Hound.get_incomplete_jobs.size.to_i   
-	erb :analytics
-end
-
 post '/upload/:id/:filename' do
 	job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
 	fu = params[:filename]
@@ -167,11 +156,6 @@ end
 get '/dashboard' do
 	@current_jobs=Hound.get_jobs 
 	erb :dashboard
-end
-
-get '/overview' do
-	
-	erb :overview
 end
 get '/contact' do
 	erb :contact

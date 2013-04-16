@@ -13,8 +13,8 @@
 						method="post" 
 						action="/dashboard/job/restart/<%=job['id']%>">
 						<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
-						<li><a href="/results/<%=job["name"]%>">View Results</a></li>
 					</form>    
+
 				</ul>
 			</div>
 
@@ -22,7 +22,7 @@
 			<p>Job status <%=job["status"]%></p>
 			<p>Last run <%=job["TIMESTAMP"]%></p>
 
-		
+
 
 
 			<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
@@ -37,45 +37,49 @@
 							<p><%=job['command']%></p>
 						</div>
 					</div>
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
-						View job trigger time
-					</a>
-				</div>
-				<div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
-					<div class="accordion-inner">
-						<p><%=Time.at(job['trigger_time'])%></p>
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
+							View job trigger time
+						</a>
 					</div>
-				</div>
-			</div> 
-			<%if job["status"].eql?("FAILED")%>
-				<div class="alert alert-error">
-					Job health CRITICAL
-				</div>
-			<%end%>
-			<%if job["status"].eql?("NOT STARTED")%>
-				<div class="alert alert-block">
-					Job health PENDING
-				</div>
-			<%end%>
-			<%if job["status"].eql?("IN PROGRESS")%>
-				<div class="alert alert-info">
-					Job health PENDING
-				</div>
-			<%end%>
-			<%if job["status"].eql?("COMPLETED")%>
-				<div class="alert alert-success">
-					Job health GOOD
-				</div>
-			<%end%>
-			<%if job["status"].eql?("SCHEDULED")%>
-				<div class="alert alert-success">
-					Job health GOOD
-				</div>
-			<%end%>
+					<div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+						<div class="accordion-inner">
+							<p><%=Time.at(job['trigger_time'])%></p>
+						</div>
+					</div>
+				</div> 
+				<%if job["status"].eql?("FAILED")%>
+					<div class="alert alert-error">
+						Job health CRITICAL
+					</div>
+				<%end%>
+				<%if job["status"].eql?("NOT STARTED")%>
+					<div class="alert alert-block">
+						Job health PENDING
+					</div>
+				<%end%>
+				<%if job["status"].eql?("IN PROGRESS")%>
+					<div class="alert alert-info">
+						Job health PENDING
+					</div>
+				<%end%>
+				<%if job["status"].eql?("COMPLETED")%>
+					<div class="alert alert-success">
+						Job health GOOD
+					</div>
+				<%end%>
+				<%if job["status"].eql?("SCHEDULED")%>
+					<div class="alert alert-success">
+						Job health GOOD
+					</div>
+				<%end%>
+			</div>
 		</div>
 	<% end %>
 </div>
+
+
+
 
 <script>
 	setTimeout(function () { location.reload(1); }, 5000);

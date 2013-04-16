@@ -13,7 +13,9 @@
 						method="post" 
 						action="/dashboard/job/restart/<%=job['id']%>">
 						<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
-						<li><a href="/results/<%=job['name']%>">Results</a></li>
+						<% if Dir.exist?("public/uploads/#{job['name']}")%>
+							<li><a href="/results/<%=job['name']%>">Results</a></li>
+						<%end%>
 					</form>    
 
 				</ul>

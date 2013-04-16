@@ -1,3 +1,4 @@
+*.log
 public/uploads/*
 *.lock
 *.DS_Store

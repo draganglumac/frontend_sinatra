@@ -38,7 +38,9 @@ set :public_folder, 'public'
 set :views ,'views'
 
 enable :sessions  
-
+log = File.new("sinatra.log","a+")
+$stdout.reopen(log)
+$stderr.reopen(log)
 configure :test,:development do
 	Pony.options = {
 		:via => :smtp,

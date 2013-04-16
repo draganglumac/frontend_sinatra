@@ -72,7 +72,7 @@ helpers do
 					end
 				end
 			else
-				halt 500, "Internal server error"
+				halt 404, "Results unavailable - May not have been processed yet"
 			end
 		end
 	end

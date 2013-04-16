@@ -1,76 +1,80 @@
 <div class="grid">
 
-    <%for job in @current_jobs%>
-        <div class="col-1-3 well">
+	<%for job in @current_jobs%>
+		<div class="col-1-3 well">
 
-            <div class="btn-group pull-right">
-                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    Action
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <form id="restart-job-<%=job['id']%>" 
-                        method="post" 
-                        action="/dashboard/job/restart/<%=job['id']%>">
-                        <li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
-                    </form>    
-                </ul>
-            </div>
+			<div class="btn-group pull-right">
+				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+					Action
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<form id="restart-job-<%=job['id']%>" 
+						method="post" 
+						action="/dashboard/job/restart/<%=job['id']%>">
+						<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
+						<li><a href="/results/<%=job["name"]%>">View Results</a></li>
+					</form>    
+				</ul>
+			</div>
 
-            <h4><%=job["name"]%></h4>
-            <p>Job status <%=job["status"]%></p>
-            <p>Last run <%=job["TIMESTAMP"]%></p>
+			<h4><%=job["name"]%></h4>
+			<p>Job status <%=job["status"]%></p>
+			<p>Last run <%=job["TIMESTAMP"]%></p>
 
-            <div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse<%=job['name']%><%=job['id']%>">
-                            View build commands
-                        </a>
-                    </div>
-                    <div id="collapse<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                            <p><%=job['command']%></p>
-                        </div>
-                    </div>
-                </div>
+		
 
 
-
-
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
-                        View job trigger time
-                    </a>
-                </div>
-                <div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <p><%=Time.at(job['trigger_time'])%></p>
-                    </div>
-                </div>
-            </div> 
-            <%if job["status"].eql?("FAILED")%>
-                <div class="alert alert-error">
-                    Job health CRITICAL
-                </div>
-            <%end%>
-            <%if job["status"].eql?("NOT STARTED")%>
-                <div class="alert alert-block">
-                    Job health PENDING
-                </div>
-            <%end%>
-            <%if job["status"].eql?("COMPLETED")%>
-                <div class="alert alert-success">
-                    Job health GOOD
-                </div>
-            <%end%>
-            <%if job["status"].eql?("SCHEDULED")%>
-                <div class="alert alert-success">
-                    Job health GOOD
-                </div>
-            <%end%>
-        </div>
-    <% end %>
+			<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse<%=job['name']%><%=job['id']%>">
+							View build commands
+						</a>
+					</div>
+					<div id="collapse<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+						<div class="accordion-inner">
+							<p><%=job['command']%></p>
+						</div>
+					</div>
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
+						View job trigger time
+					</a>
+				</div>
+				<div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<p><%=Time.at(job['trigger_time'])%></p>
+					</div>
+				</div>
+			</div> 
+			<%if job["status"].eql?("FAILED")%>
+				<div class="alert alert-error">
+					Job health CRITICAL
+				</div>
+			<%end%>
+			<%if job["status"].eql?("NOT STARTED")%>
+				<div class="alert alert-block">
+					Job health PENDING
+				</div>
+			<%end%>
+			<%if job["status"].eql?("IN PROGRESS")%>
+				<div class="alert alert-info">
+					Job health PENDING
+				</div>
+			<%end%>
+			<%if job["status"].eql?("COMPLETED")%>
+				<div class="alert alert-success">
+					Job health GOOD
+				</div>
+			<%end%>
+			<%if job["status"].eql?("SCHEDULED")%>
+				<div class="alert alert-success">
+					Job health GOOD
+				</div>
+			<%end%>
+		</div>
+	<% end %>
 </div>
 
 <script>

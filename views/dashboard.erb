@@ -22,9 +22,16 @@
 			</div>
 
 			<h4><%=job["name"]%></h4>
+		
+			<% if job["recursion"].eql?(0) %>
+			<h5> Single run job</h5>
+		<%else%>	
+			<h5> Recursive job</h5>
+		<%end%>
 			<p>Job status <%=job["status"]%></p>
 			<p>Last run <%=job["TIMESTAMP"]%></p>
 
+		
 
 
 

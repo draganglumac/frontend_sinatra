@@ -47,7 +47,7 @@ class Hound
 		#get current unix timestamp
 		#update the trigger to the current time stamp
 		#we add two minutes to be sure the local satellite differential doesn't miss the job
-		current_time = Time.now.to_i + 120
+		current_time = Time.now.to_i + 60
 		DB[:jobs].where(:id => job_id).update(:trigger_time =>current_time)
 	end
 	def self.directquery(query)

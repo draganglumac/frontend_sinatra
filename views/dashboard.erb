@@ -29,9 +29,9 @@
 			<h5> Recursive job</h5>
 		<%end%>
 			<p>Job status <%=job["status"]%></p>
-			<p>Last run <%=job["TIMESTAMP"]%></p>
-
+			<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
 		
+			<p><a href="/machines/<%=job['machine_id']%>">Build machine <%=job['machine_id']%></a></p>	
 
 
 

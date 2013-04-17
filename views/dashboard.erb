@@ -21,7 +21,7 @@
 				</ul>
 			</div>
 
-			<h4><%=job["name"]%></h4>
+			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=job["name"]%></h4>
 		
 			<% if job["recursion"].eql?(0) %>
 			<h5> Single run job</h5>

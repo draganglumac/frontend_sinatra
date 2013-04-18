@@ -1,21 +1,27 @@
 <div class="grid">
 
 	<%for machine in @machines%>
-	<div class="col-1-3 well">
+		<div class="col-1-3 well">
 
-		<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
-	
-		<%if machine.status.eql?("ONLINE")%>
-		<div class="alert alert-success">
-		Status Online
-		</div>
-		<%else%>
-		<div class="alert alert-error">
-		Status Offline
-		</div>
-		<%end%>
+			<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
 
-	</div>
+			<% if !machine.connected_devices.empty? %>
+				<h5>Connected devices</h5>
+				<% for device in machine.connected_devices%>
+					<p><%=device.device.tag%></p>
+				<%end%>
+			<%end%>
+			<%if machine.status.eql?("ONLINE")%>
+				<div class="alert alert-success">
+					Status Online
+				</div>
+			<%else%>
+				<div class="alert alert-error">
+					Status Offline
+				</div>
+			<%end%>
+
+		</div>
 	<%end%>
 
 </div>

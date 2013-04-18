@@ -29,8 +29,9 @@ module Machines
     	Hound.remove_machine(params[:id])
 		  redirect "/machines"
     end
-	post '/machines/status/:id/:status' do
-		Hound.directquery("call update_machine_status(#{params[:id]},'#{params[:status]}');")	
+	post '/machines/status/:status' do
+		puts "received status update from machine #{request.ip}"
+		Hound.directquery("call update_machine_status('#{request.ip}','#{params[:status]}');")	
 	end
     post '/machines' do
       redirect "/machines" if params[:cancel]

@@ -12,6 +12,7 @@
 			<th>model</th>
 			<th>manufacturer</th>
 			<th>serial number</th>
+			<th>ip</th>
 			<th>type</th>
 			<th></th>
 		</tr>
@@ -23,7 +24,8 @@
 		    <td><%=device.name%></td>
 		    <td><%=device.manufacturer.name%></td>
 		    <td><%=device.serial_number%></td>
-		    <td><%=device.device_type.name%></td>
+			<td><%=device.ip%></td>
+			<td><%=device.device_type.name%></td>
 		    <td>
 			    <form method="post" action="/devices/<%=device.id%>/delete"> 
 		        <%if can_edit?%>

@@ -1,129 +1,140 @@
 
 <form action="/job" method="post" enctype="multipart/form-data">
-    <% if not @errors.empty? %>
-        <div class="errors">
-            <p>Validation errors:</p>
-            <% @errors.each do |key, value| %>
-                <li><%= value %></li>
-            <% end %>
-        </div>
-        <br>
-    <% end %>    
-<div class="well">
-<p>Configuration file</p>
-<div style="position:relative;">
-        <a class='btn' href='javascript:;'>
-            Choose File...
-            <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
-        </a>
-        &nbsp;
-        <span class='label label-info' id="upload-file-info"></span>
-</div>
-<p>Selected machine</p>
+	<% if not @errors.empty? %>
+		<div class="errors">
+			<p>Validation errors:</p>
+			<% @errors.each do |key, value| %>
+				<li><%= value %></li>
+			<% end %>
+		</div>
+		<br>
+	<% end %>    
+	<div class="col-1-3 well">
+		<h1>New job</h1>
+		<h4>Configuration file</h4>
+		<div style="position:relative;">
+			<a class='btn' href='javascript:;'>
+				Choose File...
+				<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
+			</a>
+			&nbsp;
+			<span class='label label-info' id="upload-file-info"></span>
+		</div>
+		<h4>Selected machine</h4>
 
-<select name="machine_id" id="machine_id">
+		<select name="machine_id" id="machine_id">
 
-<%for row in @machines %>
+			<%for row in @machines %>
 
-<option value=<%=row.id%>>
-<%=row.call_sign%>
-</option>
-<% end %>
+				<option value=<%=row.id%>>
+				<%=row.call_sign%>
+				</option>
+			<% end %>
 
-</select>
+		</select>
 
-<p>Job name</p>
-<input type="text" name="lname" id="lname">
-<br>
-<p>Trigger time</p>
+		<h4>Job name</h4>
+		<input type="text" name="lname" id="lname">
+		<br>
+		<h4>Trigger time</h4>
 
-   <link rel="stylesheet" type="text/css" media="screen"
-    href="/css/bootstrap-datetimepicker.min.css">
- <div id="datetimepicker" class="input-append date">
-      <input type="text"  name="ltrigger" id="ltrigger"></input>
-      <span class="add-on">
-        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-      </span>
-    </div>
-    <script type="text/javascript"
-     src="jquery.min.js">
-    </script> 
-    <script type="text/javascript"
-     src="/js/bootstrap.min.js">
-    </script>
-    <script type="text/javascript"
-     src="/js/bootstrap-datetimepicker.min.js">
-    </script>
-    <script type="text/javascript">
+		<link rel="stylesheet" type="text/css" media="screen"
+		href="/css/bootstrap-datetimepicker.min.css">
+		<div id="datetimepicker" class="input-append date">
+			<input type="text"  name="ltrigger" id="ltrigger"></input>
+			<span class="add-on">
+				<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+			</span>
+		</div>
+		<script type="text/javascript"
+			src="jquery.min.js">
+			</script> 
+			<script type="text/javascript"
+				src="/js/bootstrap.min.js">
+				</script>
+				<script type="text/javascript"
+					src="/js/bootstrap-datetimepicker.min.js">
+					</script>
+					<script type="text/javascript">
 
-      $('#datetimepicker').datetimepicker({
-        format: 'dd/MM/yyyy hh:mm:ss',
-        pickDate: false
-      });
-      jQuery(function($) {
-  $('div.btn-group[data-toggle-name=*]').each(function(){
-    var group   = $(this);
-    var form    = group.parents('form').eq(0);
-    var name    = group.attr('data-toggle-name');
-    var hidden  = $('input[name="' + name + '"]', form);
-    $('button', group).each(function(){
-      var button = $(this);
-      button.live('click', function(){
-          hidden.val($(this).val());
-      });
-      if(button.val() == hidden.val()) {
-        button.addClass('active');
-      }
-    });
-  });
+						$('#datetimepicker').datetimepicker({
+format: 'dd/MM/yyyy hh:mm:ss',
+pickDate: false
 });
-    </script>
-<br />
+jQuery(function($) {
+		$('div.btn-group[data-toggle-name=*]').each(function(){
+			var group   = $(this);
+			var form    = group.parents('form').eq(0);
+			var name    = group.attr('data-toggle-name');
+			var hidden  = $('input[name="' + name + '"]', form);
+			$('button', group).each(function(){
+				var button = $(this);
+				button.live('click', function(){
+					hidden.val($(this).val());
+					});
+				if(button.val() == hidden.val()) {
+				button.addClass('active');
+				}
+				});
+			});
+		});
+	</script>
+	<br />
 
-<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
-  <button type="button" value="0" class="btn" data-toggle="button">Single</button>
-  <button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
-</div>
-<br />
-<input type="hidden" name="is_private" value="0" />
+	<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
+		<button type="button" value="0" class="btn" data-toggle="button">Single</button>
+		<button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
+	</div>
+	<br />
+	<input type="hidden" name="is_private" value="0" />
 
-<br />
-<input id="submit"type="submit" xdwonclick="alert('Hi Bob!')" value="submit"class="btn btn-primary"/>
+	<br />
+	<input id="submit"type="submit" xdwonclick="alert('Hi Bob!')" value="submit"class="btn btn-primary"/>
 </form>
+
 </div>
-<h2>Current jobs</h2>
+<div class="col-1-3 well" style="margin-top:-15px;height:475px;">
+	<h2>Environmental variables</h2>
+	<span>The following are variables you can put into your script and will be automatically resolved for the correct entry</span>
+	<h4>IP addresses</h4>
+	<p>$IPHONE_ENDPOINT</p>
+	<p>$IPAD_ENDPOINT</p>
+	</br>
+	<span>e.g. "DEVICE_ENDPOINT=http://$IPHONE_ENDPOINT cucumber"</span>
+</div>
+
 <table id="job_table" class="table">
 	<tr>
-        <td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td><td>Toggle recursion</td><td></td>
+		<td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td><td>Toggle recursion</td><td></td>
 	</tr>
-	
-<%for row in @jobs_done %>
-	<tr>
-        <td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=Time.at(row["trigger_time"])%></td><td><%=row["recursion"]%></td><td><%=row["status"]%></td><td><%=row["machine_id"]%></td><td><%=row["command"]%></td><td>
-	<form method="post" action="/job/restart/<%=row["id"]%>"> 
-    <input type="hidden" name="_method" value="submit">
-    <button type="submit"class="btn">Go</button>
-	</form>
-	</td>
-  <td>
-      <%if row["recursion"].eql?(1)%>
-      <form method="post" action="/job/recursion/disable/<%=row["id"]%>"> 
-       <input type="hidden" name="_method" value="submit">
-        <button type="submit"class="btn">Disable</button>
-      </form>
-  <%end%>
-    <%if row["recursion"].eql?(0)%>
-        <form method="post" action="/job/recursion/enable/<%=row["id"]%>"> 
-        <input type="hidden" name="_method" value="submit">
-        <button type="submit"class="btn">Enable</button>
-      </form>
-    <%end%>
-  </td>
-  <td>
-       <form method="post" action="/job/<%=row["id"]%>/delete"> 
-          <%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
-      </form> 
-  </td>
-	</tr>
-<% end %>
+
+	<%for row in @jobs_done %>
+		<tr>
+			<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=Time.at(row["trigger_time"])%></td><td><%=row["recursion"]%></td><td><%=row["status"]%></td><td><%=row["machine_id"]%></td><td><%=row["command"]%></td><td>
+				<form method="post" action="/job/restart/<%=row["id"]%>"> 
+					<input type="hidden" name="_method" value="submit">
+					<button type="submit"class="btn">Go</button>
+				</form>
+			</td>
+			<td>
+				<%if row["recursion"].eql?(1)%>
+					<form method="post" action="/job/recursion/disable/<%=row["id"]%>"> 
+						<input type="hidden" name="_method" value="submit">
+						<button type="submit"class="btn">Disable</button>
+					</form>
+				<%end%>
+				<%if row["recursion"].eql?(0)%>
+					<form method="post" action="/job/recursion/enable/<%=row["id"]%>"> 
+						<input type="hidden" name="_method" value="submit">
+						<button type="submit"class="btn">Enable</button>
+					</form>
+				<%end%>
+			</td>
+			<td>
+				<form method="post" action="/job/<%=row["id"]%>/delete"> 
+					<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
+				</form> 
+			</td>
+		</tr>
+	<% end %>
 </table>

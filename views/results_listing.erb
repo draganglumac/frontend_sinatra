@@ -1,5 +1,10 @@
 <ul> 
   <% @arr.each do |page| %>
-    <li><a href="/<%=page%>"><%=page> %></a></li>
+
+	  <%if File.open(page).include?("Errno") %>
+		  <li><a href="/<%=page%>"><%=page%></a></li>
+	  <% else %>
+	  <li><a href="/<%=page%>"><%=page%></a></li>
+  		<% end %>
   <% end %>
 </ul> 

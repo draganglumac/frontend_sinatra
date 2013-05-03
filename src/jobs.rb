@@ -64,9 +64,21 @@ module Jobs
 				tempfile = params[:file_source][:tempfile] 
 				filename = params[:file_source][:filename] 
 				string = File.open(tempfile.path, 'rb') { |file| file.read }
-				#puts string
-				#machine_num = params[:machine_id].split("machine_id")
+				#######Parse the string and replace 
 
+				if string.include?("$IPAD_ENDPOINT")
+					ip_addr = "not done"
+					ip_addr = Hound.get_device_ip_from_type_and_machine(2,params[:machine_id]).first
+					puts ip_addr['ip']
+					string.gsub!("$IPAD_ENDPOINT",ip_addr['ip'])
+				end
+				if string.include?("$IPHONE_ENDPOINT")
+					ip_addr = "UNKNOWN"
+					ip_addr = Hound.get_device_ip_from_type_and_machine(1,params[:machine_id]).first
+					puts ip_addr['ip']
+					string.gsub!("$IPHONE_ENDPOINT","#{ip_addr['ip']}")
+				end
+				#######
 				recursion=0
 
 				if params[:is_private] == "0"
@@ -76,20 +88,10 @@ module Jobs
 					puts "RECURSION HAS BEEN SET, RECURSIVE MODE" if development?
 					recursion=1
 				end
-				#There is a difference here between ruby versions, be aware
 				machine_num = params[:machine_id]
-				#'dd/MM/yyyy hh:mm:ss'
 				trigger = params[:ltrigger] 
 				trigger << ".000000"
 				trigger = Time.parse(trigger).to_i
-
-				if development?
-					puts "JOB NAME #{params[:lname]}"
-					puts "MACHINE NUMBER #{machine_num}"
-					puts "OUTPUT STRING IS #{string}"
-					puts "TRIGGER TIME IS #{trigger}"    
-				end
-
 
 				Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
 				redirect '/job'

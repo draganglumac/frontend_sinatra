@@ -98,4 +98,8 @@ class Hound
 @@dbconnect.query("select devices.ip from connected_devices inner join devices on connected_devices.device_id=devices.id where devices.device_type_id=#{type} and connected_devices.machine_id=#{machine_id};")
 
 	end
+	def self.get_device_serial_from_type_and_machine(type,machine_id)
+@@dbconnect.query("select devices.serial_number from connected_devices inner join devices on connected_devices.device_id=devices.id where devices.device_type_id=#{type} and connected_devices.machine_id=#{machine_id};")
+
+	end
 end

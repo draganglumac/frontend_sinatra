@@ -16,21 +16,24 @@
 						<% if Dir.exist?("public/uploads/#{job['name']}")%>
 							<li><a href="/results/<%=job['name']%>">Results</a></li>
 						<%end%>
+						<li>
+						<a href="/job/<%=job['id']%>/delete">Delete</a>
+							</li>
 					</form>    
 
 				</ul>
 			</div>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=job["name"]%></h4>
-		
+
 			<% if job["recursion"].eql?(0) %>
-			<h5> Single run job</h5>
-		<%else%>	
-			<h5> Recursive job</h5>
-		<%end%>
+				<h5> Single run job</h5>
+			<%else%>	
+				<h5> Recursive job</h5>
+			<%end%>
 			<p>Job status <%=job["status"]%></p>
 			<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
-		
+
 			<p><a href="/machines/<%=job['machine_id']%>">Build machine <%=job['machine_id']%></a></p>	
 
 

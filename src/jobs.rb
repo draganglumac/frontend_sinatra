@@ -42,7 +42,11 @@ module Jobs
 			Hound.enable_recursion(params[:id])
 			redirect back
 		end
-
+		get '/job/:id/delete' do
+			job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+			job.delete
+			redirect back
+		end
 		post '/job/:id/delete' do
 			job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
 			job.delete

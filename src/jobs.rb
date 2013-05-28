@@ -3,7 +3,6 @@ module Jobs
 		helpers do
 			def validate(params)
 				errors = {}
-
 				[:machine_id, :lname, :ltrigger].each do |key|
 					(params[key] || "").strip
 				end
@@ -23,6 +22,7 @@ module Jobs
 		get '/job' do
 			@errors    = {}
 			@machines  = AutomationStack::Infrastructure::Machine.all
+			@devices = AutomationStack::Infrastructure::Device.all
 			@jobs_done = Hound.get_jobs
 			erb :jobs
 		end
@@ -54,21 +54,39 @@ module Jobs
 		end
 
 		post '/job' do
-			puts params if development?
 
-			@errors = validate(params);
-
-			if not @errors.empty?
-				@machines  = AutomationStack::Infrastructure::Machine.all
-				@jobs_done = Hound.get_jobs
-				erb :jobs
-			else
-				puts params[:file_source][:filename] if development?
-
+			params.keys.each do | pline |
+				if pline.include? "SELECTED_DEVICE"
+					current_device = pline.split("=").last
+					puts "Current device #{current_device}"
+					machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
+					machine = machine.first[:machine_id]
+					puts "Device machine is #{machine}"
+					#We have our current device, so lets build a job for each device
+					####
+					####
+					#
+					tempfile = params[:file_source][:tempfile]	
+					filename = params[:file_source][:filename]
+					string = File.open(tempfile.path,'rb') { |file|file.read}
+					trigger = params[:ltrigger] 
+					trigger << ".000000"
+					trigger = Time.parse(trigger).to_i
+					recursion=0
+					if params[:is_private] == "0"
+						recursion=0
+					else
+						recursion=1
+					end
+					Hound.add_job(machine,params[:lname],string,trigger,recursion)
+				end
+			end			
+=begin
 				tempfile = params[:file_source][:tempfile] 
 				filename = params[:file_source][:filename] 
 				string = File.open(tempfile.path, 'rb') { |file| file.read }
 				#######Parse the string and replace 
+
 				if string.include?("$PAD_ENDPOINT")
 					ip_addr = "UNKNOWN"
 					ip_addr = Hound.get_device_ip_from_type_and_machine(2,params[:machine_id]).first
@@ -110,8 +128,10 @@ module Jobs
 				trigger = Time.parse(trigger).to_i
 
 				Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
-				redirect '/job'
-			end
+
+				#redirect '/job'
+=end	
+redirect '/dashboard'
 		end
 	end
 end

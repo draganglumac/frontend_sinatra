@@ -1,5 +1,28 @@
-
+<link href="/css/bootstrap-scroll-modal.css" res="stylesheet">
+<!-- Process the devices from the modal -->
+<!-- Our device modal --!>
+<!-- End --!>
 <form action="/job" method="post" enctype="multipart/form-data">
+	<div id="deviceModal" class="modal hide" style="opacity:1.0;">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">&times;</a>
+			<h3>Device Selection</h3>
+		</div>
+		<div class="modal-body">
+			<ul id="device_list">
+				<%for device in @devices %>
+					<% if device.ip %>
+					<li>
+					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
+					</li>
+				<%end%>
+				<%end %>
+			</ul>
+		</div>
+		<div class="modal-footer">
+			<input id="submit" type="submit" value="submit"/>
+		</div>
+	</div>
 	<% if not @errors.empty? %>
 		<div class="errors">
 			<p>Validation errors:</p>
@@ -9,8 +32,11 @@
 		</div>
 		<br>
 	<% end %>    
-	<div class="col-1-3 well">
+	<div class="col-1-3 well"style="height:475px;">
 		<h1>New job</h1>
+		<h4>Job name</h4>
+		<input type="text" name="lname" id="lname">
+		<br>
 		<h4>Configuration file</h4>
 		<div style="position:relative;">
 			<a class='btn' href='javascript:;'>
@@ -20,22 +46,6 @@
 			&nbsp;
 			<span class='label label-info' id="upload-file-info"></span>
 		</div>
-		<h4>Selected machine</h4>
-
-		<select name="machine_id" id="machine_id">
-
-			<%for row in @machines %>
-
-				<option value=<%=row.id%>>
-				<%=row.call_sign%>
-				</option>
-			<% end %>
-
-		</select>
-
-		<h4>Job name</h4>
-		<input type="text" name="lname" id="lname">
-		<br>
 		<h4>Trigger time</h4>
 
 		<link rel="stylesheet" type="text/css" media="screen"
@@ -56,7 +66,6 @@
 					src="/js/bootstrap-datetimepicker.min.js">
 					</script>
 					<script type="text/javascript">
-
 						$('#datetimepicker').datetimepicker({
 format: 'dd/MM/yyyy hh:mm:ss',
 pickDate: false
@@ -78,20 +87,17 @@ jQuery(function($) {
 				});
 			});
 		});
-	</script>
-	<br />
-
-	<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
-		<button type="button" value="0" class="btn" data-toggle="button">Single</button>
-		<button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
-	</div>
-	<br />
-	<input type="hidden" name="is_private" value="0" />
-
-	<br />
-	<input id="submit"type="submit" xdwonclick="alert('Hi Bob!')" value="submit"class="btn btn-primary"/>
+</script>
+<br />
+<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
+	<button type="button" value="0" class="btn" data-toggle="button">Single</button>
+	<button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
+</div>
+<br />
+<input type="hidden" name="is_private" value="0" />
 </form>
-
+<h4>Select devices</h4>
+<a class="btn btn-info" data-dynamic="true" data-toggle="modal" href="#deviceModal">Device selection</a>
 </div>
 <div class="col-1-3 well" style="margin-top:-15px;height:475px;">
 	<h2>Environmental variables</h2>
@@ -104,39 +110,5 @@ jQuery(function($) {
 	<p>$PAD_SERIAL</p>
 	<span>e.g. "DEVICE_ENDPOINT=http://$PHONE_ENDPOINT cucumber"</span>
 </div>
-
-<table id="job_table" class="table">
-	<tr>
-		<td>Id</td><td>Name</td><td>Time stamp</td><td>Trigger Time</td><td>Reccuring?</td><td>STATUS</td><td>Machine id</td><td>command</td><td>Run Job</td><td>Toggle recursion</td><td></td>
-	</tr>
-
-	<%for row in @jobs_done %>
-		<tr>
-			<td><%=row["id"]%></td><td><%=row["name"]%></td><td><%=row["TIMESTAMP"]%></td><td><%=Time.at(row["trigger_time"])%></td><td><%=row["recursion"]%></td><td><%=row["status"]%></td><td><%=row["machine_id"]%></td><td><%=row["command"]%></td><td>
-				<form method="post" action="/job/restart/<%=row["id"]%>"> 
-					<input type="hidden" name="_method" value="submit">
-					<button type="submit"class="btn">Go</button>
-				</form>
-			</td>
-			<td>
-				<%if row["recursion"].eql?(1)%>
-					<form method="post" action="/job/recursion/disable/<%=row["id"]%>"> 
-						<input type="hidden" name="_method" value="submit">
-						<button type="submit"class="btn">Disable</button>
-					</form>
-				<%end%>
-				<%if row["recursion"].eql?(0)%>
-					<form method="post" action="/job/recursion/enable/<%=row["id"]%>"> 
-						<input type="hidden" name="_method" value="submit">
-						<button type="submit"class="btn">Enable</button>
-					</form>
-				<%end%>
-			</td>
-			<td>
-				<form method="post" action="/job/<%=row["id"]%>/delete"> 
-					<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
-				</form> 
-			</td>
-		</tr>
-	<% end %>
-</table>
+<script src="/js/bootstrap-scroll-modal.js"></script>
+<script src="/js/bootstrap-transition.js"></script>

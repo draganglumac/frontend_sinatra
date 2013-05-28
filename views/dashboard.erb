@@ -16,9 +16,11 @@
 						<% if Dir.exist?("public/uploads/#{job['name']}")%>
 							<li><a href="/results/<%=job['name']%>">Results</a></li>
 						<%end%>
+						<%if can_edit?%>
 						<li>
 						<a href="/job/<%=job['id']%>/delete">Delete</a>
-							</li>
+						</li>
+					<%end%>
 					</form>    
 
 				</ul>

@@ -59,8 +59,9 @@ module Jobs
 			params.keys.each do | pline |
 				if pline.include? "SELECTED_DEVICE"
 					current_device = pline.split("=").last
-					current_device_type = AutomationStack::Infrastructure::Device.select(:device_type_id).where(:id => current_device).first[:device_type_id]
-					puts "Device type #{current_device_type}"
+					current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first[:name]
+					
+					puts "Device name #{current_device_name}"
 					puts "Current device #{current_device}"
 					machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
 					machine = machine.first[:machine_id]
@@ -82,7 +83,7 @@ module Jobs
 						recursion=1
 					end
 					string = Jobhelper.replace_symbols(string,machine)	
-					Hound.add_job(machine,params[:lname],string,trigger,recursion)
+					Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion)
 				end
 			end			
 redirect '/dashboard'

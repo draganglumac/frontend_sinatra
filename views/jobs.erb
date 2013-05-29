@@ -9,10 +9,11 @@
 			<h3>Device Selection</h3>
 		</div>
 		<div class="modal-body">
-			<ul id="device_list">
+			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
-					<li>
+						
+					<li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
 					</li>
 				<%end%>

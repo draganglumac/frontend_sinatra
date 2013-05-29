@@ -82,7 +82,7 @@ module Jobs
 						recursion=1
 					end
 					string = Jobhelper.replace_symbols(string,machine)	
-					Hound.add_job(machine,params[:lname] << "- #{current_device_type}",string,trigger,recursion)
+					Hound.add_job(machine,params[:lname],string,trigger,recursion)
 				end
 			end			
 redirect '/dashboard'

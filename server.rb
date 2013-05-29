@@ -58,13 +58,15 @@ end
 helpers do
 
 	def check_availibility(id)
+
+		#Needs to be fixed as if one machine is attached to multiple jobs it will pull the first entry
 		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
-		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).first[:status]
+		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last[:status]
 		
 		if machine_status.include? "IN PROGRESS"
 			return 0
 		else
-			return 1 
+			return 
 		end
 		end
 	def partial(page, options={})

@@ -12,7 +12,6 @@
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
-						
 					<li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
 					</li>
@@ -21,7 +20,7 @@
 			</ul>
 		</div>
 		<div class="modal-footer">
-			<input id="submit" type="submit" value="submit"/>
+			<input class="btn"id="submit" type="submit" value="submit"/>
 		</div>
 	</div>
 	<% if not @errors.empty? %>

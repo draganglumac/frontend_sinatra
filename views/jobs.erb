@@ -3,7 +3,7 @@
 <!-- Our device modal --!>
 <!-- End --!>
 <form action="/job" method="post" enctype="multipart/form-data">
-	<div id="deviceModal" class="modal hide" style="opacity:1.0;">
+	<div id="deviceModal" class="modal hide">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">&times;</a>
 			<h3>Device Selection</h3>
@@ -12,9 +12,11 @@
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
+						<% if check_availibility(device.id) %>	
 					<li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
 					</li>
+				<% end %>
 				<%end%>
 				<%end %>
 			</ul>

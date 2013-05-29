@@ -57,6 +57,16 @@ end
 
 helpers do
 
+	def check_availibility(id)
+		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
+		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).first[:status]
+		
+		if machine_status.include? "IN PROGRESS"
+			return 0
+		else
+			return 1 
+		end
+		end
 	def partial(page, options={})
 		erb page, options.merge!(:layout => false)
 	end

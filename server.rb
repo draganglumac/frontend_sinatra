@@ -1,12 +1,10 @@
 $: << "src"
-
 require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/flash'
 require 'jobman'
 require 'hound'
 require 'find'  
-
 require "logger"
 require "pony"
 require 'configatron' 
@@ -38,9 +36,6 @@ set :public_folder, 'public'
 set :views ,'views'
 
 enable :sessions  
-#log = File.new("sinatra.log","a+")
-#$stdout.reopen(log)
-#$stderr.reopen(log)
 configure :test,:development do
 	Pony.options = {
 		:via => :smtp,
@@ -54,28 +49,22 @@ end
 @@connections = []
 #instantiate our database connection
 #Entry page
-
 helpers do
-
 	def check_availibility(id)
-
-		#Needs to be fixed as if one machine is attached to multiple jobs it will pull the first entry
 		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
 		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last[:status]
-		
+		#FYI: Using last to get the last most job reading against the current machine	
 		if machine_status.include? "IN PROGRESS"
 			return 0
 		else
 			return 
 		end
-		end
+	end
 	def partial(page, options={})
 		erb page, options.merge!(:layout => false)
 	end
-
 	def link_builder(name)
 		target = "public/uploads"
-
 		Dir.chdir(target) do
 			if Dir.exist?(name)
 				Dir.chdir(name) do 
@@ -90,8 +79,6 @@ helpers do
 			end
 		end
 	end
-
-
 	def current_user
 		session[:current_user]
 	end
@@ -127,8 +114,6 @@ helpers do
 		raise "oooops! #{machine.supported_platforms} is not supported !"
 	end
 end
-
-
 get '/home' do  
 	redirect '/'
 end
@@ -174,7 +159,6 @@ end
 get '/contact' do
 	erb :contact
 end
-
 post '/contact' do    
 
 	if params[:send]

@@ -53,11 +53,12 @@ helpers do
 	def check_availibility(id)
 		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
 		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last[:status]
-		#FYI: Using last to get the last most job reading against the current machine	
 		if machine_status.include? "IN PROGRESS"
+			puts "Machine #{machine_id} is currently in progress..."
 			return 0
 		else
-			return 
+			puts "Machine #{machine_id} is currently in ready for action..."
+			return 1 
 		end
 	end
 	def partial(page, options={})

@@ -12,7 +12,7 @@
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
-						<% if check_availibility(device.id) %>	
+						<% if check_availibility(device.id) == 1 %>	
 					<li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
 					</li>
@@ -99,7 +99,7 @@ jQuery(function($) {
 <input type="hidden" name="is_private" value="0" />
 </form>
 <h4>Select devices</h4>
-<a class="btn btn-info" data-dynamic="true" data-toggle="modal" href="#deviceModal">Device selection</a>
+<a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal">Device selection</a>
 </div>
 <div class="col-1-3 well" style="margin-top:-15px;height:475px;">
 	<h2>Environmental variables</h2>

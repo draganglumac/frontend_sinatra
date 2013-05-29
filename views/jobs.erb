@@ -12,7 +12,7 @@
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
-						<% if check_availibility(device.id) %>	
+						<% if check_availibility(device.id) == 1 %>	
 					<li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
 					</li>

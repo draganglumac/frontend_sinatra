@@ -14,7 +14,7 @@
 					<% if device.ip %>
 						<% if check_availibility(device.id) == 1 %>	
 					<li >
-					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>"><%=device.name%></input>
+					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 					</li>
 				<% end %>
 				<%end%>

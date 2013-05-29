@@ -1,3 +1,5 @@
+require 'jobs_helper'
+
 module Jobs
 	module Routes
 		helpers do
@@ -78,59 +80,11 @@ module Jobs
 					else
 						recursion=1
 					end
+				
+					string = Jobhelper.replace_symbols(string,machine)	
 					Hound.add_job(machine,params[:lname],string,trigger,recursion)
 				end
 			end			
-=begin
-				tempfile = params[:file_source][:tempfile] 
-				filename = params[:file_source][:filename] 
-				string = File.open(tempfile.path, 'rb') { |file| file.read }
-				#######Parse the string and replace 
-
-				if string.include?("$PAD_ENDPOINT")
-					ip_addr = "UNKNOWN"
-					ip_addr = Hound.get_device_ip_from_type_and_machine(2,params[:machine_id]).first
-					puts "PAD ENDPOINT #{ip_addr['ip']}"
-					string.gsub!("$PAD_ENDPOINT",ip_addr['ip'])
-				end
-				if string.include?("$PHONE_ENDPOINT")
-					ip_addr = "UNKNOWN"
-					ip_addr = Hound.get_device_ip_from_type_and_machine(1,params[:machine_id]).first
-					puts "PHONE ENDPOINT #{ip_addr['ip']}"
-					string.gsub!("$PHONE_ENDPOINT","#{ip_addr['ip']}")
-				end
-
-				if string.include?("$PHONE_SERIAL")
-					serial = "NULL"
-					serial = Hound.get_device_serial_from_type_and_machine(1,params[:machine_id])
-					puts "PHONE SERIAL #{serial.first['serial_number']}"
-					string.gsub!("$PHONE_SERIAL", "#{serial.first['serial_number']}")
-				end
-
-				if string.include?("$PAD_SERIAL")
-					serial = "NULL"
-					serial = Hound.get_device_serial_from_type_and_machine(2,params[:machine_id])
-					puts "PAD SERIAL #{serial.first['serial_number']}"
-					string.gsub!("$PAD_SERIAL", "#{serial.first['serial_number']}")
-				end
-				#######
-				recursion=0
-				if params[:is_private] == "0"
-					puts "NO RECURSION SET, SINGLE RUN MODE" if development?
-					recursion=0
-				else
-					puts "RECURSION HAS BEEN SET, RECURSIVE MODE" if development?
-					recursion=1
-				end
-				machine_num = params[:machine_id]
-				trigger = params[:ltrigger] 
-				trigger << ".000000"
-				trigger = Time.parse(trigger).to_i
-
-				Hound.add_job(machine_num,params[:lname],string,trigger,recursion)
-
-				#redirect '/job'
-=end	
 redirect '/dashboard'
 		end
 	end

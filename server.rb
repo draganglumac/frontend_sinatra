@@ -51,6 +51,11 @@ end
 #Entry page
 helpers do
 	def check_availibility(id)
+		
+		if AutomationStack::Infrastructure::Job.count == 0
+			puts "No jobs found in database"
+			return 1
+		end
 		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
 		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last[:status]
 		if machine_status.include? "IN PROGRESS"
@@ -133,10 +138,15 @@ post '/upload/:id/:filename' do
 	job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
 	fu = params[:filename]
 	Dir.chdir("public/uploads") do
-		Dir.mkdir job.name unless Dir.exists? job.name
-		Dir.chdir("#{job.name}") do 
+		#Take the job name and cut at the - mark 
+		job_split = job.name.split('-',2)
+		job_name = job_split[0]
+		job_device = job_split[1]
+	    puts "Splitting #{job.name} into #{job_name} and #{job_device}"	
+		Dir.mkdir job_name unless Dir.exists? job_name
+		Dir.chdir("#{job_name}") do 
 			puts "FILE NAME FOR SAVING IS #{fu}"
-			File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
+			File.open("#{Time.now.to_i}.#{job_device}.#{fu}", 'w+') do |file|
 				file.write(request.body.read)
 			end
 		end 

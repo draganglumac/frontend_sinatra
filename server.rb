@@ -57,12 +57,19 @@ helpers do
 			return 1
 		end
 		machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
-		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last[:status]
-		if machine_status.include? "IN PROGRESS"
+		puts "Checking availbility of machine #{machine_id}"
+
+		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last
+	
+		if !machine_status
+			puts "no status found for #{machine_id} assuming ready..."
+			return 1
+		end
+		if machine_status[:status].include? "IN PROGRESS"
 			puts "Machine #{machine_id} is currently in progress..."
 			return 0
 		else
-			puts "Machine #{machine_id} is currently in ready for action..."
+			puts "Machine #{machine_id} is currently ready for action..."
 			return 1 
 		end
 	end

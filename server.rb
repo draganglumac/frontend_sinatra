@@ -81,7 +81,9 @@ helpers do
 		file_list = []
 		Dir.chdir("public/uploads/" + folder) do
 		Dir.glob("*").reverse.each do |f|
-		file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{f}</a>"
+			epoch,filename = f.split('.',2)
+			display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+			file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
 		end
 		return file_list
 		end

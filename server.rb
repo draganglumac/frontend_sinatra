@@ -51,7 +51,7 @@ end
 #Entry page
 helpers do
 	def check_availibility(id)
-		
+
 		if AutomationStack::Infrastructure::Job.count == 0
 			puts "No jobs found in database"
 			return 1
@@ -60,7 +60,7 @@ helpers do
 		puts "Checking availbility of machine #{machine_id}"
 
 		machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last
-	
+
 		if !machine_status
 			puts "no status found for #{machine_id} assuming ready..."
 			return 1
@@ -76,15 +76,25 @@ helpers do
 	def partial(page, options={})
 		erb page, options.merge!(:layout => false)
 	end
+	def link_folder_content(folder)
+		puts "Link folder content #{folder}"
+		file_list = []
+		Dir.chdir("public/uploads/" + folder) do
+		Dir.glob("*").reverse.each do |f|
+		file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{f}</a>"
+		end
+		return file_list
+		end
+	end
 	def link_builder(name)
 		target = "public/uploads"
 		Dir.chdir(target) do
 			if Dir.exist?(name)
 				Dir.chdir(name) do 
 					Dir.glob("*").reverse.each do|f|
-						epoch, filename = f.split('.', 2)
-						display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
-						yield  "<a href=\"/uploads/#{name}/#{f}\">#{display_name}</a>"
+						if Dir.exist?(f)
+						yield  "<a href=\"/results/#{name}/#{f}\">#{f}</a>"
+						end
 					end
 				end
 			else
@@ -149,14 +159,19 @@ post '/upload/:id/:filename' do
 		job_split = job.name.split('-',2)
 		job_name = job_split[0]
 		job_device = job_split[1]
-	    puts "Splitting #{job.name} into #{job_name} and #{job_device}"	
-		Dir.mkdir job_name unless Dir.exists? job_name
-		Dir.chdir("#{job_name}") do 
-			puts "FILE NAME FOR SAVING IS #{fu}"
-			File.open("#{Time.now.to_i}.#{job_device}.#{fu}", 'w+') do |file|
+		#subbing out the whitespace
+		job_device.gsub!('/','-')
+		job_path = job_name + "/" + job_device
+		puts "job path #{job_path}"
+		FileUtils.mkdir_p job_name
+		FileUtils.mkdir_p job_path
+		puts "Created job directory"
+		Dir.chdir(job_path) do
+			puts "Changing dir"
+			File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
 				file.write(request.body.read)
 			end
-		end 
+		end
 	end
 	status 200
 end

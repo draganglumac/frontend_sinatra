@@ -23,7 +23,7 @@ module Results
     end
 	
 	get '/results/:name/:device' do
-		@folder_path = link_folder_content(params[:name] + '/' + params[:device])
+		@folder_path = "#{name}" + '/' + "#{device}"	
 		erb :'results/resultjob'
   	end	
   end

@@ -43,21 +43,21 @@
 			<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
 				<div class="accordion-group">
 					<div class="accordion-heading">
-						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse<%=job['name']%><%=job['id']%>">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse-<%=job['id']%>">
 							View build commands
 						</a>
 					</div>
-					<div id="collapse<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+					<div id="collapse-<%=job['id']%>" class="accordion-body collapse">
 						<div class="accordion-inner">
 							<p><%=job['command']%></p>
 						</div>
 					</div>
 					<div class="accordion-heading">
-						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2<%=job['name']%><%=job['id']%>">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2-<%=job['id']%>">
 							View job trigger time
 						</a>
 					</div>
-					<div id="collapse2<%=job['name']%><%=job['id']%>" class="accordion-body collapse">
+					<div id="collapse2-<%=job['id']%>" class="accordion-body collapse">
 						<div class="accordion-inner">
 							<p><%=Time.at(job['trigger_time'])%></p>
 						</div>
@@ -96,6 +96,6 @@
 
 
 
-<script>
+<!--script>
 	setTimeout(function () { location.reload(1); }, 5000);
-</script>
+</script-->

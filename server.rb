@@ -138,6 +138,14 @@ helpers do
 
 		raise "oooops! #{machine.supported_platforms} is not supported !"
 	end
+
+	def id_of_connected_machine(id)
+		connected_devices = AutomationStack::Infrastructure::ConnectedDevice.all
+		connected_devices.each do |cd|
+			return cd.machine_id if cd.device_id == id
+		end
+		return nil
+	end
 end
 get '/home' do  
 	redirect '/'

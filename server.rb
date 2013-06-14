@@ -80,12 +80,12 @@ helpers do
 		puts "Link folder content #{folder}"
 		file_list = []
 		Dir.chdir("public/uploads/" + folder) do
-		Dir.glob("*").reverse.each do |f|
-			epoch,filename = f.split('.',2)
-			display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
-			file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
-		end
-		return file_list
+			Dir.glob("*").reverse.each do |f|
+				epoch,filename = f.split('.',2)
+				display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+				file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+			end
+			return file_list
 		end
 	end
 	def link_builder(name)
@@ -95,7 +95,7 @@ helpers do
 				Dir.chdir(name) do 
 					Dir.glob("*").reverse.each do|f|
 						if Dir.exist?(f)
-						yield  "<a href=\"/results/#{name}/#{f}\">#{f}</a>"
+							yield  "<a href=\"/results/#{name}/#{f}\">#{f}</a>"
 						end
 					end
 				end
@@ -139,14 +139,17 @@ helpers do
 		raise "oooops! #{machine.supported_platforms} is not supported !"
 	end
 
-	def id_of_connected_machine(id)
-		connected_devices = AutomationStack::Infrastructure::ConnectedDevice.all
-		connected_devices.each do |cd|
-			return cd.machine_id if cd.device_id == id
-		end
-		return nil
+	def connected(device_id)
+		connected_ids = AutomationStack::Infrastructure::ConnectedDevice.dataset.map(:device_id)
+		return connected_ids.include?(device_id)
+	end
+
+	def machine_id_hosting_device(device_id)
+		connections = AutomationStack::Infrastructure::ConnectedDevice.dataset.to_hash(:device_id, :machine_id)
+		return connections[device_id]
 	end
 end
+
 get '/home' do  
 	redirect '/'
 end

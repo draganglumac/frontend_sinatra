@@ -20,9 +20,9 @@
 	<tbody>
 		<% for device in @devices%>
 			<tr>
-				<td><% machine_id = id_of_connected_machine(device.id) %>
-					<% if not machine_id.nil? %>
-						<a href="/machines/<%=machine_id%>"><%=device.tag%></a>
+				<td>
+					<% if connected(device.id) %>
+						<a href="/machines/<%= machine_id_hosting_device(device.id) %>"><%=device.tag%></a>
 					<% else %>
 						<%=device.tag%>
 					<% end %>

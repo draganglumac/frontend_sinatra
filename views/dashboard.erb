@@ -1,14 +1,21 @@
 <div class="grid">
-	<div id="refresh-toggle" class="row">
-		<% if params[:auto_refresh] == 'false' %>
-			<a style="float: right" href="?auto_refresh=true">Enable Refresh</a>
-		<% else %>
-			<a style="float: right" href="?auto_refresh=false">Disable Refresh</a>
-
-			<script>
-				setTimeout(function () { location.reload(1); }, 15000);
-			</script>
-		<% end %>
+	<div id="refresh-row" class="row">
+		<form id="toggle_refresh" action="/refresh" method="POST" style="float: right">
+			<input type="hidden" name="redirect_url" value="<%=URI.escape(request.path)%>">
+			<div id="refresh-toggle" style="float: right">
+				Enable Auto-Refresh 
+				<%if settings.autorefresh%>
+					<input type="hidden" name="auto_refresh" value="false">
+					<input name="enable_refresh" type="checkbox" 
+					checked="checked" 
+					onclick="document.forms.toggle_refresh.submit();">
+				<%else%>
+					<input type="hidden" name="auto_refresh" value="true">
+					<input id="enable_refresh" type="checkbox" 
+					onclick="document.forms.toggle_refresh.submit();">
+				<%end%>
+			</div>
+		</form>
 	</div>
 	<div id="jobs-grid" class="row">
 		<%for job in @current_jobs%>
@@ -104,3 +111,10 @@
 		<% end %>
 	</div>
 </div>
+
+<%if settings.autorefresh%>
+	<script>
+		setTimeout(function () { location.reload(1); }, 15000);
+	</script>
+<%end%>
+

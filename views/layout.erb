@@ -1,144 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Automation stack</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	<head>
+		<meta charset="utf-8">
+		<title>Automation stack</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-    <!-- Le styles -->
-    <link href="/css/dashboard.css" rel="stylesheet">
-    <link href="/css/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-      .errors {
-          color: red;
-      }
+		<!-- Le styles -->
+		<link href="/css/dashboard.css" rel="stylesheet">
+		<link href="/css/bootstrap.css" rel="stylesheet">
+		<style>
+			body {
+				padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+			}
+			.errors {
+				color: red;
+			}
+			.hidden-form {
+				display: none;
+			}
+			.refresh-form {
+				float: right;
+			}
+		</style>
 
-    </style>
-   
- 	<link href="/css/bootstrap-responsive.css" rel="stylesheet">
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+		<!-- Fav and touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
 
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
-  </head>
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
+	</head>
 
-  <body>
-   
-
-  <div id="sign_in" class="modal hide fade">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      
-    </div>
-    <div class="modal-body">
-     <div id="sign_in_form">
-        <form class="form-horizontal" action="/session" method="POST">
-    <fieldset>
-      <div id="legend" class="">
-        <legend class="">Login</legend>
-      </div>
-    
-
-    <div class="control-group">
-
-          <!-- Text input-->
-          <label class="control-label" for="username">Username:</label>
-          <div class="controls">
-            <input type="text" placeholder="" class="input-xlarge" name="username">
-            
-          </div>
-        </div>
-
-    <div class="control-group">
-
-          <!-- Text input-->
-          <label class="control-label" for="password">Password</label>
-          <div class="controls">
-            <input type="text" placeholder="" class="input-xlarge" name ="password">
-            
-          </div>
-        </div>
-
-         <div class="controls">
-            <button class="btn btn-success">Login</button>
-          </div>
-        </div>
-    </fieldset>
-  </form>
-
-    </div>
-    </div>
-    <div class="modal-footer">
-      
-    </div>
-  </div>
+	<body>
 
 
-    
+		<div id="sign_in" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
+			</div>
+			<div class="modal-body">
+				<div id="sign_in_form">
+					<form class="form-horizontal" action="/session" method="POST">
+						<fieldset>
+							<div id="legend" class="">
+								<legend class="">Login</legend>
+							</div>
 
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">Automation stack</a>
-          <div class="nav-collapse collapse">
 
-            <ul class="nav">
-              <li><a href="/">Home</a></li>
-              <li><a href="/contact">Contact</a></li>
-              <li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
-            </ul>
-          </div><!--/.nav-collapse -->
-         
-        </div>
+							<div class="control-group">
 
-        
-      </div>
-    </div>
+								<!-- Text input-->
+								<label class="control-label" for="username">Username:</label>
+								<div class="controls">
+									<input type="text" placeholder="" class="input-xlarge" name="username">
 
-    <div class="container">
-       <div>
-    	     <%=styled_flash%>
-    	  </div>
+								</div>
+							</div>
 
-	<%= yield %>
-    </div> <!-- /container -->
+							<div class="control-group">
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/js/jquery.js"></script>
-    <script src="/js/bootstrap-transition.js"></script>
-    <script src="/js/bootstrap-alert.js"></script>
+								<!-- Text input-->
+								<label class="control-label" for="password">Password</label>
+								<div class="controls">
+									<input type="text" placeholder="" class="input-xlarge" name ="password">
 
-    <script src="/js/bootstrap-scroll-modal.js"></script>
-    <script src="/js/bootstrap-dropdown.js"></script>
-    <script src="/js/bootstrap-scrollspy.js"></script>
-    <script src="/js/bootstrap-tab.js"></script>
-    <script src="/js/bootstrap-tooltip.js"></script>
-    <script src="/js/bootstrap-popover.js"></script>
+								</div>
+							</div>
 
-    <script src="/js/bootstrap-button.js"></script>
-    <script src="/js/bootstrap-collapse.js"></script>
-    <script src="/js/bootstrap-carousel.js"></script>
-    <script src="/js/bootstrap-typeahead.js"></script>
-  </body>
+							<div class="controls">
+								<button class="btn btn-success">Login</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+
+			</div>
+		</div>
+
+		<div class="modal-footer">
+
+			<div class="refresh-form hidden-form">
+				<form id="toggle_refresh" action="/refresh" method="POST">
+					<input type="hidden" name="redirect_url" value="<%=URI.escape(request.path)%>">
+					<div id="refresh-toggle" style="float: right">
+						Enable Auto-Refresh 
+						<%if settings.autorefresh%>
+							<input type="hidden" name="auto_refresh" value="false">
+							<input name="enable_refresh" type="checkbox" 
+							checked="checked" 
+							onclick="document.forms.toggle_refresh.submit();">
+						<%else%>
+							<input type="hidden" name="auto_refresh" value="true">
+							<input id="enable_refresh" type="checkbox" 
+							onclick="document.forms.toggle_refresh.submit();">
+						<%end%>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="/">Automation stack</a>
+				<div class="nav-collapse collapse">
+
+					<ul class="nav">
+						<li><a href="/">Home</a></li>
+						<li><a href="/contact">Contact</a></li>
+						<li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
+						</ul>
+					</div><!--/.nav-collapse -->
+
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="container">
+			<div>
+				<%=styled_flash%>
+			</div>
+
+			<%= yield %>
+		</div> <!-- /container -->
+
+		<!-- Le javascript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="/js/jquery.js"></script>
+		<script src="/js/bootstrap-transition.js"></script>
+		<script src="/js/bootstrap-alert.js"></script>
+
+		<script src="/js/bootstrap-scroll-modal.js"></script>
+		<script src="/js/bootstrap-dropdown.js"></script>
+		<script src="/js/bootstrap-scrollspy.js"></script>
+		<script src="/js/bootstrap-tab.js"></script>
+		<script src="/js/bootstrap-tooltip.js"></script>
+		<script src="/js/bootstrap-popover.js"></script>
+
+		<script src="/js/bootstrap-button.js"></script>
+		<script src="/js/bootstrap-collapse.js"></script>
+		<script src="/js/bootstrap-carousel.js"></script>
+		<script src="/js/bootstrap-typeahead.js"></script>
+
+		<script>
+			$(window).load(function() {
+				if (show_refresh_form)
+				{
+					$('div.refresh-form').toggleClass('hidden-form');
+				}
+			});
+		</script>
+
+
+	</body>
 </html>
 

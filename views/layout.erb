@@ -92,16 +92,20 @@
 				<form id="toggle_refresh" action="/refresh" method="POST">
 					<input type="hidden" name="redirect_url" value="<%=URI.escape(request.path)%>">
 					<div id="refresh-toggle" style="float: right">
-						Enable Auto-Refresh 
 						<%if settings.autorefresh%>
 							<input type="hidden" name="auto_refresh" value="false">
-							<input name="enable_refresh" type="checkbox" 
-							checked="checked" 
-							onclick="document.forms.toggle_refresh.submit();">
+							<button id="btn-refresh" type="button" class="btn btn-small " 
+								data-toggle="tooltip" title="Click to disable autorefresh." 
+								onclick="document.forms.toggle_refresh.submit();">
+								<i class="icon-refresh"></i>
+							</button>
 						<%else%>
 							<input type="hidden" name="auto_refresh" value="true">
-							<input id="enable_refresh" type="checkbox" 
-							onclick="document.forms.toggle_refresh.submit();">
+							<button id="btn-refresh" type="button" class="btn btn-small btn-primary" 
+								data-toggle="tooltip" title="Click to enable autorefresh." 
+								onclick="document.forms.toggle_refresh.submit();">
+								<i class="icon-refresh"></i>
+							</button>
 						<%end%>
 					</div>
 				</form>

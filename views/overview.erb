@@ -45,7 +45,9 @@
 
 </div>
 
-
 <script>
-	setTimeout(function () { location.reload(1); }, 5000);
+	show_refresh_form = true;
+	<%if should_autorefresh? %>
+		setTimeout(function () { location.reload(1); }, 15000);
+	<%end%>
 </script>

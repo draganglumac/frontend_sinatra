@@ -102,4 +102,7 @@ module AutomationStackHelpers
     return connections[device_id]
   end
 
+  def should_autorefresh?
+    session[:autorefresh] or not session[:toggled_already]
+  end
 end

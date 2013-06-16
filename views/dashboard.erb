@@ -1,15 +1,4 @@
 <div class="grid">
-	<div id="refresh-toggle" class="row">
-		<% if params[:auto_refresh] == 'false' %>
-			<a style="float: right" href="?auto_refresh=true">Enable Refresh</a>
-		<% else %>
-			<a style="float: right" href="?auto_refresh=false">Disable Refresh</a>
-
-			<script>
-				setTimeout(function () { location.reload(1); }, 15000);
-			</script>
-		<% end %>
-	</div>
 	<div id="jobs-grid" class="row">
 		<%for job in @current_jobs%>
 			<div class="col-1-3 well">
@@ -104,3 +93,14 @@
 		<% end %>
 	</div>
 </div>
+
+<script>
+	show_refresh_form = true;
+</script>
+
+<%if settings.autorefresh%>
+	<script>
+		setTimeout(function () { location.reload(1); }, 15000);
+	</script>
+<%end%>
+

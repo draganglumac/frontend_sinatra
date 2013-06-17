@@ -35,7 +35,6 @@ set :bind, '0.0.0.0'
 set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
-set :autorefresh, true
 
 enable :sessions  
 configure :test,:development do
@@ -125,10 +124,19 @@ post '/contact' do
 end
 
 post '/refresh' do
+  # Need this ugly flag for should_autorefresh? helper, which is called 
+  # from ERB files. I couldn't find a way of nicely initialising 
+  # session[:autorefresh] flag to true. Tried the before method, 
+  # but Sinatra seems to create session[:autorefresh] flag even before
+  # I first refer to it in code (I imagine while it's processing routes)
+  # so I couldn't test for flag being nil? and set it to global setting
+  # or anything similarly elegant. Might have to investigate it further.
+  session[:toggled_already] = true
+  
   if params[:auto_refresh] == 'true'
-    set :autorefresh, true
+    session[:autorefresh] = true
   else
-    set :autorefresh, false
+    session[:autorefresh] = false
   end
   
   redirect params[:redirect_url]

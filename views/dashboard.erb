@@ -96,11 +96,7 @@
 
 <script>
 	show_refresh_form = true;
-</script>
-
-<%if settings.autorefresh%>
-	<script>
+	<%if should_autorefresh? %>
 		setTimeout(function () { location.reload(1); }, 15000);
-	</script>
-<%end%>
-
+	<%end%>
+</script>

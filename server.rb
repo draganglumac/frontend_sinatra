@@ -100,11 +100,23 @@ post '/results/:id' do
   puts "Job name is #{job_name['name']}"
   send_file("public/uploads/#{job_name['name']}/cuke.html")
 end
+
 #system dashboard
 get '/dashboard' do
-  @current_jobs=Hound.get_jobs 
+  @current_jobs = Hound.get_jobs
+  @projects = {}
+  @current_jobs.each do |job|
+    project = job['name'].split('-').first
+    if @projects[project].nil?
+      @projects[project] = [job]
+    else
+      @projects[project] << job
+    end 
+  end 
+  
   erb :dashboard
 end
+
 get '/contact' do
   erb :contact
 end
@@ -132,12 +144,12 @@ post '/refresh' do
   # so I couldn't test for flag being nil? and set it to global setting
   # or anything similarly elegant. Might have to investigate it further.
   session[:toggled_already] = true
-  
+
   if params[:auto_refresh] == 'true'
     session[:autorefresh] = true
   else
     session[:autorefresh] = false
   end
-  
+
   redirect params[:redirect_url]
 end

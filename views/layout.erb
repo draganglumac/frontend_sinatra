@@ -96,14 +96,14 @@
 					<div id="refresh-toggle" style="float: right">
 						<%if should_autorefresh? %> 
 							<input type="hidden" name="auto_refresh" value="false">
-							<button id="btn-refresh" type="button" class="btn btn-small" 
+							<button id="btn-refresh" type="button" class="btn btn-small btn-primary" 
 								data-toggle="tooltip" title="Click to disable autorefresh." 
 								onclick="document.forms.toggle_refresh.submit();">
 								<i class="icon-refresh"></i>
 							</button>
 						<%else%>
 							<input type="hidden" name="auto_refresh" value="true">
-							<button id="btn-refresh" type="button" class="btn btn-small btn-primary" 
+							<button id="btn-refresh" type="button" class="btn btn-small" 
 								data-toggle="tooltip" title="Click to enable autorefresh." 
 								onclick="document.forms.toggle_refresh.submit();">
 								<i class="icon-refresh"></i>

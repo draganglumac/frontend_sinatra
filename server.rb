@@ -103,6 +103,13 @@ end
 
 #system dashboard
 get '/dashboard' do
+  if request.cookies['uncle'].nil?
+    response.set_cookie "uncle", "Bob"
+    @uncle = "Bob"
+  else
+    @uncle = request.cookies['uncle']
+  end
+
   @current_jobs = Hound.get_jobs
   @projects = {}
   @current_jobs.each do |job|

@@ -39,7 +39,6 @@
 				<p><a href="/machines/<%=job['machine_id']%>">Build machine <%=job['machine_id']%></a></p>	
 
 				<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
-
 					<div class="accordion-group">
 						<div class="accordion-heading">
 							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse-<%=job['id']%>">
@@ -68,20 +67,9 @@
 						</div>
 					<%end%>
 					<%if job["status"].eql?("NOT STARTED")%>
-					<div class="progress" style="height: 3em">
-						<div class="bar bar-info" style="text-align: center; width: 40%;">
-							<h4>4</h4>
+						<div class="alert alert-block">
+							Job health UNCONFIRMED
 						</div>
-						<div class="bar bar-danger" style="text-align: center; width: 30%;">
-							<h4>3</h4>
-						</div>
-						<div class="bar bar-success" style="text-align: center; width: 10%;">
-							<h4>1</h4>
-						</div>
-						<div class="bar bar-warning" style="text-align: center; width: 20%;">
-							<h4>2</h4>
-						</div>
-					</div>
 					<%end%>
 					<%if job["status"].eql?("IN PROGRESS")%>
 						<div class="alert alert-info">
@@ -98,7 +86,6 @@
 							Job health GOOD
 						</div>
 					<%end%>
-
 				</div>
 
 			</div>
@@ -106,9 +93,6 @@
 	<% end %>
 
 </div>
-
-<script>
-</script>
 
 <!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
 <script>

@@ -68,20 +68,43 @@
 						</div>
 					<%end%>
 					<%if job["status"].eql?("NOT STARTED")%>
-					<div class="progress" style="height: 3em">
-						<div class="bar bar-info" style="text-align: center; width: 40%;">
-							<h4>4</h4>
+						<!-- Option 1 -->
+						<div class="progress" style="height: 3em">
+							<div class="bar bar-success" 
+								style="text-align: center; width: 10%;"
+								data-toggle="tooltip" title="Number of COMPLETED jobs.">
+								<h4>1</h4>
+							</div>
+							<div class="bar bar-danger" 
+								style="text-align: center; width: 30%;"
+								data-toggle="tooltip" title="Number of FAILED jobs.">
+								<h4>3</h4>
+							</div>
+							<div class="bar"
+								style="text-align: center; width: 40%;" 
+								data-toggle="tooltip" title="Number of IN PROGRESS jobs.">
+								<h4>4</h4>
+							</div>
+							<div class="bar bar-warning" 
+								style="text-align: center; width: 20%;"
+								data-toggle="tooltip" title="Number of UNCONFIRMED jobs.">
+								<h4>2</h4>
+							</div>
 						</div>
-						<div class="bar bar-danger" style="text-align: center; width: 30%;">
-							<h4>3</h4>
-						</div>
-						<div class="bar bar-success" style="text-align: center; width: 10%;">
-							<h4>1</h4>
-						</div>
-						<div class="bar bar-warning" style="text-align: center; width: 20%;">
-							<h4>2</h4>
-						</div>
-					</div>
+
+						<!-- Option 2 -->
+							<div class="progress progress-success">
+								<div class="bar" style="width: 10%;">1 COMPLETED</div>
+							</div>
+							<div class="progress progress-danger">
+								<div class="bar" style="width: 20%;">2 FAILED</div>
+							</div>
+							<div class="progress progress-striped active">
+								<div class="bar" style="width: 40%;">4 IN PROGRESS</div>
+							</div>
+							<div class="progress progress-warning">
+								<div class="bar" style="width: 30%;">3 UNCONFIRMED</div>
+							</div>
 					<%end%>
 					<%if job["status"].eql?("IN PROGRESS")%>
 						<div class="alert alert-info">

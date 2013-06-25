@@ -14,15 +14,16 @@
 							action="/dashboard/job/restart/<%=job['id']%>">
 							<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
 							<% if Dir.exist?("public/uploads/#{job['name']}")%>
-								<li><a href="/results/<%=job['name']%>">Results</a></li>
+								<li>
+								<a href="/results/<%=job['name']%>">Results</a>
+								</li>
 							<%end%>
 							<%if can_edit?%>
 								<li>
 								<a href="/job/<%=job['id']%>/delete">Delete</a>
 								</li>
 							<%end%>
-						</form>    
-
+						</form>
 					</ul>
 				</div>
 
@@ -30,81 +31,91 @@
 
 				<% if job["recursion"].eql?(0) %>
 					<h5> Single run job</h5>
-				<%else%>	
+				<%else%>
 					<h5> Recursive job</h5>
 				<%end%>
-				<p>Job status <%=job["status"]%></p>
 				<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
 
-				<p><a href="/machines/<%=job['machine_id']%>">Build machine <%=job['machine_id']%></a></p>	
-
 				<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
-
-					<div class="accordion-group">
-						<div class="accordion-heading">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse-<%=job['id']%>">
-								View build commands
-							</a>
-						</div>
-						<div id="collapse-<%=job['id']%>" class="accordion-body collapse">
-							<div class="accordion-inner">
-								<p><%=job['command']%></p>
-							</div>
-						</div>
-						<div class="accordion-heading">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2-<%=job['id']%>">
-								View job trigger time
-							</a>
-						</div>
-						<div id="collapse2-<%=job['id']%>" class="accordion-body collapse">
-							<div class="accordion-inner">
-								<p><%=Time.at(job['trigger_time'])%></p>
-							</div>
-						</div>
-					</div> 
 					<%if job["status"].eql?("FAILED")%>
 						<div class="alert alert-error">
 							Job health CRITICAL
 						</div>
 					<%end%>
 					<%if job["status"].eql?("NOT STARTED")%>
-						<!-- Option 1 -->
+						<h5>Status of Jobs on Devices</h5>
+						<!-- Option 1 --> 
+						<div class="row-fluid" style="text-align: left;">
+							<div class="span3">Completed</div>
+							<div class="span3">Failed</div>
+							<div class="span3">Running</div>
+							<div class="span3">Pending</div>
+						</div>
+						<!-- 1a
+						<div class="row-fluid" style="text-align: right; font-weight: bold;">
+							<div class="span2 alert alert-success">1</div>
+							<div class="span1"></div>
+							<div class="span2 alert alert-error">3</div>
+							<div class="span1"></div>
+							<div class="span2 alert alert-info">3</div>
+							<div class="span1"></div>
+							<div class="span2 alert alert-warning">4</div>
+						</div>
+						-->
+						<!-- 1b -->
+						<div class="row-fluid" style="text-align: center; font-weight: bold;">
+							<div class="span3 alert alert-success">1</div>
+							<div class="span3 alert alert-error">3</div>
+							<div class="span3 alert alert-info">3</div>
+							<div class="span3 alert alert-warning">4</div>
+						</div>
+
+						<!-- Option 2
 						<div class="progress" style="height: 3em">
 							<div class="bar bar-success" 
-								style="text-align: center; width: 10%;"
-								data-toggle="tooltip" title="Number of COMPLETED jobs.">
+								style="text-align: center; width: 5%;"
+								data-toggle="tooltip" title="1 job Completed">
 								<h4>1</h4>
 							</div>
 							<div class="bar bar-danger" 
 								style="text-align: center; width: 30%;"
-								data-toggle="tooltip" title="Number of FAILED jobs.">
-								<h4>3</h4>
+								data-toggle="tooltip" title="6 jobs Failed">
+								<h4>6</h4>
 							</div>
-							<div class="bar"
+							<div class="bar bar-info"
 								style="text-align: center; width: 40%;" 
-								data-toggle="tooltip" title="Number of IN PROGRESS jobs.">
-								<h4>4</h4>
+								data-toggle="tooltip" title="8 jobs Running">
+								<h4>8</h4>
 							</div>
 							<div class="bar bar-warning" 
-								style="text-align: center; width: 20%;"
-								data-toggle="tooltip" title="Number of UNCONFIRMED jobs.">
-								<h4>2</h4>
+								style="text-align: center; width: 25%;"
+								data-toggle="tooltip" title="5 jobs Pending">
+								<h4>5</h4>
 							</div>
 						</div>
+						-->
 
-						<!-- Option 2 -->
-							<div class="progress progress-success">
-								<div class="bar" style="width: 10%;">1 COMPLETED</div>
-							</div>
-							<div class="progress progress-danger">
-								<div class="bar" style="width: 20%;">2 FAILED</div>
-							</div>
-							<div class="progress progress-striped active">
-								<div class="bar" style="width: 40%;">4 IN PROGRESS</div>
-							</div>
-							<div class="progress progress-warning">
-								<div class="bar" style="width: 30%;">3 UNCONFIRMED</div>
-							</div>
+						<!-- Option 3  
+						<div class="progress progress-success" style="text-align: right;">
+							<div class="bar" style="width: 10%;"></div>
+							1 Completed
+						</div>
+						<div class="progress progress-danger" style="text-align: right;">
+
+							<div class="bar" style="width: 20%;"></div>
+							2 Failed
+						</div>
+						<div class="progress progress-striped active" style="text-align: right;">
+
+							<div class="bar" style="width: 40%;"></div>
+							4 Running
+						</div>
+						<div class="progress progress-warning" style="text-align: right;">
+
+							<div class="bar" style="width: 30%;"></div>
+							3 Pending
+						</div>
+						-->
 					<%end%>
 					<%if job["status"].eql?("IN PROGRESS")%>
 						<div class="alert alert-info">

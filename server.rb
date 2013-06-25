@@ -67,7 +67,7 @@ end
 get '/resources' do
   erb :installer
 end
-post '/upload/:id/:filename' do
+post '/upload/:id/:filename/?:bin?' do
   job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
   fu = params[:filename]
   Dir.chdir("public/uploads") do
@@ -84,9 +84,16 @@ post '/upload/:id/:filename' do
     puts "Created job directory"
     Dir.chdir(job_path) do
       puts "Changing dir"
+
+	  if !params[:bin].nil?
+	  File.open("#{Time.now.to_i}.#{fu}",'wb') do |file|
+		  file.write(Base64.decode64(request.body.read))
+	  end
+	  else
       File.open("#{Time.now.to_i}.#{fu}", 'w+') do |file|
         file.write(request.body.read)
       end
+	  end
     end
   end
   status 200

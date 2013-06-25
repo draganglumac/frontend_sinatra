@@ -36,40 +36,46 @@
 				<%end%>
 				<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
 
-				<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
-					<%if job["status"].eql?("FAILED")%>
-						<div class="alert alert-error">
-							Job health CRITICAL
-						</div>
-					<%end%>
-					<%if job["status"].eql?("NOT STARTED")%>
-						<h5>Status of Jobs on Devices</h5>
-						<!-- Option 1 --> 
-						<div class="row-fluid" style="text-align: left;">
-							<div class="span3">Completed</div>
-							<div class="span3">Failed</div>
-							<div class="span3">Running</div>
-							<div class="span3">Pending</div>
-						</div>
-						<!-- 1a
-						<div class="row-fluid" style="text-align: right; font-weight: bold;">
-							<div class="span2 alert alert-success">1</div>
-							<div class="span1"></div>
-							<div class="span2 alert alert-error">3</div>
-							<div class="span1"></div>
-							<div class="span2 alert alert-info">3</div>
-							<div class="span1"></div>
-							<div class="span2 alert alert-warning">4</div>
-						</div>
-						-->
-						<!-- 1b -->
-						<div class="row-fluid" style="text-align: center; font-weight: bold;">
-							<div class="span3 alert alert-success">1</div>
-							<div class="span3 alert alert-error">3</div>
-							<div class="span3 alert alert-info">3</div>
-							<div class="span3 alert alert-warning">4</div>
-						</div>
+				<%if job["status"].eql?("FAILED")%>
+					<div class="alert alert-error">
+						Job health CRITICAL
+					</div>
+				<%end%>
+				<%if job["status"].eql?("NOT STARTED")%>
+					<h5>Status of Jobs on Devices</h5>
+					<!-- Option 1 --> 
 
+					<div class="row-fluid" style="text-align: left;">
+						<div class="span3">Completed</div>
+						<div class="span3">Failed</div>
+						<div class="span3">Running</div>
+						<div class="span3">Pending</div>
+					</div>
+					<!-- 1a
+					<div class="row-fluid" style="text-align: right; font-weight: bold;">
+						<div class="span2 alert alert-success">1</div>
+						<div class="span1"></div>
+						<div class="span2 alert alert-error">3</div>
+						<div class="span1"></div>
+						<div class="span2 alert alert-info">3</div>
+						<div class="span1"></div>
+						<div class="span2 alert alert-warning">4</div>
+					</div>
+					-->
+					<!-- 1b -->
+
+					<div class="accordion" id="accordion-<%=job['id']%>">
+						<div class="accordion-heading">
+							<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=job['id']%>" href="#collapse-<%=job['id']%>">
+
+								<div class="row-fluid" style="text-align: center; font-weight: bold;">
+									<div class="span3 alert alert-success">1</div>
+									<div class="span3 alert alert-error">3</div>
+									<div class="span3 alert alert-info">3</div>
+									<div class="span3 alert alert-warning">4</div>
+								</div>
+							</div>
+						</div>
 						<!-- Option 2
 						<div class="progress" style="height: 3em">
 							<div class="bar bar-success" 
@@ -133,6 +139,21 @@
 						</div>
 					<%end%>
 
+					<div id="collapse-<%=job['id']%>" class="accordion-body collapse">
+						<div class="accordion-inner">
+							<div class="alert alert-success">iPhone 4 job COMPLETED.</div>
+							<div class="alert alert-error">iPhone 4S job FAILED.</div>
+							<div class="alert alert-error">iPhone 5 job FAILED.</div>
+							<div class="alert alert-error">iPod Touch 4Gen job FAILED.</div>
+							<div class="alert alert-info">iPad 1 job RUNNING.</div>
+							<div class="alert alert-info">iPad 2 job RUNNING.</div>
+							<div class="alert alert-info">iPad 3 job RUNNING.</div>
+							<div class="alert alert-warning">iPad 4 job PENDING.</div>
+							<div class="alert alert-warning">iPad Mini job PENDING.</div>
+							<div class="alert alert-warning">iPhone 3GS job PENDING.</div>
+							<div class="alert alert-warning">iPod Touch 3Gen job PENDING.</div>
+						</div>
+					</div>
 				</div>
 
 			</div>

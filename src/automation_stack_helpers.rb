@@ -106,6 +106,14 @@ module AutomationStackHelpers
     session[:autorefresh] or not session[:toggled_already]
   end
 
+  def project_name_from_job_name(job_name)
+    job_name.split('-')[0...-1].join("-")
+  end
+
+  def device_name_from_job_name(job_name)
+    job_name.split('-').last
+  end
+
   def increment_status_count(status, status_hash)
     if status == 'COMPLETED'
       status_hash[:completed] += 1

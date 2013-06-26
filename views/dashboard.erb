@@ -75,7 +75,7 @@
 
 								<%if job["status"].eql?("FAILED")%>
 									<div class="alert alert-error">
-										<%=job['name'].split("#{project}-").last%> has FAILED.
+										<%=device_name_from_job_name(job['name'])%> has FAILED.
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
@@ -84,7 +84,7 @@
 									</div>
 								<%elsif job["status"].eql?("NOT STARTED")%>
 									<div class="alert alert-warning">
-										<%=job['name'].split("#{project}-").last%> is PENDING.
+										<%=device_name_from_job_name(job['name'])%> is PENDING.
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
@@ -93,7 +93,7 @@
 									</div>
 								<%elsif job["status"].eql?("IN PROGRESS")%>
 									<div class="alert alert-info">
-										<%=job['name'].split("#{project}-").last%> is RUNNING.
+										<%=device_name_from_job_name(job['name'])%> is RUNNING.
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
@@ -102,7 +102,7 @@
 									</div>
 								<%elsif job["status"].eql?("COMPLETED")%>
 									<div class="alert alert-success">
-										<%=job['name'].split("#{project}-").last%> has COMPLETED.
+										<%=device_name_from_job_name(job['name'])%> has COMPLETED.
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
@@ -111,7 +111,7 @@
 									</div>
 								<%elsif job["status"].eql?("SCHEDULED")%>
 									<div class="alert alert-warning">
-										<%=job['name'].split("#{project}-").last%> is PENDING.
+									<%=device_name_from_job_name(job['name'])%> is PENDING.
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>

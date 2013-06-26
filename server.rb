@@ -114,7 +114,7 @@ get '/dashboard' do
   @last_run_times = {}
   
   @current_jobs.each do |job|
-    project = job['name'].split('-')[0...-1].join("-")
+    project = project_name_from_job_name(job['name'])
     if @projects[project].nil?
       @projects[project] = [job]
     else
@@ -129,7 +129,7 @@ get '/dashboard' do
     if @last_run_times[project].nil?
       @last_run_times[project] = ''
     end
-    current_timestr = job['TIMESTAMP'].strftime('%Y-%m-%d at %H:%M:%S') 
+    current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') 
     if @last_run_times[project] < current_timestr 
         @last_run_times[project] = current_timestr
     end  

@@ -1,7 +1,8 @@
+require 'sequel-json'
 require 'yaml'
 
 require_relative "./mysql"
-
+Sequel::Model.plugin :json_serializer
 module AutomationStack
 
 	module Application
@@ -54,9 +55,9 @@ module AutomationStack
 		end
 
 		class Job < Sequel::Model
+			plugin :serialization, :json
 			many_to_one :job
 			many_to_one :results
-
 		end
 
 		class Result < Sequel::Model

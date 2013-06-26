@@ -20,7 +20,7 @@ require 'results'
 require 'dashboard'
 require 'overview'
 require "pry-remote"
-
+require "json_api"
 include FileUtils::Verbose   
 include Devices::Routes
 include Machines::Routes

@@ -74,6 +74,9 @@ GEM
       rubyzip
       websocket (~> 1.0.4)
     sequel (3.45.0)
+    sequel-json (0.0.1)
+      sequel
+      yajl-ruby
     sinatra (1.3.5)
       rack (~> 1.4)
       rack-protection (~> 1.3)
@@ -99,6 +102,7 @@ GEM
     websocket (1.0.7)
     xpath (1.0.0)
       nokogiri (~> 1.3)
+    yajl-ruby (1.1.0)
     yamler (0.1.0)
 
 PLATFORMS
@@ -116,6 +120,7 @@ DEPENDENCIES
   rack (>= 1.4.2)
   rake (>= 10.0.3)
   sequel
+  sequel-json
   sinatra (>= 1.3.3)
   sinatra-flash
   sinatra-graph (>= 0.1.3)

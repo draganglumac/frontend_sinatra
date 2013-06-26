@@ -79,7 +79,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="#"></a>
+											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("NOT STARTED")%>
@@ -88,7 +88,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="#"></a>
+											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("IN PROGRESS")%>
@@ -97,7 +97,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="#"></a>
+											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("COMPLETED")%>
@@ -106,7 +106,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="#"></a>
+											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("SCHEDULED")%>
@@ -115,7 +115,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt pull-right icon-white" href="#"></a>
+											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
 										</div>
 									</div>
 								<%end%>

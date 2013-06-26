@@ -1,174 +1,124 @@
 <div id="jobs-grid" class="row">
 	<% @projects.each do |project, jobs|%>
-		<%jobs.each do |job|%>
-			<div class="span6 well">
+		<div class="span6 well">
 
-				<div class="btn-group pull-right">
-					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-						Action
-						<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<form id="restart-job-<%=job['id']%>" 
-							method="post" 
-							action="/dashboard/job/restart/<%=job['id']%>">
-							<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
-							<% if Dir.exist?("public/uploads/#{job['name']}")%>
-								<li>
-								<a href="/results/<%=job['name']%>">Results</a>
-								</li>
-							<%end%>
-							<%if can_edit?%>
-								<li>
-								<a href="/job/<%=job['id']%>/delete">Delete</a>
-								</li>
-							<%end%>
-						</form>
-					</ul>
-				</div>
+			<div class="btn-group pull-right">
+				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+					Action
+					<span class="caret"></span>
+				</a>
+			</div>
 
-				<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=job["name"]%></h4>
+			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
 
-				<% if job["recursion"].eql?(0) %>
-					<h5> Single run job</h5>
-				<%else%>
-					<h5> Recursive job</h5>
-				<%end%>
-				<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
+			<h5>Schedule</h5>
+			<% if @last_run_times[project].empty? %>
+				<p style="padding-left: 1em;">Jobs never run</p>
+			<% else %>
+				<p style="padding-left: 1em;">Last job run on  <%=@last_run_times[project]%></p>
+			<% end %>
 
-				<%if job["status"].eql?("FAILED")%>
-					<div class="alert alert-error">
-						Job health CRITICAL
-					</div>
-				<%end%>
-				<%if job["status"].eql?("NOT STARTED")%>
-					<h5>Status of Jobs on Devices</h5>
-					<!-- Option 1 --> 
+			<h5>Status of jobs on devices</h5>
 
-					<div class="row-fluid" style="text-align: left;">
-						<div class="span3">Completed</div>
-						<div class="span3">Failed</div>
-						<div class="span3">Running</div>
-						<div class="span3">Pending</div>
-					</div>
-					<!-- 1a
-					<div class="row-fluid" style="text-align: right; font-weight: bold;">
-						<div class="span2 alert alert-success">1</div>
-						<div class="span1"></div>
-						<div class="span2 alert alert-error">3</div>
-						<div class="span1"></div>
-						<div class="span2 alert alert-info">3</div>
-						<div class="span1"></div>
-						<div class="span2 alert alert-warning">4</div>
-					</div>
-					-->
-					<!-- 1b -->
+			<div class="accordion" id="accordion-<%=project%>">
+				<div class="accordion-heading" onclick="toggle_expand_cookie('SkyGo');" >
+					<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=project%>" href="#collapse-<%=project%>">
 
-					<div class="accordion" id="accordion-<%=job['id']%>">
-						<div class="accordion-heading">
-							<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=job['id']%>" href="#collapse-<%=job['id']%>">
 
-								<div class="row-fluid" style="text-align: center; font-weight: bold;">
-									<div class="span3 alert alert-success">1</div>
-									<div class="span3 alert alert-error">3</div>
-									<div class="span3 alert alert-info">3</div>
-									<div class="span3 alert alert-warning">4</div>
-								</div>
-							</div>
-						</div>
-						<!-- Option 2
 						<div class="progress" style="height: 3em">
-							<div class="bar bar-success" 
-								style="text-align: center; width: 5%;"
-								data-toggle="tooltip" title="1 job Completed">
-								<h4>1</h4>
-							</div>
-							<div class="bar bar-danger" 
-								style="text-align: center; width: 30%;"
-								data-toggle="tooltip" title="6 jobs Failed">
-								<h4>6</h4>
-							</div>
-							<div class="bar bar-info"
-								style="text-align: center; width: 40%;" 
-								data-toggle="tooltip" title="8 jobs Running">
-								<h4>8</h4>
-							</div>
-							<div class="bar bar-warning" 
-								style="text-align: center; width: 25%;"
-								data-toggle="tooltip" title="5 jobs Pending">
-								<h4>5</h4>
-							</div>
+							<%statuses = @statuses[project]%>
+							<%percentages = get_percentages_for_statuses(statuses)%>
+							<%if statuses[:completed] > 0%>
+								<div class="bar bar-success" 
+									style="text-align: center; width: <%=percentages[:completed]%>%;"
+									data-toggle="tooltip" title="<%=statuses[:completed]%> job Completed">
+									<h4><%=statuses[:completed]%></h4>
+								</div>
+							<%end%>
+							<%if statuses[:failed] > 0%>
+								<div class="bar bar-danger" 
+									style="text-align: center; width: <%=percentages[:failed]%>%;"
+									data-toggle="tooltip" title="<%=statuses[:failed]%> jobs Failed">
+									<h4><%=statuses[:failed]%></h4>
+								</div>
+							<%end%>
+							<%if statuses[:running] > 0%>
+								<div class="bar bar-info"
+									style="text-align: center; width: <%=percentages[:running]%>%;" 
+									data-toggle="tooltip" title="<%=statuses[:running]%> jobs Running">
+									<h4><%=statuses[:running]%></h4>
+								</div>
+							<%end%>
+							<%if statuses[:pending] > 0%>
+								<div class="bar bar-warning" 
+									style="text-align: center; width: <%=percentages[:pending]%>%;"
+									data-toggle="tooltip" title="<%=statuses[:pending]%> jobs Pending">
+									<h4><%=@statuses[project][:pending]%></h4>
+								</div>
+							<%end%>
 						</div>
-						-->
 
-						<!-- Option 3  
-						<div class="progress progress-success" style="text-align: right;">
-							<div class="bar" style="width: 10%;"></div>
-							1 Completed
-						</div>
-						<div class="progress progress-danger" style="text-align: right;">
-
-							<div class="bar" style="width: 20%;"></div>
-							2 Failed
-						</div>
-						<div class="progress progress-striped active" style="text-align: right;">
-
-							<div class="bar" style="width: 40%;"></div>
-							4 Running
-						</div>
-						<div class="progress progress-warning" style="text-align: right;">
-
-							<div class="bar" style="width: 30%;"></div>
-							3 Pending
-						</div>
-						-->
-					<%end%>
-					<%if job["status"].eql?("IN PROGRESS")%>
-						<div class="alert alert-info">
-							Job health PENDING
-						</div>
-					<%end%>
-					<%if job["status"].eql?("COMPLETED")%>
-						<div class="alert alert-success">
-							Job health GOOD
-						</div>
-					<%end%>
-					<%if job["status"].eql?("SCHEDULED")%>
-						<div class="alert alert-success">
-							Job health GOOD
-						</div>
-					<%end%>
-
-					<div id="collapse-<%=job['id']%>" class="accordion-body collapse">
-						<div class="accordion-inner">
-							<div class="alert alert-success">iPhone 4 job COMPLETED.</div>
-							<div class="alert alert-error">iPhone 4S job FAILED.</div>
-							<div class="alert alert-error">iPhone 5 job FAILED.</div>
-							<div class="alert alert-error">iPod Touch 4Gen job FAILED.</div>
-							<div class="alert alert-info">iPad 1 job RUNNING.</div>
-							<div class="alert alert-info">iPad 2 job RUNNING.</div>
-							<div class="alert alert-info">iPad 3 job RUNNING.</div>
-							<div class="alert alert-warning">iPad 4 job PENDING.</div>
-							<div class="alert alert-warning">iPad Mini job PENDING.</div>
-							<div class="alert alert-warning">iPhone 3GS job PENDING.</div>
-							<div class="alert alert-warning">iPod Touch 3Gen job PENDING.</div>
-						</div>
 					</div>
 				</div>
 
+				<%if @cookies[project] == "expanded"%>
+					<div id="collapse-<%=project%>" class="accordion-body collapse in">
+				<%else%>
+					<div id="collapse-<%=project%>" class="accordion-body collapse">
+				<%end%>
+						<div class="accordion-inner">
+
+							<%jobs.each do |job|%>
+								<%if job["status"].eql?("FAILED")%>
+									<div class="alert alert-error">
+										<%=job['name'].split("#{project}-").last%> has FAILED.
+									</div>
+								<%elsif job["status"].eql?("NOT STARTED")%>
+									<div class="alert alert-warning">
+										<%=job['name'].split("#{project}-").last%> is PENDING.
+									</div>
+								<%elsif job["status"].eql?("IN PROGRESS")%>
+									<div class="alert alert-info">
+										<%=job['name'].split("#{project}-").last%> is RUNNING.
+									</div>
+								<%elsif job["status"].eql?("COMPLETED")%>
+									<div class="alert alert-success">
+										<%=job['name'].split("#{project}-").last%> has COMPLETED.
+									</div>
+								<%elsif job["status"].eql?("SCHEDULED")%>
+									<div class="alert alert-warning">
+										<%=job['name'].split("#{project}-").last%> is PENDING.
+									</div>
+								<%end%>
+							<%end%>
+
+						</div>
+					</div>
+					<!-- accordion -->
+				</div>
+				<!-- well -->
 			</div>
 		<% end %>
-	<% end %>
+	</div>
 
-</div>
+	<script>
+		function toggle_expand_cookie(project_name)
+		{
+			var old_value = $.cookie(project_name);
 
-<script>
-</script>
+			if (typeof old_value === undefined)
+			$.cookie(project_name, "expanded");
+			else if (old_value == "collapsed")
+			$.cookie(project_name, "expanded");
+			else
+			$.cookie(project_name, "collapsed");
+		}
+	</script>
 
-<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
-<script>
-	show_refresh_form = true;
-	<%if should_autorefresh? %>
-		setTimeout(function () { location.reload(1); }, 15000);
-	<%end%>
-</script>
+	<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
+	<script>
+		show_refresh_form = true;
+		<%if should_autorefresh? %>
+			setTimeout(function () { location.reload(1); }, 15000);
+		<%end%>
+	</script>

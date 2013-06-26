@@ -26,7 +26,7 @@ module AutomationStackHelpers
   def partial(page, options={})
     erb page, options.merge!(:layout => false)
   end
-  
+
   def link_folder_content(folder)
     puts "Link folder content #{folder}"
     file_list = []
@@ -39,7 +39,7 @@ module AutomationStackHelpers
       return file_list
     end
   end
-  
+
   def link_builder(name)
     target = "public/uploads"
     Dir.chdir(target) do
@@ -56,7 +56,7 @@ module AutomationStackHelpers
       end
     end
   end
-  
+
   def current_user
     session[:current_user]
   end
@@ -105,4 +105,31 @@ module AutomationStackHelpers
   def should_autorefresh?
     session[:autorefresh] or not session[:toggled_already]
   end
+
+  def increment_status_count(status, status_hash)
+    if status == 'COMPLETED'
+      status_hash[:completed] += 1
+    elsif status == 'FAILED'
+      status_hash[:failed] += 1
+    elsif status == 'IN PROGRESS'
+      status_hash[:running] += 1
+    elsif status == 'NOT STARTED' or status == 'SCHEDULED'
+      status_hash[:pending] += 1
+    end
+  end
+
+  def get_percentages_for_statuses(statuses)
+    min_percentage = 3
+    max_percentage = 100
+
+    total = 0
+    statuses.values.each { |x| total += x } 
+
+    percentages = {}
+    statuses.each do |status, value|
+      percentages[status] = (100 * value / total).floor
+    end
+
+    return percentages
+  end 
 end

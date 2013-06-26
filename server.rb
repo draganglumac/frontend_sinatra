@@ -53,6 +53,10 @@ end
 
 helpers AutomationStackHelpers 
 
+before do
+  @cookies = request.cookies
+end
+
 get '/home' do  
   redirect '/'
 end
@@ -103,24 +107,34 @@ end
 
 #system dashboard
 get '/dashboard' do
-  if request.cookies['uncle'].nil?
-    response.set_cookie "uncle", "Bob"
-    @uncle = "Bob"
-  else
-    @uncle = request.cookies['uncle']
-  end
-
   @current_jobs = Hound.get_jobs
+  
   @projects = {}
+  @statuses = {}
+  @last_run_times = {}
+  
   @current_jobs.each do |job|
-    project = job['name'].split('-').first
+    project = job['name'].split('-')[0...-1].join("-")
     if @projects[project].nil?
       @projects[project] = [job]
     else
       @projects[project] << job
-    end 
+    end
+
+    if @statuses[project].nil?
+      @statuses[project] = { :completed => 0, :failed => 0, :running => 0, :pending => 0 }
+    end
+    increment_status_count(job['status'], @statuses[project])
+
+    if @last_run_times[project].nil?
+      @last_run_times[project] = ''
+    end
+    current_timestr = job['TIMESTAMP'].strftime('%Y-%m-%d at %H:%M:%S') 
+    if @last_run_times[project] < current_timestr 
+        @last_run_times[project] = current_timestr
+    end  
   end 
-  
+
   erb :dashboard
 end
 

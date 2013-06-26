@@ -2,12 +2,9 @@
 	<% @projects.each do |project, jobs|%>
 		<div class="span6 well">
 
-			<div class="btn-group pull-right">
-				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-					Action
-					<span class="caret"></span>
-				</a>
-			</div>
+			<a class="btn btn-primary pull-right" >
+				Manage Devices 
+			</a>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
 
@@ -31,7 +28,7 @@
 							<%if statuses[:completed] > 0%>
 								<div class="bar bar-success" 
 									style="text-align: center; width: <%=percentages[:completed]%>%;"
-									data-toggle="tooltip" title="<%=statuses[:completed]%> job Completed">
+									data-toggle="tooltip" title="<%=statuses[:completed]%> jobs Completed">
 									<h4><%=statuses[:completed]%></h4>
 								</div>
 							<%end%>
@@ -63,33 +60,66 @@
 
 				<%if @cookies[project] == "expanded"%>
 					<div id="collapse-<%=project%>" class="accordion-body collapse in">
-				<%else%>
-					<div id="collapse-<%=project%>" class="accordion-body collapse">
-				<%end%>
+					<%else%>
+						<div id="collapse-<%=project%>" class="accordion-body collapse">
+						<%end%>
 						<div class="accordion-inner">
 
 							<%jobs.each do |job|%>
+
+								<!-- Restart the job form - submitted by an icon-repeat link. -->
+								<form id="restart-job-<%=job['id']%>" 
+									method="post" 
+									action="/dashboard/job/restart/<%=job['id']%>">
+								</form> 
+
 								<%if job["status"].eql?("FAILED")%>
 									<div class="alert alert-error">
 										<%=job['name'].split("#{project}-").last%> has FAILED.
+										<div class="pull-right">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="#"></a>
+										</div>
 									</div>
 								<%elsif job["status"].eql?("NOT STARTED")%>
 									<div class="alert alert-warning">
 										<%=job['name'].split("#{project}-").last%> is PENDING.
+										<div class="pull-right">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="#"></a>
+										</div>
 									</div>
 								<%elsif job["status"].eql?("IN PROGRESS")%>
 									<div class="alert alert-info">
 										<%=job['name'].split("#{project}-").last%> is RUNNING.
+										<div class="pull-right">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="#"></a>
+										</div>
 									</div>
 								<%elsif job["status"].eql?("COMPLETED")%>
 									<div class="alert alert-success">
 										<%=job['name'].split("#{project}-").last%> has COMPLETED.
+										<div class="pull-right">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="#"></a>
+										</div>
 									</div>
 								<%elsif job["status"].eql?("SCHEDULED")%>
 									<div class="alert alert-warning">
 										<%=job['name'].split("#{project}-").last%> is PENDING.
+										<div class="pull-right">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt pull-right icon-white" href="#"></a>
+										</div>
 									</div>
 								<%end%>
+								
 							<%end%>
 
 						</div>

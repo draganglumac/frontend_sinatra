@@ -2,9 +2,25 @@
 	<% @projects.each do |project, jobs|%>
 		<div class="span6 well">
 
-			<a class="btn btn-primary pull-right" >
-				Manage Devices 
-			</a>
+			<div class="btn-group pull-right">
+				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+					Action
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/results/<%=project%>">Results</a></li>
+					<%if can_edit?%>
+						<form id="<%=project%>-manage-devices" 
+							method="post" 
+							action="#">
+							<li>
+							<a href="#">Manage devices</a>
+							</li>
+						</form>    
+					<%end%>
+				</ul>
+			</div>
+
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
 
@@ -77,49 +93,69 @@
 									<div class="alert alert-error">
 										<%=device_name_from_job_name(job['name'])%> has FAILED.
 										<div class="pull-right">
-											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
+											<% if Dir.exist?("public/uploads/#{job['name']}")%>
+												<a class="icon-list-alt icon-white" href="/results/<%=job['name']%>" data-toggle="tooltip" title="Results"></a>
+											<%end%>
+											<span>&nbsp;</span>
+											<a class="icon-edit icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("NOT STARTED")%>
 									<div class="alert alert-warning">
 										<%=device_name_from_job_name(job['name'])%> is PENDING.
 										<div class="pull-right">
-											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
+											<% if Dir.exist?("public/uploads/#{job['name']}")%>
+												<a class="icon-list-alt icon-white" href="/results/<%=job['name']%>" data-toggle="tooltip" title="Results"></a>
+											<%end%>
+											<span>&nbsp;</span>
+											<a class="icon-edit icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("IN PROGRESS")%>
 									<div class="alert alert-info">
 										<%=device_name_from_job_name(job['name'])%> is RUNNING.
 										<div class="pull-right">
-											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
+											<% if Dir.exist?("public/uploads/#{job['name']}")%>
+												<a class="icon-list-alt icon-white" href="/results/<%=job['name']%>" data-toggle="tooltip" title="Results"></a>
+											<%end%>
+											<span>&nbsp;</span>
+											<a class="icon-edit icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("COMPLETED")%>
 									<div class="alert alert-success">
 										<%=device_name_from_job_name(job['name'])%> has COMPLETED.
 										<div class="pull-right">
-											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
+											<% if Dir.exist?("public/uploads/#{job['name']}")%>
+												<a class="icon-list-alt icon-white" href="/results/<%=job['name']%>" data-toggle="tooltip" title="Results"></a>
+											<%end%>
+											<span>&nbsp;</span>
+											<a class="icon-edit icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
 								<%elsif job["status"].eql?("SCHEDULED")%>
 									<div class="alert alert-warning">
-									<%=device_name_from_job_name(job['name'])%> is PENDING.
+										<%=device_name_from_job_name(job['name'])%> is PENDING.
 										<div class="pull-right">
-											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();"></a>
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<a class="icon-list-alt icon-white" href="/job/<%=job['id']%>"></a>
+											<% if Dir.exist?("public/uploads/#{job['name']}")%>
+												<a class="icon-list-alt icon-white" href="/results/<%=job['name']%>" data-toggle="tooltip" title="Results"></a>
+											<%end%>
+											<span>&nbsp;</span>
+											<a class="icon-edit icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
 								<%end%>
-								
+
 							<%end%>
 
 						</div>

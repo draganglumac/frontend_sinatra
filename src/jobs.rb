@@ -47,7 +47,7 @@ module Jobs
 
     get '/job/:id' do
       @job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-      print @job.name
+      @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
       erb :job_detail
     end
 
@@ -95,5 +95,6 @@ module Jobs
       end			
       redirect '/dashboard'
     end
+
   end
 end

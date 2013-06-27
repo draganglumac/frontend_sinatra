@@ -20,6 +20,7 @@ require 'results'
 require 'dashboard'
 require 'overview'
 require "pry-remote"
+require 'cgi'
 
 include FileUtils::Verbose   
 include Devices::Routes

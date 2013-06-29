@@ -18,6 +18,10 @@ module Jobs
 
         errors
       end
+
+      def in_editing_mode?
+        return @editing
+      end
     end
 
     #new job page
@@ -46,6 +50,12 @@ module Jobs
     end
 
     get '/job/:id' do
+      if params[:edit] == 'on'
+        @editing = true
+      else
+        @editing = false
+      end
+
       @job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
       @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
       erb :job_detail

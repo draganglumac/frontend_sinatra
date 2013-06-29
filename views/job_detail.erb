@@ -1,115 +1,80 @@
 <div class="well">
 
 	<span class="pull-right">	
-		<button class="btn"><i class="icon-repeat icon-white"></i></button>
-		<button class="btn"><i class="icon-list-alt icon-white"></i></button>
+		<a class="btn" href="/job/restart/<%=@job.id%>"><i class="icon-repeat icon-white"></i></a>
+		<a class="btn" href="/results/<%=@job.name%>"><i class="icon-list-alt icon-white"></i></a>
 		<% if can_edit? %>
-   <button class="btn"><i class="icon-edit icon-white"></i></button>
+			<% if in_editing_mode? %>
+				<button id="edit-button" class="btn active" data-toggle="button" onclick="toggle_edit();"><i class="icon-edit icon-white"></i></button>
+			<% else %>
+				<button id="edit-button" class="btn" data-toggle="button" onclick="toggle_edit();"><i class="icon-edit icon-white"></i></button>
+			<% end %>
+			<form id="toggle-editing" action="/job/<%=@job.id%>">
+				<input id="edit" type="hidden" name="edit" value="off" />
+			</form>
 		<% end %>
 	</span>
 
 	<h3><%=project_name_from_job_name(@job.name)%></h3>
 
 	<h4><%=device_name_from_job_name(@job.name)%> 
-	<%if not @job.machine_id.nil?%>		
-   <small>connected to</small> 
-		<a href="/machines/<%=@job.machine_id%>"><%=@machine.call_sign%></a>
-	<%end%>
+		<%if not @job.machine_id.nil?%>		
+			<small>connected to</small> 
+			<a href="/machines/<%=@job.machine_id%>"><%=@machine.call_sign%></a>
+		<%end%>
 	</h4>
 
 	<%if @job.status.eql?("FAILED")%>
-   <div class="alert alert-error">
+		<div class="alert alert-error">
 			<strong>FAILED</strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("NOT STARTED")%>
-   <div class="alert alert-warning">
+		<div class="alert alert-warning">
 			<strong>PENDING</strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("IN PROGRESS")%>
-   <div class="alert alert-info">
+		<div class="alert alert-info">
 			<strong>RUNNING</strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("COMPLETED")%>
-   <div class="alert alert-success">
+		<div class="alert alert-success">
 			<strong>COMPLETED</strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("SCHEDULED")%>
-   <div class="alert alert-warning">
+		<div class="alert alert-warning">
 			<strong>PENDING</strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%end%>
 
-	<form action="#" method="post" enctype="multipart/form-data">
-
-	<h5>Trigger Time</h5>
-	<link rel="stylesheet" type="text/css" media="screen" href="/css/bootstrap-datetimepicker.min.css">
-	<div id="datetimepicker" class="input-append date">
-		<input type="text" name="ltrigger" id="ltrigger" value="<%=Time.at(@job.trigger_time).strftime('%d/%m/%Y %H:%M:%S')%>"></input>
-		<span class="add-on">
-			<i data-time-icon="icon-time" data-date-icon="icon-calendar" class="icon-time"></i>
-		</span>
-	</div>
-	<script type="text/javascript" src="jquery.min.js"></script> 
-	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript">
-		$('#datetimepicker').datetimepicker({
-format: 'dd/MM/yyyy hh:mm:ss',
-pickDate: false
-});
-
-jQuery(function($) {
-		$('div.btn-group[data-toggle-name=*]').each(function(){
-			var group   = $(this);
-			var form    = group.parents('form').eq(0);
-			var name    = group.attr('data-toggle-name');
-			var hidden  = $('input[name="' + name + '"]', form);
-			$('button', group).each(function(){
-				var button = $(this);
-				button.live('click', function(){
-					hidden.val($(this).val());
-					});
-				if (button.val() == hidden.val()) {
-				button.addClass('active');
-				}
-				});
-			});
-		});
-	</script>
-
-	<% if can_edit? %>
-   <span>&nbsp;</span>
-		<span class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
-		<% if @job.recursion == 0 %>
-   <button type="button" value="0" class="btn active" data-toggle="button">Single</button>
-			<button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
-		<% else %>
-   <button type="button" value="0" class="btn" data-toggle="button">Single</button>
-			<button type="button" value="1" class="btn active" data-toggle="button">Recursive</button>
-		<% end %>
-		</span>
+	<% if in_editing_mode? %>
+		<%= erb :_job_detail_editing %>
+	<% else %>
+		<%= erb :_job_detail_readonly %>
 	<% end %>
-	<br />
 
-	<h5>Build Commands</h5>
-	<pre class="well pre-scrollable text-warning" style="padding-top: 0px; padding-bottom: 0px" >	
-		<%="\n#{@job.command}"%>
-	</pre>
-</form>
+			<script>
+				function toggle_edit() {
+					
+					var current_value = $('input#edit').val();
+					
+					if (current_value == 'off') {
+						$('input#edit').val('on');
+					}
+					else {
+						$('input#edit').val('off');
+					}
 
-<div>
-	<button class="btn ">Delete Job</button>
-	<button class="btn ">Save Changes</button>
-</div>
-
-</div>
+					$('#toggle-editing').submit();
+				}	
+			</script>
+		</div>

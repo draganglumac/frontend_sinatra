@@ -1,7 +1,10 @@
 <div class="well">
-
+	<form id="restart-job" 
+			method="post" 
+			action="/dashboard/job/restart/<%=@job.id%>">
+	</form> 
 	<span class="pull-right">	
-		<a class="btn" href="/job/restart/<%=@job.id%>"><i class="icon-repeat icon-white"></i></a>
+		<a class="btn" href="#" onclick="$('#restart-job').submit();"><i class="icon-repeat icon-white"></i></a>
 		<a class="btn" href="/results/<%=@job.name%>"><i class="icon-list-alt icon-white"></i></a>
 		<% if can_edit? %>
 			<% if in_editing_mode? %>

@@ -1,19 +1,32 @@
+<% if not @errors.empty? %>
+	<div class="errors">
+		<p>Validation errors:</p>
+		<% @errors.each do |key, value| %>
+			<li><%= value %></li>
+		<% end %>
+	</div>
+<% end %> 
+
 <div class="well">
 	<form id="restart-job" 
 		method="post" 
 		action="/dashboard/job/restart/<%=@job.id%>">
 	</form> 
 	<form id="toggle-editing" action="/job/<%=@job.id%>">
-		<input id="edit" type="hidden" name="edit" value="off" />
+		<% if in_editing_mode? %>
+			<input id="edit" type="hidden" name="edit" value="on" />
+		<% else %>
+			<input id="edit" type="hidden" name="edit" value="off" />
+		<% end %>
 	</form>
 	<span class="pull-right">	
-		<a class="btn" href="#" onclick="$('#restart-job').submit();"><i class="icon-repeat icon-white"></i></a>
-		<a class="btn" href="/results/<%=@job.name%>"><i class="icon-list-alt icon-white"></i></a>
+		<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
+		<a class="btn" href="/results/<%=@job.name%>" data-toggle="tooltip" title="View job reports."><i class="icon-list-alt icon-white"></i></a>
 		<% if can_edit? %>
 			<% if in_editing_mode? %>
-				<button id="edit-button" class="btn active" data-toggle="button" onclick="toggle_edit();"><i class="icon-edit icon-white"></i></button>
+				<button id="edit-button" class="btn active" data-toggle="button tooltip" onclick="toggle_edit();" title="Edit job."><i class="icon-edit icon-white"></i></button>
 			<% else %>
-				<button id="edit-button" class="btn" data-toggle="button" onclick="toggle_edit();"><i class="icon-edit icon-white"></i></button>
+				<button id="edit-button" class="btn" data-toggle="button tooltip" onclick="toggle_edit();" title="Edit job."><i class="icon-edit icon-white"></i></button>
 			<% end %>
 		<% end %>
 	</span>

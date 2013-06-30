@@ -1,4 +1,6 @@
 require 'jobs_helper'
+require 'automation_stack_helpers'
+require 'cgi'
 
 module Jobs
   module Routes
@@ -20,7 +22,19 @@ module Jobs
       end
 
       def in_editing_mode?
-        return @editing
+        if can_edit?
+          return @editing
+        else
+          return false
+        end
+      end
+
+      def html_escape(text)
+        CGI.escapeHTML(text)
+      end
+
+      def html_unescape(text)
+        CGI.unescapeHTML(text)
       end
     end
 
@@ -44,6 +58,7 @@ module Jobs
       Hound.disable_recursion(params[:id])
       redirect back
     end
+
     post '/job/recursion/enable/:id' do
       Hound.enable_recursion(params[:id])
       redirect back
@@ -56,17 +71,24 @@ module Jobs
         @editing = false
       end
 
+      @errors ||= {}      
       @job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
       puts "params[:id] = #{params[:id]}"
       puts "job.id = #{@job.id}, machine.id = #{@job.machine_id}"
       @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
+
       erb :'job_detail/job_detail'
+    end
+
+    post '/job/:id/update' do
+      puts 'To Do, get values in parameters, update the job, record errors, redirect to get /job/:id route.'
+      @errors = {}
     end
 
     get '/job/:id/delete' do
       job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
       job.delete
-      redirect back
+      redirect '/dashboard' 
     end
     post '/job/:id/delete' do
       job = AutomationStack::Infrastructure::Job.find(:id => params[:id])

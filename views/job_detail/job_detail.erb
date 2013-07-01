@@ -10,7 +10,7 @@
 <div class="well">
 	<form id="restart-job" 
 		method="post" 
-		action="/dashboard/job/restart/<%=@job.id%>">
+		action="/job/restart/<%=@job.id%>">
 	</form> 
 	<form id="toggle-editing" action="/job/<%=@job.id%>">
 		<% if in_editing_mode? %>

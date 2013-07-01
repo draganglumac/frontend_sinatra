@@ -21,6 +21,8 @@ require 'dashboard'
 require 'overview'
 require "pry-remote"
 require "json_api"
+require 'cgi'
+
 include FileUtils::Verbose   
 include Devices::Routes
 include Machines::Routes
@@ -52,6 +54,10 @@ end
 #Entry page
 
 helpers AutomationStackHelpers 
+
+before do
+  @cookies = request.cookies
+end
 
 get '/home' do  
   redirect '/'
@@ -107,11 +113,40 @@ post '/results/:id' do
   puts "Job name is #{job_name['name']}"
   send_file("public/uploads/#{job_name['name']}/cuke.html")
 end
+
 #system dashboard
 get '/dashboard' do
-  @current_jobs=Hound.get_jobs 
+  @current_jobs = Hound.get_jobs
+  
+  @projects = {}
+  @statuses = {}
+  @last_run_times = {}
+  
+  @current_jobs.each do |job|
+    project = project_name_from_job_name(job['name'])
+    if @projects[project].nil?
+      @projects[project] = [job]
+    else
+      @projects[project] << job
+    end
+
+    if @statuses[project].nil?
+      @statuses[project] = { :completed => 0, :failed => 0, :running => 0, :pending => 0 }
+    end
+    increment_status_count(job['status'], @statuses[project])
+
+    if @last_run_times[project].nil?
+      @last_run_times[project] = ''
+    end
+    current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') 
+    if @last_run_times[project] < current_timestr 
+        @last_run_times[project] = current_timestr
+    end  
+  end 
+
   erb :dashboard
 end
+
 get '/contact' do
   erb :contact
 end
@@ -139,12 +174,12 @@ post '/refresh' do
   # so I couldn't test for flag being nil? and set it to global setting
   # or anything similarly elegant. Might have to investigate it further.
   session[:toggled_already] = true
-  
+
   if params[:auto_refresh] == 'true'
     session[:autorefresh] = true
   else
     session[:autorefresh] = false
   end
-  
+
   redirect params[:redirect_url]
 end

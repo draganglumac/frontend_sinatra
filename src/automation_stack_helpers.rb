@@ -26,20 +26,24 @@ module AutomationStackHelpers
   def partial(page, options={})
     erb page, options.merge!(:layout => false)
   end
-  
+
   def link_folder_content(folder)
     puts "Link folder content #{folder}"
     file_list = []
-    Dir.chdir("public/uploads/" + folder) do
-      Dir.glob("*").reverse.each do |f|
-        epoch,filename = f.split('.',2)
-        display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
-        file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+    if Dir.exist?("public/uploads/#{folder}")
+      Dir.chdir("public/uploads/" + folder) do
+        Dir.glob("*").reverse.each do |f|
+          epoch,filename = f.split('.',2)
+          display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+          file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+        end
+        return file_list
       end
-      return file_list
+    else
+      halt 404, "Results unavailable - May not have been processed yet"
     end
   end
-  
+
   def link_builder(name)
     target = "public/uploads"
     Dir.chdir(target) do
@@ -56,7 +60,7 @@ module AutomationStackHelpers
       end
     end
   end
-  
+
   def current_user
     session[:current_user]
   end
@@ -105,4 +109,54 @@ module AutomationStackHelpers
   def should_autorefresh?
     session[:autorefresh] or not session[:toggled_already]
   end
+
+  def project_name_from_job_name(job_name)
+    job_name.split('-')[0...-1].join("-")
+  end
+
+  def device_name_from_job_name(job_name)
+    job_name.split('-').last
+  end
+
+  def device_report_folder_name(job_name)
+    device_name = device_name_from_job_name(job_name)
+    device_name.split('/').join('-')
+  end
+
+  def increment_status_count(status, status_hash)
+    if status == 'COMPLETED'
+      status_hash[:completed] += 1
+    elsif status == 'FAILED'
+      status_hash[:failed] += 1
+    elsif status == 'IN PROGRESS'
+      status_hash[:running] += 1
+    elsif status == 'NOT STARTED' or status == 'SCHEDULED' or status == 'QUEUED' or status =='PENDING'
+      status_hash[:pending] += 1
+    end
+  end
+
+  def get_percentages_for_statuses(statuses)
+    min_percentage = 3
+    max_percentage = 100
+    percentages = {}
+
+    total = statuses.values.inject(:+)
+    sorted_statuses = statuses.sort_by { |k, v| v }
+    sorted_statuses.each do |pair|
+      status = pair[0]
+      value = pair[1]
+
+      if value == 0
+        percentages[status] = 0
+      else
+        percentage = (max_percentage * value / total).floor
+        percentages[status] = percentage >= min_percentage ? percentage : min_percentage
+      end
+
+      total -= statuses[status]
+      max_percentage -= percentages[status]
+    end
+
+    return percentages
+  end 
 end

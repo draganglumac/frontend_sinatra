@@ -1,31 +1,29 @@
-<div class="grid">
-
+<div class="row">
 	<%for machine in @machines%>
-		<div class="col-1-3 well">
+		<div class="span4 well">
 
 			<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
 			<h4><%=machine.ip_address%></h4>
 			<% if !machine.connected_devices.empty? %>
-			
 
-			<div class="accordion" id="accordion<%=machine.id%>">
-				<div class="accordion-group">
-					<div class="accordion-heading">
-						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=machine.id%>" href="#collapse<%=machine.call_sign%>">
-							Connected devices
-						</a>
-					</div>
-					<div id="collapse<%=machine.call_sign%>" class="accordion-body collapse">
-						<div class="accordion-inner">
-						<% for device in machine.connected_devices%>
-						<p><%=device.device.tag%></p>
-						<%end%>
+				<div class="accordion" id="accordion<%=machine.id%>">
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=machine.id%>" href="#collapse<%=machine.call_sign%>">
+								Connected devices
+							</a>
 						</div>
-					</div>
-					
-				</div> 
-		
-			</div>
+						<div id="collapse<%=machine.call_sign%>" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<% for device in machine.connected_devices%>
+									<p><%=device.device.tag%></p>
+								<%end%>
+							</div>
+						</div>
+
+					</div> 
+
+				</div>
 			<%end%>
 			<%if machine.status.eql?("ONLINE")%>
 				<div class="alert alert-success">
@@ -37,14 +35,11 @@
 				</div>
 			<%end%>
 
-
-
-
 		</div>
 	<%end%>
-
 </div>
 
+<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
 <script>
 	show_refresh_form = true;
 	<%if should_autorefresh? %>

@@ -1,0 +1,103 @@
+<div id="jobs-grid" class="row">
+	<% @projects.each do |project, jobs|%>
+		<%jobs.each do |job|%>
+			<div class="span6 well">
+
+				<div class="btn-group pull-right">
+					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+						Action
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<form id="restart-job-<%=job['id']%>" 
+							method="post" 
+							action="/dashboard/job/restart/<%=job['id']%>">
+							<li><a tabindex="-1" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();">Restart</a></li>
+							<% if Dir.exist?("public/uploads/#{job['name']}")%>
+								<li><a href="/results/<%=job['name']%>">Results</a></li>
+							<%end%>
+							<%if can_edit?%>
+								<li>
+								<a href="/job/<%=job['id']%>/delete">Delete</a>
+								</li>
+							<%end%>
+						</form>    
+
+					</ul>
+				</div>
+
+				<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=job["name"]%></h4>
+
+				<% if job["recursion"].eql?(0) %>
+					<h5> Single run job</h5>
+				<%else%>	
+					<h5> Recursive job</h5>
+				<%end%>
+				<p>Job status <%=job["status"]%></p>
+				<p>Last run <%=job["TIMESTAMP"].strftime("%Y-%m-%d %H:%M:%S ")%></p>
+
+				<p><a href="/machines/<%=job['machine_id']%>">Build machine <%=job['machine_id']%></a></p>	
+
+				<div class="accordion" id="accordion<%=job['name']%><%=job['id']%>">
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse-<%=job['id']%>">
+								View build commands
+							</a>
+						</div>
+						<div id="collapse-<%=job['id']%>" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<p><%=job['command']%></p>
+							</div>
+						</div>
+						<div class="accordion-heading">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=job['name']%><%=job['id']%>" href="#collapse2-<%=job['id']%>">
+								View job trigger time
+							</a>
+						</div>
+						<div id="collapse2-<%=job['id']%>" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<p><%=Time.at(job['trigger_time'])%></p>
+							</div>
+						</div>
+					</div> 
+					<%if job["status"].eql?("FAILED")%>
+						<div class="alert alert-error">
+							Job health CRITICAL
+						</div>
+					<%end%>
+					<%if job["status"].eql?("NOT STARTED")%>
+						<div class="alert alert-block">
+							Job health UNCONFIRMED
+						</div>
+					<%end%>
+					<%if job["status"].eql?("IN PROGRESS")%>
+						<div class="alert alert-info">
+							Job health PENDING
+						</div>
+					<%end%>
+					<%if job["status"].eql?("COMPLETED")%>
+						<div class="alert alert-success">
+							Job health GOOD
+						</div>
+					<%end%>
+					<%if job["status"].eql?("SCHEDULED")%>
+						<div class="alert alert-success">
+							Job health GOOD
+						</div>
+					<%end%>
+				</div>
+
+			</div>
+		<% end %>
+	<% end %>
+
+</div>
+
+<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
+<script>
+	show_refresh_form = true;
+	<%if should_autorefresh? %>
+		setTimeout(function () { location.reload(1); }, 15000);
+	<%end%>
+</script>

@@ -145,8 +145,13 @@ module AutomationStackHelpers
     sorted_statuses.each do |pair|
       status = pair[0]
       value = pair[1]
-      percentage = (max_percentage * value / total).floor
-      percentages[status] = percentage >= min_percentage ? percentage : min_percentage
+
+      if value == 0
+        percentages[status] = 0
+      else
+        percentage = (max_percentage * value / total).floor
+        percentages[status] = percentage >= min_percentage ? percentage : min_percentage
+      end
 
       total -= statuses[status]
       max_percentage -= percentages[status]

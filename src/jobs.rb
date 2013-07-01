@@ -29,6 +29,11 @@ module Jobs
         end
       end
 
+      def today_and_trigger_time
+        trigger = Time.at(@job.trigger_time).strftime('%d/%m/%Y %H:%M:%S')
+        now = (Time.now).strftime('%d/%m/%Y %H:%M:%S')
+        now.split(' ').first + ' ' + trigger.split(' ').last
+      end
       def url_escape(text)
         URI.escape(text)
       end

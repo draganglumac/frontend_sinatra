@@ -8,7 +8,7 @@
 	<div class="well">
 		<link rel="stylesheet" type="text/css" media="screen" href="/css/bootstrap-datetimepicker.min.css">
 		<div id="datetimepicker" class="input-append date">
-			<input type="text" name="ltrigger" id="ltrigger" value="<%=Time.at(@job.trigger_time).strftime('%d/%m/%Y %H:%M:%S')%>"></input>
+			<input type="text" name="ltrigger" id="ltrigger" value="<%=today_and_trigger_time%>"></input>
 			<span id="time-picker-button" class="add-on">
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar" class="icon-time"></i>
 			</span>

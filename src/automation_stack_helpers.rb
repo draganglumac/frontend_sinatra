@@ -121,7 +121,7 @@ module AutomationStackHelpers
       status_hash[:failed] += 1
     elsif status == 'IN PROGRESS'
       status_hash[:running] += 1
-    elsif status == 'NOT STARTED' or status == 'SCHEDULED'
+    elsif status == 'NOT STARTED' or status == 'SCHEDULED' or status == 'QUEUED' or status='PENDING'
       status_hash[:pending] += 1
     end
   end

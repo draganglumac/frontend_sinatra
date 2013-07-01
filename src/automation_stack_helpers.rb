@@ -30,13 +30,17 @@ module AutomationStackHelpers
   def link_folder_content(folder)
     puts "Link folder content #{folder}"
     file_list = []
-    Dir.chdir("public/uploads/" + folder) do
-      Dir.glob("*").reverse.each do |f|
-        epoch,filename = f.split('.',2)
-        display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
-        file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+    if Dir.exist?("public/uploads/#{folder}")
+      Dir.chdir("public/uploads/" + folder) do
+        Dir.glob("*").reverse.each do |f|
+          epoch,filename = f.split('.',2)
+          display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+          file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+        end
+        return file_list
       end
-      return file_list
+    else
+      halt 404, "Results unavailable - May not have been processed yet"
     end
   end
 
@@ -112,6 +116,11 @@ module AutomationStackHelpers
 
   def device_name_from_job_name(job_name)
     job_name.split('-').last
+  end
+
+  def device_report_folder_name(job_name)
+    device_name = device_name_from_job_name(job_name)
+    device_name.split('/').join('-')
   end
 
   def increment_status_count(status, status_hash)

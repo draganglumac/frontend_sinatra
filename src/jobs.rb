@@ -78,8 +78,6 @@ module Jobs
 
       @errors ||= {}      
       @job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-      puts "params[:id] = #{params[:id]}"
-      puts "job.id = #{@job.id}, machine.id = #{@job.machine_id}"
       @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
 
       erb :'job_detail/job_detail'

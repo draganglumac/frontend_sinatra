@@ -130,7 +130,7 @@ module AutomationStackHelpers
       status_hash[:failed] += 1
     elsif status == 'IN PROGRESS'
       status_hash[:running] += 1
-    elsif status == 'NOT STARTED' or status == 'SCHEDULED' or status == 'QUEUED' or status='PENDING'
+    elsif status == 'NOT STARTED' or status == 'SCHEDULED' or status == 'QUEUED' or status =='PENDING'
       status_hash[:pending] += 1
     end
   end
@@ -138,13 +138,18 @@ module AutomationStackHelpers
   def get_percentages_for_statuses(statuses)
     min_percentage = 3
     max_percentage = 100
-
-    total = 0
-    statuses.values.each { |x| total += x } 
-
     percentages = {}
-    statuses.each do |status, value|
-      percentages[status] = (100 * value / total).floor
+
+    total = statuses.values.inject(:+)
+    sorted_statuses = statuses.sort_by { |k, v| v }
+    sorted_statuses.each do |pair|
+      status = pair[0]
+      value = pair[1]
+      percentage = (max_percentage * value / total).floor
+      percentages[status] = percentage >= min_percentage ? percentage : min_percentage
+
+      total -= statuses[status]
+      max_percentage -= percentages[status]
     end
 
     return percentages

@@ -1,6 +1,6 @@
 require 'jobs_helper'
 require 'automation_stack_helpers'
-require 'cgi'
+require 'uri'
 
 module Jobs
   module Routes
@@ -29,12 +29,12 @@ module Jobs
         end
       end
 
-      def html_escape(text)
-        CGI.escapeHTML(text)
+      def url_escape(text)
+        URI.escape(text)
       end
 
-      def html_unescape(text)
-        CGI.unescapeHTML(text)
+      def url_unescape(text)
+        URI.unescape(text)
       end
     end
 
@@ -81,8 +81,29 @@ module Jobs
     end
 
     post '/job/:id/update' do
-      puts 'To Do, get values in parameters, update the job, record errors, redirect to get /job/:id route.'
       @errors = {}
+      job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
+      
+      # new trigger time
+      trigger = params[:ltrigger]
+      trigger << '.000000'
+      job.trigger_time = Time.parse(trigger).to_i
+
+      # new recursion
+      job.recursion = params[:recursion].to_i
+
+      # new commands - use file content if supplied
+      if not params[:file_source].nil?
+        tempfile = params[:file_source][:tempfile]	
+        #filename = params[:file_source][:filename]
+        file_content = File.open(tempfile.path,'rb') { |file|file.read}
+        job.command = file_content
+      else
+        job.command = url_unescape(params[:command])
+      end
+
+      job.save
+      redirect "/job/#{params[:id]}"
     end
 
     get '/job/:id/delete' do
@@ -114,7 +135,7 @@ module Jobs
           tempfile = params[:file_source][:tempfile]	
           filename = params[:file_source][:filename]
           string = File.open(tempfile.path,'rb') { |file|file.read}
-          trigger = params[:ltrigger] 
+          trigger = paramy[:ltrigger] 
           trigger << ".000000"
           trigger = Time.parse(trigger).to_i
           recursion=0

@@ -138,7 +138,7 @@ module Jobs
           tempfile = params[:file_source][:tempfile]	
           filename = params[:file_source][:filename]
           string = File.open(tempfile.path,'rb') { |file|file.read}
-          trigger = paramy[:ltrigger] 
+          trigger = param[:ltrigger] 
           trigger << ".000000"
           trigger = Time.parse(trigger).to_i
           recursion=0

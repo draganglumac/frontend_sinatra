@@ -10,17 +10,16 @@
 				<ul class="dropdown-menu">
 					<li><a href="/results/<%=project%>">Results</a></li>
 					<%if can_edit?%>
-						<form id="<%=project%>-manage-devices" 
-							method="post" 
-							action="#">
-							<li>
-							<a href="#">Manage devices</a>
-							</li>
-						</form>    
+						<li><a href='#' onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
+						<li><a href="#">Manage devices</a></li>
 					<%end%>
 				</ul>
 			</div>
-
+			
+			<%if can_edit?%>
+				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+				<form id="<%=project%>-manage-devices" method="post" action="#"></form>
+			<%end%>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
 
@@ -34,7 +33,7 @@
 			<h5>Status of jobs on devices</h5>
 
 			<div class="accordion" id="accordion-<%=project%>">
-				<div class="accordion-heading" onclick="toggle_expand_cookie('SkyGo');" >
+				<div class="accordion-heading" onclick="toggle_expand_cookie('<%=project%>');" >
 					<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=project%>" href="#collapse-<%=project%>">
 
 
@@ -95,9 +94,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<% if Dir.exist?("public/uploads/#{job['name']}")%>
-												<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
-											<%end%>
+											<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
@@ -108,9 +105,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<% if Dir.exist?("public/uploads/#{job['name']}")%>
-												<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
-											<%end%>
+											<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
@@ -121,9 +116,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<% if Dir.exist?("public/uploads/#{job['name']}")%>
-												<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
-											<%end%>
+											<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
@@ -134,9 +127,7 @@
 										<div class="pull-right">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
-											<% if Dir.exist?("public/uploads/#{job['name']}")%>
-												<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
-											<%end%>
+											<a class="icon-list-alt icon-white" href="/results/<%=project_name_from_job_name(job['name'])%>/<%=device_report_folder_name(job['name'])%>" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
@@ -158,9 +149,11 @@
 		function toggle_expand_cookie(project_name)
 		{
 			var old_value = $.cookie(project_name);
-
-			if (typeof old_value === undefined)
-			$.cookie(project_name, "expanded");
+			if (typeof old_value === 'undefined')
+			{
+				$.cookie(project_name, "expanded");
+				location.reload();
+			}
 			else if (old_value == "collapsed")
 			$.cookie(project_name, "expanded");
 			else

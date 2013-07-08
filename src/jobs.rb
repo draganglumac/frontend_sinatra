@@ -120,6 +120,12 @@ module Jobs
       redirect '/job'
     end
 
+    post '/jobs/:project/delete' do
+      AutomationStack::Infrastructure::Job.subset(:project, :name.like("#{params[:project]}%"))
+      AutomationStack::Infrastructure::Job.project.delete
+      redirect back
+    end
+
     post '/job' do
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"

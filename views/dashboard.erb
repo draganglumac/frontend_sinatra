@@ -10,17 +10,16 @@
 				<ul class="dropdown-menu">
 					<li><a href="/results/<%=project%>">Results</a></li>
 					<%if can_edit?%>
-						<form id="<%=project%>-manage-devices" 
-							method="post" 
-							action="#">
-							<li>
-							<a href="#">Manage devices</a>
-							</li>
-						</form>    
+						<li><a href='#' onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
+						<li><a href="#">Manage devices</a></li>
 					<%end%>
 				</ul>
 			</div>
-
+			
+			<%if can_edit?%>
+				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+				<form id="<%=project%>-manage-devices" method="post" action="#"></form>
+			<%end%>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
 
@@ -151,7 +150,10 @@
 		{
 			var old_value = $.cookie(project_name);
 			if (typeof old_value === 'undefined')
-			$.cookie(project_name, "expanded");
+			{
+				$.cookie(project_name, "expanded");
+				location.reload();
+			}
 			else if (old_value == "collapsed")
 			$.cookie(project_name, "expanded");
 			else

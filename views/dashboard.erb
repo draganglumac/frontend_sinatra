@@ -10,15 +10,46 @@
 				<ul class="dropdown-menu">
 					<li><a href="/results/<%=project%>">Results</a></li>
 					<%if can_edit?%>
-						<li><a href='#' onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
-						<li><a href="#">Manage devices</a></li>
+						<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
+						<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal">Manage devices</a></li>
 					<%end%>
 				</ul>
 			</div>
 			
 			<%if can_edit?%>
-				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
-				<form id="<%=project%>-manage-devices" method="post" action="#"></form>
+				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete">
+					<div id="device-modal" class="modal hide">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">&times;</a>
+							<h3>Device Selection</h3>
+						</div>
+						<div class="modal-body">
+							<ul id="device_list" style="list-style-type:none;text-decoration:none;">
+							<%for device in @devices %>
+								<% if device.ip %>
+									<% if check_availibility(device.id) == 1 %>
+										<li >
+											<%if not @project_devices[project].nil? and @project_devices[project].include?(device.id)%>
+												<input type="checkbox" id="<%=device.tag%>" 
+												name="SELECTED_DEVICE=<%=device.id%>" checked  
+												style="margin-top:-5px;"><%=device.name%></input>
+											<% else %>
+												<input type="checkbox" id="<%=device.tag%>" 
+												name="SELECTED_DEVICE=<%=device.id%>"
+												style="margin-top:-5px;"><%=device.name%></input>
+											<% end %>
+										</li>
+									<% end %>
+								<%end%>
+							<%end %>
+							</ul>
+						</div>
+						<div class="modal-footer">
+							<input class="btn"id="submit" type="submit" value="submit"/>
+						</div>
+					</div>
+				</form>
+				<form id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit"></form>
 			<%end%>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
@@ -165,6 +196,11 @@
 	<script>
 		show_refresh_form = true;
 		<%if should_autorefresh? %>
-			setTimeout(function () { location.reload(1); }, 15000);
+			setTimeout(
+				function () {
+						location.reload(1); 
+				}, 
+				15000
+			);
 		<%end%>
 	</script>

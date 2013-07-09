@@ -92,8 +92,29 @@ jQuery(function($) {
 </script>
 <br />
 <div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
-	<button type="button" value="0" class="btn" data-toggle="button">Single</button>
-	<button type="button" value="1" class="btn" data-toggle="button">Recursive</button>
+	<button type="button" value="0" class="btn" data-toggle="button" onclick="reset_recurrence();">Single</button>
+	<button type="button" value="1" class="btn" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
+</div>
+<div class="well" id="recurrence-div">
+	<div class="center">
+		<input type="hidden" name="interval" id="interval" value="0"></input>
+		<h6>
+			<span>&nbsp;</span>
+			<span>Repeats every</span>
+			<span>&nbsp;</span>
+			<span>
+				<input style="width: 17%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="text" id="number-of-time-units" value="1"></input>
+			</span>
+			<span>&nbsp;</span>
+			<span class="controls" >
+				<select style="width: 33%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
+					<option value="60">minutes</option>
+					<option value"3600">hours</option>
+					<option value="86400" selected>days</option>
+				</select>
+			</span>
+		</h6>
+	</div>
 </div>
 <br />
 <input type="hidden" name="is_private" value="0" />
@@ -114,3 +135,15 @@ jQuery(function($) {
 </div>
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
+<script src="text/javascript">
+function show_recurrence_form() {
+	alert("Hi show_recurrence_form.");
+	return;
+	$('#recurrence-div').removeClass("hidden");
+}
+
+function reset_recurrence() {
+	$('#recurrence-div').addClass("hidden");
+	$('#interval').val('0');
+}
+</script>

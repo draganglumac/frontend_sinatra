@@ -126,6 +126,11 @@ module Jobs
       redirect back
     end
 
+    post '/jobs/:project/edit' do
+      puts "ToDo => add and remove devices to project"
+      redirect back
+    end
+
     post '/job' do
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"

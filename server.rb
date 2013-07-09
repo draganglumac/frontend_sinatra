@@ -119,6 +119,7 @@ get '/dashboard' do
   @current_jobs = Hound.get_jobs
   
   @projects = {}
+  @project_devices = {}
   @statuses = {}
   @last_run_times = {}
   
@@ -143,6 +144,8 @@ get '/dashboard' do
         @last_run_times[project] = current_timestr
     end  
   end 
+
+  @devices = AutomationStack::Infrastructure::Device.all
 
   erb :dashboard
 end

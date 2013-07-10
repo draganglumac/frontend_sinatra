@@ -59,11 +59,13 @@ module Jobs
       end
 
       def multiplier_from_interval(interval)
-        if interval < 3600
+        if interval == 0
+          1
+        elsif interval < 3600
           interval / 60
         elsif interval < 86400
           interval / 3600
-        elseif interval >= 86400
+        elsif interval >= 86400
           interval / 86400
         else
           1
@@ -71,7 +73,9 @@ module Jobs
       end
 
       def time_unit_from_interval(interval)
-        if interval < 3600
+        if interval == 0
+          "days"
+        elsif interval < 3600
           "minutes"
         elsif interval < 86400
           "hours"

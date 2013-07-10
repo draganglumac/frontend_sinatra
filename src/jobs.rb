@@ -155,11 +155,15 @@ module Jobs
           recursion=0
           if params[:is_private] == "0"
             recursion=0
+            interval=0
           else
             recursion=1
+            interval=params[:seconds_multiplier].to_i * params[:seconds].to_i
+            interval=interval < 900 ? 900 : interval
           end
+          puts "interval = #{interval}"
           string = Jobhelper.replace_symbols(string,machine)	
-          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion)
+          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval)
         end
       end			
       redirect '/dashboard'

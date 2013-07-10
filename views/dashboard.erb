@@ -17,7 +17,8 @@
 			</div>
 			
 			<%if can_edit?%>
-				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete">
+				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+				<form id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
 					<div id="device-modal" class="modal hide">
 						<div class="modal-header">
 							<a class="close" data-dismiss="modal">&times;</a>
@@ -49,7 +50,6 @@
 						</div>
 					</div>
 				</form>
-				<form id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit"></form>
 			<%end%>
 
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>

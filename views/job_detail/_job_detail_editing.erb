@@ -38,21 +38,40 @@
 					if (button.val() == hidden.val()) {
 						button.addClass('active');
 					}
+
+					if ($('#recursive').hasClass("active")) {
+						$('#recurrence-div').removeClass('hidden');
+					}
 				});
 			});
 		});
 		</script>
-
-		<span>&nbsp;</span>
-		<span id="recursion-buttons" class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
-		<% if @job.recursion == 0 %>
-			<button id="single" type="button" value="0" class="btn active" data-toggle="button">Single</button>
-			<button id="recursive" type="button" value="1" class="btn" data-toggle="button">Recursive</button>
-		<% else %>
-			<button type="button" value="0" class="btn" data-toggle="button">Single</button>
-			<button type="button" value="1" class="btn active" data-toggle="button">Recursive</button>
-		<% end %>
-		</span>
+		<br/>	
+		<div id="recursion-buttons" class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio" >
+			<span>
+				<button id="single" onclick="hide_recurrence_form();" type="button" value="0" class="btn<%if @job.recursion == 0%> active<%end%>" data-toggle="button">Single</button>
+				<button id="recursive" onclick="show_recurrence_form();" type="button" value="1" class="btn<%if @job.recursion == 1%> active<%end%>" data-toggle="button">Recursive</button>
+			</span>
+			<div class="well<%if @job.recursion == 0%> hidden<%end%>" style="margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;" id="recurrence-div">
+				<h6>
+					<span>&nbsp;</span>
+					<span>Repeats every</span>
+					<span>&nbsp;</span>
+					<span>
+						<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="<%=multiplier_from_interval(@job.interval)%>"></input>
+					</span>
+					<span>&nbsp;</span>
+					<span class="controls" >
+						<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
+							<option value="60" <%if time_unit_from_interval(@job.interval) == 'minutes'%>selected<%end%>>minutes</option>
+							<option value="3600" <%if time_unit_from_interval(@job.interval) == 'hours'%>selected<%end%>>hours</option>
+							<option value="86400" <%if time_unit_from_interval(@job.interval) == 'days'%>selected<%end%>>days</option>
+						</select>
+					</span>
+					<p><br/><small class="pull-left"><em>* minimum interval is 15 minutes.</em></small></p>
+				</h6>
+			</div>
+		</div>
 	</div>
 
 	<h5>Build Commands</h5>
@@ -89,6 +108,18 @@
 			$('input#command').val(encodeURIComponent($('textarea#job-commands').val()));
 			
 			$('form#update-job').submit();
+		}
+
+		function show_recurrence_form() {
+			$('#recursive').addClass('active');
+			$('#single').removeClass('active');
+			$('#recurrence-div').removeClass("hidden");
+		}
+
+		function hide_recurrence_form() {
+			$('#single').addClass('active');
+			$('#recursive').removeClass('active');
+			$('#recurrence-div').addClass("hidden");
 		}
 	</script>
 </form>

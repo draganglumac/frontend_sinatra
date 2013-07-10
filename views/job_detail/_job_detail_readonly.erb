@@ -5,7 +5,7 @@
 	<div class="well">
 	<p><%=Time.at(@job.trigger_time).strftime('%d-%m-%Y %H:%M:%S')%>
 	<% if @job.recursion == 1 %>
-		<span>&nbsp;</span> repeating daily.
+		<span>&nbsp;</span> repeats every <%=recurrence_string(@job.interval)%>.
 	<% end %>
 	</div>
 

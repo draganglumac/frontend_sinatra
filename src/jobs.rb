@@ -4,6 +4,7 @@ require 'uri'
 
 module Jobs
   module Routes
+
     helpers do
       def validate(params)
         errors = {}
@@ -40,6 +41,47 @@ module Jobs
 
       def url_unescape(text)
         URI.unescape(text)
+      end
+
+      def recurrence_string(interval)
+        if interval >= 900 and interval < 3600
+          multiplier = interval / 60
+          "#{multiplier} minutes"
+        elsif interval < 86400
+          multiplier = interval / 3600
+          "#{multiplier} hours"
+        elsif interval >= 86400
+          multiplier = interval / 86400
+          "#{multiplier} days"
+        else
+          "unknown"
+        end
+      end
+
+      def multiplier_from_interval(interval)
+        if interval == 0
+          1
+        elsif interval < 3600
+          interval / 60
+        elsif interval < 86400
+          interval / 3600
+        elsif interval >= 86400
+          interval / 86400
+        else
+          1
+        end
+      end
+
+      def time_unit_from_interval(interval)
+        if interval == 0
+          "days"
+        elsif interval < 3600
+          "minutes"
+        elsif interval < 86400
+          "hours"
+        else
+          "days"
+        end
       end
     end
 
@@ -86,7 +128,7 @@ module Jobs
     post '/job/:id/update' do
       @errors = {}
       job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-      
+
       # new trigger time
       trigger = params[:ltrigger]
       trigger << '.000000'
@@ -94,6 +136,12 @@ module Jobs
 
       # new recursion
       job.recursion = params[:recursion].to_i
+      if job.recursion == 0
+        job.interval = 0
+      else
+        interval = params[:seconds_multiplier].to_i * params[:seconds].to_i
+        job.interval = interval < 900 ? 900 : interval
+      end        
 
       # new commands - use file content if supplied
       if not params[:file_source].nil?
@@ -155,11 +203,15 @@ module Jobs
           recursion=0
           if params[:is_private] == "0"
             recursion=0
+            interval=0
           else
             recursion=1
+            interval=params[:seconds_multiplier].to_i * params[:seconds].to_i
+            interval=interval < 900 ? 900 : interval
           end
+          puts "interval = #{interval}"
           string = Jobhelper.replace_symbols(string,machine)	
-          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion)
+          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval)
         end
       end			
       redirect '/dashboard'

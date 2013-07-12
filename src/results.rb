@@ -23,6 +23,8 @@ module Results
     end
 
     get '/results/:name/:device' do
+      @project = params[:name]
+      @device = params[:device]
       @main_paths = link_main_results(params[:name] + '/' + params[:device], "cukes.html")
       @supporting_paths = link_supporting_results(params[:name] + '/' + params[:device], "cukes.html")
       erb :'results/resultjob', :layout => :results_layout

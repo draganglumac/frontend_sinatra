@@ -135,47 +135,50 @@
 					<ul class="nav">
 						<li><a href="/">Home</a></li>
 						<li><a href="/contact">Contact</a></li>
-						<li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
-						</ul>
-					</div><!--/.nav-collapse -->
-
-				</div>
-
+					<li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
+					</ul>
+				</div><!--/.nav-collapse -->
 
 			</div>
+
+
 		</div>
+	</div>
 
-		<%= yield %>
+	<%= yield %>
 
-		<!-- Le javascript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="/js/jquery.js"></script>
-		<script src="/js/jquery.cookie.js"></script>
-		<script src="/js/bootstrap-transition.js"></script>
-		<script src="/js/bootstrap-alert.js"></script>
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="/js/jquery.js"></script>
+	<script src="/js/jquery.cookie.js"></script>
+	<script src="/js/bootstrap-transition.js"></script>
+	<script src="/js/bootstrap-alert.js"></script>
 
-		<script src="/js/bootstrap-scroll-modal.js"></script>
-		<script src="/js/bootstrap-dropdown.js"></script>
-		<script src="/js/bootstrap-scrollspy.js"></script>
-		<script src="/js/bootstrap-tab.js"></script>
-		<script src="/js/bootstrap-tooltip.js"></script>
-		<script src="/js/bootstrap-popover.js"></script>
+	<script src="/js/bootstrap-scroll-modal.js"></script>
+	<script src="/js/bootstrap-dropdown.js"></script>
+	<script src="/js/bootstrap-scrollspy.js"></script>
+	<script src="/js/bootstrap-tab.js"></script>
+	<script src="/js/bootstrap-tooltip.js"></script>
+	<script src="/js/bootstrap-popover.js"></script>
 
-		<script src="/js/bootstrap-button.js"></script>
-		<script src="/js/bootstrap-collapse.js"></script>
-		<script src="/js/bootstrap-carousel.js"></script>
-		<script src="/js/bootstrap-typeahead.js"></script>
+	<script src="/js/bootstrap-button.js"></script>
+	<script src="/js/bootstrap-collapse.js"></script>
+	<script src="/js/bootstrap-carousel.js"></script>
+	<script src="/js/bootstrap-typeahead.js"></script>
 
-		<script>
-			$(window).load(function() {
-				if (show_refresh_form)
-				{
-					$('div.refresh-form').toggleClass('hidden-form');
-				}
-			});
-		</script>
+	<script>
+		$(document).ready(function ($) {
+			$('#results-nav li a').filter(':first').click();
+		});
 
+		$(window).load(function() {
+			if (show_refresh_form)
+			{
+				$('div.refresh-form').toggleClass('hidden-form');
+			}
+		});
+	</script>
 
 	</body>
 </html>

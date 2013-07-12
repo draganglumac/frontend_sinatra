@@ -36,7 +36,7 @@ module AutomationStackHelpers
           epoch,filename = f.split('.',2)
           if (filename == main_result_file) 
             display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S") 
-            epoch_file_map[epoch] = "<a href=\"/uploads/#{folder}/#{f}\" target=\"main-content\">#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
+            epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('/uploads/#{folder}/#{f}');\">#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
             puts "#{epoch_file_map[epoch]}"
           end
         end

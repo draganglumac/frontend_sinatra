@@ -21,7 +21,7 @@
 	</form>
 	<span class="pull-right">	
 		<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
-		<a class="btn" href="/results/<%=project_name_from_job_name(@job.name)%>/<%=device_report_folder_name(@job.name)%>" data-toggle="tooltip" title="View job reports."><i class="icon-list-alt icon-white"></i></a>
+		<a class="btn" href="/results/job/<%=@job.id%>" data-toggle="tooltip" title="View job reports."><i class="icon-list-alt icon-white"></i></a>
 		<% if can_edit? %>
 			<% if in_editing_mode? %>
 				<button id="edit-button" class="btn active" data-toggle="button tooltip" onclick="toggle_edit();" title="Edit job."><i class="icon-edit icon-white"></i></button>

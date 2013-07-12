@@ -27,19 +27,25 @@ module AutomationStackHelpers
     erb page, options.merge!(:layout => false)
   end
 
-  def link_main_results(folder, main_result_file)
-    puts "Link folder content #{folder}"
+  def link_main_results(job_id_folder, main_result_file)
     epoch_file_map = {}
-    if Dir.exist?("public/uploads/#{folder}")
-      Dir.chdir("public/uploads/" + folder) do
-        Dir.glob("*").reverse.each do |f|
-          epoch,filename = f.split('.',2)
-          if (filename == main_result_file) 
-            display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S") 
-            epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('/uploads/#{folder}/#{f}');\">#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
-            puts "#{epoch_file_map[epoch]}"
+    job_id_results_path = "public/uploads/results/#{job_id_folder}" 
+    if Dir.exist?(job_id_results_path)
+      Dir.chdir(job_id_results_path) do
+        Dir.glob("*").reverse.each do |epoch|
+          Dir.chdir(epoch) do
+            Dir.glob("*").each do |filename|
+              href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
+              if (filename == main_result_file) 
+                display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}');\">"\
+                                            "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i>"\
+                                        "</a>"
+              end
+            end
           end
         end
+
         return epoch_file_map 
       end
     else
@@ -47,41 +53,49 @@ module AutomationStackHelpers
     end
   end
 
-  def create_link_for_supporting_result(folder,filename,display_name)
+  def create_link_for_supporting_result(job_id_folder, relative_file_path, display_name)
+    href = "/uploads/results/#{job_id_folder}#{relative_file_path}"
+
     images = [/\.jpg$/, /\.jpeg$/, /\.gif$/, /\.png$/]
     images.each do |img_regex|
-      if filename =~ img_regex
+      if relative_file_path =~ img_regex
         return "<a href=\"#img-modal\" data-toggle=\"modal\" class=\"thumbnail\""\
-                 " data-dynamic=\"true\" data-backdrop=\"false\""\
-                 " onclick=\"set_modal_image_src('/uploads/#{folder}/#{filename}', '#{display_name}');\">"\
-                 "<img class=\"pull-left\""\
-                     " src=\"/uploads/#{folder}/#{filename}\"i"\
-                     " style=\"width: 90px; height: 120px;\""\
-                     " alt=\"#{display_name}\">#{display_name}</a>"
+                    " data-dynamic=\"true\" data-backdrop=\"false\""\
+                    " onclick=\"set_modal_image_src('#{href}', '#{display_name}');\">"\
+                        "<img class=\"pull-left\""\
+                            " src=\"#{href}\""\
+                            " style=\"width: 90px; height: 120px;\""\
+                            " alt=\"#{display_name}\">"\
+                        "#{display_name}"\
+                "</a>"
       end
     end
-    
-    return "<a href=\"/uploads/#{folder}/#{filename}\" target=\"main-content\">#{display_name}</a>"
+
+    return "<a href=\"#{href}\">#{display_name}</a>"
   end
-  
-  def link_supporting_results(folder, main_result_file)
-    puts "Link folder content #{folder}"
+
+  def link_supporting_results(job_id_folder, main_result_file)
     epoch_file_map = {} 
-    if Dir.exist?("public/uploads/#{folder}")
-      Dir.chdir("public/uploads/" + folder) do
-        Dir.glob("*").reverse.each do |f|
-          epoch,filename = f.split('.',2)
-          if (filename != main_result_file) 
-            display_name = filename
-            
-            if epoch_file_map[epoch].nil?
-              epoch_file_map[epoch] = [create_link_for_supporting_result(folder, f, display_name)]
-            else
-              epoch_file_map[epoch] << create_link_for_supporting_result(folder, f, display_name)
+    job_id_results_path = "public/uploads/results/#{job_id_folder}" 
+    if Dir.exist?(job_id_results_path)
+      Dir.chdir(job_id_results_path) do
+        Dir.glob("*").reverse.each do |epoch|
+          Dir.chdir(epoch) do
+            Dir.glob("*").each do |filename|
+              f = "/#{epoch}/#{filename}"
+              if (filename != main_result_file) 
+                display_name = filename
+
+                if epoch_file_map[epoch].nil?
+                  epoch_file_map[epoch] = [create_link_for_supporting_result(job_id_folder, f, display_name)]
+                else
+                  epoch_file_map[epoch] << create_link_for_supporting_result(job_id_folder, f, display_name)
+                end
+              end
             end
-          
           end
         end
+
         return epoch_file_map
       end
     else

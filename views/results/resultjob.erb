@@ -1,8 +1,75 @@
-<% if !@folder_path.empty? %>
-	<ul>
-		<%@folder_path.each do |link|%>
+<% if !@main_paths.empty? %>
+<div class="container-fluid">
 
-			<li><%=link%></li>
+	<div class="row-fluid">
+
+		<div class="span2">
+			<ul class="nav nav-list">
+				<%sorted_keys = @main_paths.keys.sort { |x,y| y <=> x }%>
+				<%first = sorted_keys.first%>
+				<%sorted_keys.each do |key|%>
+					<%link = @main_paths[key]%>
+				<li id="report-<%=key%>" onclick="toggle_active('<%="report-#{key}"%>');">
+				<%=link%>
+				</li>
+			<%end%>
+			</ul>
+		</div> <!-- class="span2" -->
+
+		<div class="span8">
+			<iframe name="main-content" style="position: absolute; width: 64%; height: 100%; margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 0px; border-width: 0px;"></iframe>
+		</div> <!-- class="span8" -->
+
+		<div id="support-files" class="span2">
+			<h5 style="margin-top: -1em;">Other Results Files</h5>
+			<%@main_paths.keys.each do |key|%>
+			<div id="support-<%=key%>" class="well hidden">
+			<%if not @supporting_paths[key].nil?%>
+				<%@supporting_paths[key].each do |link|%>
+					<p><%=link%></p>
+				<%end%>
+			<%else%>
+				<p>No other files.</p>
+			<%end%>
+			</div>
 		<%end%>
-	</ul>
+		</div> <!-- class="span2" -->
+
+		<div id="img-modal" class="modal hide">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 id="modal-title">...</h5>
+			</div>
+			
+			<div class="modal-body">
+				<img id="full-size-image" src="#"></img>
+			</div>
+			
+			<div class="modal-footer">
+			</div>
+		</div> <!-- class="modal hide" -->
+
+	</div> <!-- class="row-fluid" -->
+
+</div> <!-- class="container-fluid -->
+
+<script type="text/javascript">
+function toggle_active(id) {
+	epoch = (id.split('-'))[1];
+
+	$('ul.nav li').removeClass('active');
+	$('ul.nav li a').css('backgroundColor', '');
+	$('#support-files div').addClass('hidden');
+
+	$('#' + id).addClass('active');
+	$('#' + id + ' a').css('backgroundColor', 'black');
+	$('#support-' + epoch).removeClass('hidden');
+}
+
+function set_modal_image_src(url, title) {
+	$('#modal-title').text(title);
+	$('#full-size-image').attr('src',url); 
+}
+</script>
+
 <%end%>

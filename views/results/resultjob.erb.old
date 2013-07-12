@@ -1,0 +1,8 @@
+<% if !@folder_path.empty? %>
+	<ul>
+		<%@folder_path.each do |link|%>
+
+			<li><%=link%></li>
+		<%end%>
+	</ul>
+<%end%>

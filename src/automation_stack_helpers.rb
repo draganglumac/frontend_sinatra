@@ -5,7 +5,7 @@ module AutomationStackHelpers
       puts "No jobs found in database"
       return 1
     end
-    machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first[:machine_id]
+    machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id)
     puts "Checking availbility of machine #{machine_id}"
 
     machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last
@@ -27,6 +27,69 @@ module AutomationStackHelpers
     erb page, options.merge!(:layout => false)
   end
 
+  def link_main_results(folder, main_result_file)
+    puts "Link folder content #{folder}"
+    epoch_file_map = {}
+    if Dir.exist?("public/uploads/#{folder}")
+      Dir.chdir("public/uploads/" + folder) do
+        Dir.glob("*").reverse.each do |f|
+          epoch,filename = f.split('.',2)
+          if (filename == main_result_file) 
+            display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S") 
+            epoch_file_map[epoch] = "<a href=\"/uploads/#{folder}/#{f}\" target=\"main-content\">#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
+            puts "#{epoch_file_map[epoch]}"
+          end
+        end
+        return epoch_file_map 
+      end
+    else
+      halt 404, "Results unavailable - May not have been processed yet"
+    end
+  end
+
+  def create_link_for_supporting_result(folder,filename,display_name)
+    images = [/\.jpg$/, /\.jpeg$/, /\.gif$/, /\.png$/]
+    images.each do |img_regex|
+      if filename =~ img_regex
+        return "<a href=\"#img-modal\" data-toggle=\"modal\" class=\"thumbnail\""\
+                 " data-dynamic=\"true\" data-backdrop=\"false\""\
+                 " onclick=\"set_modal_image_src('/uploads/#{folder}/#{filename}', '#{display_name}');\">"\
+                 "<img class=\"pull-left\""\
+                     " src=\"/uploads/#{folder}/#{filename}\"i"\
+                     " style=\"width: 90px; height: 120px;\""\
+                     " alt=\"#{display_name}\">#{display_name}</a>"
+      end
+    end
+    
+    return "<a href=\"/uploads/#{folder}/#{filename}\" target=\"main-content\">#{display_name}</a>"
+  end
+  
+  def link_supporting_results(folder, main_result_file)
+    puts "Link folder content #{folder}"
+    epoch_file_map = {} 
+    if Dir.exist?("public/uploads/#{folder}")
+      Dir.chdir("public/uploads/" + folder) do
+        Dir.glob("*").reverse.each do |f|
+          epoch,filename = f.split('.',2)
+          if (filename != main_result_file) 
+            display_name = filename
+            
+            if epoch_file_map[epoch].nil?
+              epoch_file_map[epoch] = [create_link_for_supporting_result(folder, f, display_name)]
+            else
+              epoch_file_map[epoch] << create_link_for_supporting_result(folder, f, display_name)
+            end
+          
+          end
+        end
+        return epoch_file_map
+      end
+    else
+      halt 404, "Results unavailable - May not have been processed yet"
+    end
+  end
+
+
   def link_folder_content(folder)
     puts "Link folder content #{folder}"
     file_list = []
@@ -35,7 +98,7 @@ module AutomationStackHelpers
         Dir.glob("*").reverse.each do |f|
           epoch,filename = f.split('.',2)
           display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
-          file_list << "<a href=\"/uploads/#{folder}/#{f}\">#{display_name}</a>"
+          file_list << "<a href=\"/uploads/#{folder}/#{f}\" target=\"main-content\">#{display_name}</a>"
         end
         return file_list
       end

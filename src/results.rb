@@ -23,9 +23,9 @@ module Results
     end
 
     get '/results/:name/:device' do
-      @folder_path = link_folder_content(params[:name] + '/' + params[:device])
-      puts "@folder_path = #{@folder_path}"
-      erb :'results/resultjob'
+      @main_paths = link_main_results(params[:name] + '/' + params[:device], "cukes.html")
+      @supporting_paths = link_supporting_results(params[:name] + '/' + params[:device], "cukes.html")
+      erb :'results/resultjob', :layout => :results_layout
     end	
   end
 

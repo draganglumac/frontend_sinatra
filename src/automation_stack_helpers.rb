@@ -121,20 +121,15 @@ module AutomationStackHelpers
     end
   end
 
-  def link_builder(name)
-    target = "public/uploads"
-    Dir.chdir(target) do
-      if Dir.exist?(name)
-        Dir.chdir(name) do 
-          Dir.glob("*").reverse.each do|f|
-            if Dir.exist?(f)
-              yield  "<a href=\"/results/#{name}/#{f}\">#{f}</a>"
-            end
-          end
-        end
-      else
-        halt 404, "Results unavailable - May not have been processed yet"
+  def link_builder(filtered_results_folders)
+    if not filtered_results_folders.empty?
+      filtered_results_folders.each do |job_id_device|
+        job_id = job_id_device[0]
+        device = job_id_device[1]        
+        yield  "<a href=\"/results/job/#{job_id}\">#{device}</a>"
       end
+    else
+      halt 404, "Results unavailable - May not have been processed yet"
     end
   end
 

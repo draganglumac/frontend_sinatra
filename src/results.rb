@@ -8,17 +8,35 @@ module Results
     end
 
     get '/results' do
-      #@results  = AutomationStack::Infrastructure::Result.all.uniq{|result| result.jobs_id}
-      Dir.chdir("public/uploads") do
-        @results = Dir.glob('*') 
+      @results = []
+      
+      Dir.chdir("public/uploads/results") do
+        Dir.glob('*').each do |job_id_folder|
+          job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+          project = project_name_from_job_name(job.name)
+          if not @results.include? project
+            @results << project 
+          end
+        end
       end
 
       erb :'results/index'
     end
 
     get '/results/:name' do
+      project = params[:name]
+      @results = []
+      
+      Dir.chdir('public/uploads/results') do
+        Dir.glob('*').each do |job_id_folder|
+          job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+          if project_name_from_job_name(job.name) == project
+            @results << [job.id, device_name_from_job_name(job.name)]
+          end
+        end
+      end
 
-      @results = "#{params[:name]}"
+      @results.sort!
       erb :'results/show'
     end
 

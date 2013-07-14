@@ -32,17 +32,7 @@
 		</div> <!-- class="span8" -->
 
 		<div id="support-files" class="span2">
-			<%@main_paths.keys.each do |key|%>
-			<div id="support-<%=key%>" class="well hidden">
-			<%if not @supporting_paths[key].nil?%>
-				<%@supporting_paths[key].each do |link|%>
-					<p><%=link%></p>
-				<%end%>
-			<%else%>
-				<p>No other files.</p>
-			<%end%>
-			</div>
-		<%end%>
+			<div id="support-files-div" class="well"></div>
 		</div> <!-- class="span2" -->
 
 		<div id="img-modal" class="modal hide">
@@ -69,16 +59,21 @@ function reload_iframe(url) {
 	ifr.contentWindow.location.replace(url);
 }
 
+function reload_other_files(job_id, epoch, main_file) {
+	url = '/results/other/' + job_id + '/' + epoch + '?main_file=' + main_file;
+	$.get(url, function(data) {
+		$('#support-files-div').html(data);
+	});
+}
+
 function toggle_active(id) {
 	epoch = (id.split('-'))[1];
 
 	$('ul.nav li').removeClass('active');
 	$('ul.nav li a').css('backgroundColor', '');
-	$('#support-files div').addClass('hidden');
 
 	$('#' + id).addClass('active');
 	$('#' + id + ' a').css('backgroundColor', 'black');
-	$('#support-' + epoch).removeClass('hidden');
 }
 
 function set_modal_image_src(url, title) {

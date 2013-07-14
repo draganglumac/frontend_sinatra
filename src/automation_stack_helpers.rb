@@ -38,7 +38,7 @@ module AutomationStackHelpers
               href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
               if (filename == main_result_file) 
                 display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
-                epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}'); reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
+                epoch_file_map[epoch] = "<a href=\"\" onclick=\"reload_iframe('#{href}'); reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
                                             "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i>"\
                                         "</a>"
               end

@@ -122,7 +122,7 @@
 								<%if job["status"].eql?("FAILED")%>
 									<div class="alert alert-error">
 										<%=device_name_from_job_name(job['name'])%> has FAILED.
-										<div class="pull-right">
+										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
@@ -133,7 +133,7 @@
 								<%elsif job["status"].eql?("IN PROGRESS")%>
 									<div class="alert alert-info">
 										<%=device_name_from_job_name(job['name'])%> is RUNNING.
-										<div class="pull-right">
+										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
@@ -144,7 +144,7 @@
 								<%elsif job["status"].eql?("COMPLETED")%>
 									<div class="alert alert-success">
 										<%=device_name_from_job_name(job['name'])%> has COMPLETED.
-										<div class="pull-right">
+										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
@@ -155,7 +155,7 @@
 								<%else%>
 									<div class="alert alert-warning">
 										<%=device_name_from_job_name(job['name'])%> is PENDING.
-										<div class="pull-right">
+										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>

@@ -183,7 +183,11 @@ module Jobs
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"
           current_device = pline.split("=").last
-          current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first[:name]
+          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.nil?
+            current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.name
+          else
+            next
+          end
 
           puts "Device name #{current_device_name}"
           puts "Current device #{current_device}"

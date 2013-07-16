@@ -209,7 +209,7 @@ module Jobs
           
           email = params[:email]
           
-          if params[:main_result_file].nil?
+          if params[:main_result_file].nil? or params[:main_result_file].strip == ''
             main_result_file = 'cukes.html'
           else
             main_result_file = params[:main_result_file]

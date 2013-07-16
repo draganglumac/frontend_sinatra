@@ -200,7 +200,17 @@ module Jobs
           #
           tempfile = params[:file_source][:tempfile]	
           filename = params[:file_source][:filename]
-          string = File.open(tempfile.path,'rb') { |file|file.read}
+          
+          canonical_string = File.open(tempfile.path,'rb') { |file|file.read}
+          
+          email = params[:email]
+          
+          if params[:main_result_file].nil?
+            main_result_file = 'cukes.html'
+          else
+            main_result_file = params[:main_result_file]
+          end
+          
           trigger = params[:ltrigger] 
           trigger << ".000000"
           trigger = Time.parse(trigger).to_i
@@ -214,8 +224,9 @@ module Jobs
             interval=interval < 900 ? 900 : interval
           end
           puts "interval = #{interval}"
-          string = Jobhelper.replace_symbols(string,machine)	
-          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval)
+          string = Jobhelper.replace_symbols(canonical_string,machine)	
+          project_id = Hound.add_or_update_project(params[:lname],canonical_string,main_result_file,email)
+          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval,project_id)
         end
       end			
       redirect '/dashboard'

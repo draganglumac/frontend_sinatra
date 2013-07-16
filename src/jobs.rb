@@ -171,6 +171,10 @@ module Jobs
     post '/jobs/:project/delete' do
       AutomationStack::Infrastructure::Job.subset(:project, :name.like("#{params[:project]}%"))
       AutomationStack::Infrastructure::Job.project.delete
+      
+      proj = AutomationStack::Infrastructure::Project.find(:name => params[:project])
+      proj.delete
+      
       redirect back
     end
 

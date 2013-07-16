@@ -122,9 +122,14 @@ get '/dashboard' do
   @project_devices = {}
   @statuses = {}
   @last_run_times = {}
-  
+  @project_names = {}
+
   @current_jobs.each do |job|
-    project = project_name_from_job_name(job['name'])
+    project_name = project_name_from_job_name(job['name'])
+    project = project_name.split(' ').join('-')
+  
+    @project_names[project] = project_name
+
     if @projects[project].nil?
       @projects[project] = [job]
     else
@@ -185,4 +190,13 @@ post '/refresh' do
   end
 
   redirect params[:redirect_url]
+end
+
+get '/project/:name' do
+  @project = AutomationStack::Infrastructure::Project.find(:name => url_unescape(params[:name]))
+  erb :project
+end
+
+post '/project/:name' do
+  redirect back
 end

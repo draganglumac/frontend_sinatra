@@ -46,8 +46,6 @@ module AutomationStack
       one_to_many :devices
     end
 
-
-
     class Device < Sequel::Model
       many_to_one :platform
       many_to_one :device_type

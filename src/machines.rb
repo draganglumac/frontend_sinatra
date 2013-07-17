@@ -15,10 +15,6 @@ module Machines
           errors[:ip_address] = 'You must supply the IP address.'
         end
 
-        if params[:port].nil? or params[:port] == ""
-          errors[:port] = 'You must supply the port.'
-        end
-
         if params[:platform_id].nil? or params[:platform_id] == "-1"
           errors[:platform_id] = 'You must pick a supported platform.'
         end
@@ -60,6 +56,9 @@ module Machines
 
     post '/machines' do
       redirect "/machines" if params[:cancel]
+      if params[:port].nil? or params[:port] == ""
+        params[:port] = '9090'
+      end
       session[:new_machine_errors] = validate_new_machine(params)
       if not session[:new_machine_errors].empty?
         redirect back

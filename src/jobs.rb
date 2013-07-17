@@ -36,10 +36,12 @@ module Jobs
         now.split(' ').first + ' ' + trigger.split(' ').last
       end
       def url_escape(text)
+        return nil if text.nil?
         URI.escape(text)
       end
 
       def url_unescape(text)
+        return nil if text.nil?
         URI.unescape(text)
       end
 

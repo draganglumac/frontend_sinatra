@@ -1,3 +1,45 @@
 <h3><%=@project.name%> Settings</h3>
 
-<p>To Do</p>
+<form id="update-project" action="/project/<%=@project.id%>" method="post" enctype="multipart/form-data">
+	<div class="well">
+		<h5 style="margin-bottom: 1px;">Job name</h5>
+		<input type="text" name="name" id="name" value="<%=@project.name%>">
+
+		<h5 style="margin-bottom: 1px;">Build commands</h5>
+		<input type="hidden" id="commands" name="commands" value="<%=url_escape(@project.commands)%>">
+		<textarea id="project-commands" class="well pre-scrollable" style="font-family: monospace; font-size: 90%; width: 100%; height: 250px; padding-top: 1.8em; padding-bottom: 0px">
+			<%="\n#{@project.commands}"%>
+		</textarea>
+
+		<div style="position: relative; margin-top: -7px; margin-bottom: 1.5em;">
+			<a class='btn' href='javascript:;'>
+				Choose file instead...
+				<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
+			</a>
+			&nbsp;
+			<span class='label label-info' id="upload-file-info"></span>
+		</div>
+
+		<h5 style="margin-bottom: 1px;">Main result file name</h5>
+		<input type="text" name="main_result_file" id="main_result_file" value="<%=@project.main_result_file%>">
+
+		<h5 style="margin-bottom: 1px;">Email reports to</h5>
+		<input type="text" name="email" id="email" value="<%=@project.email%>">
+		<div style="margin-top: -7px;">
+			<small><em>* separate multiple emails by a space</em></small>
+			<span class="pull-right">
+				<a class="btn" href="/dashboard">Cancel</a>
+				&nbsp;
+				<button class="btn" onclick="update_project();">Save Changes</button>
+			</span>
+		</div>
+
+	</div> <!-- well -->
+</form>
+
+<script type="text/javascript">
+function update_project() {
+	$('input#commands').val(encodeURIComponent($('textarea#project-commands').val()));
+	$('#update-project').submit();
+}
+</script>

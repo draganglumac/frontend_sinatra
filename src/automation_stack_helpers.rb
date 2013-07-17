@@ -1,5 +1,13 @@
 module AutomationStackHelpers
 
+  def update_job_names_for_project(project_id, new_project_name)
+    jobs = AutomationStack::Infrastructure::Job.where(:project_id => project_id)
+    jobs.each do |job|
+      job.name = new_project_name + '-' + device_name_from_job_name(job.name)
+      job.save
+    end
+  end
+
   def check_availibility(id)
     if AutomationStack::Infrastructure::Job.count == 0
       puts "No jobs found in database"

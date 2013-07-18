@@ -18,7 +18,7 @@
 					<%end%>
 				</ul>
 			</div>
-			
+
 			<%if can_edit?%>
 				<form id="delete-<%=project%>" method="post" action="/jobs/<%=safe_project_name%>/delete"></form>
 				<form id="edit-<%=project%>" method="post" action="/jobs/<%=safe_project_name%>/edit">
@@ -138,7 +138,7 @@
 									</div>
 								<%elsif job["status"].eql?("IN PROGRESS")%>
 									<div class="alert alert-info">
-										<%=device_name_from_job_name(job['name'])%> is RUNNING.
+										<%=device_name_from_job_name(job['name'])%> is IN PROGRESS.
 										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
@@ -158,9 +158,9 @@
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
-								<%else%>
+								<%elsif job["status"].eql?("NOT STARTED")%>
 									<div class="alert alert-warning">
-										<%=device_name_from_job_name(job['name'])%> is PENDING.
+										<%=device_name_from_job_name(job['name'])%> NOT STARTED.
 										<div class="pull-right" style="margin-right: -2em;">
 											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
 											<span>&nbsp;</span>
@@ -169,6 +169,30 @@
 											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 										</div>
 									</div>
+								<%elsif job["status"].eql?("QUEUED")%>
+									<div class="alert alert-warning">
+										<%=device_name_from_job_name(job['name'])%> is QUEUED.
+										<div class="pull-right" style="margin-right: -2em;">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+											<span>&nbsp;</span>
+											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
+										</div>
+									</div>
+								<%else%>
+									<div class="alert alert-warning">
+										<%=device_name_from_job_name(job['name'])%> UNKNOWN.
+										<div class="pull-right" style="margin-right: -2em;">
+											<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+											<span>&nbsp;</span>
+											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+											<span>&nbsp;</span>
+											<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
+										</div>
+									</div>
+
+
 								<%end%>
 
 							<%end%>

@@ -90,8 +90,8 @@ class Hound
     return project.id
   end
 
-  def self.add_job(machine_id,job_name,command,trigger_time,recursionflag,interval,project_id)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag, :interval => interval, :project_id => project_id
+  def self.add_job(machine_id,job_name,command,trigger_time,recursionflag,interval,project_id,device_id)
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag, :interval => interval, :project_id => project_id, :device_id => device_id
   end
   def self.add_machine(machine)
     DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address],:port => machine[:port]

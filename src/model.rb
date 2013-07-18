@@ -32,7 +32,7 @@ module AutomationStack
     end
 
     class ConnectedDevice < Sequel::Model
-      many_to_one  :machine
+      many_to_one :machine
       many_to_one :device
     end
 
@@ -50,6 +50,7 @@ module AutomationStack
       many_to_one :platform
       many_to_one :device_type
       many_to_one :manufacturer
+      one_to_many :jobs
     end
 
     class Project < Sequel::Model
@@ -60,6 +61,7 @@ module AutomationStack
       plugin :serialization, :json
       many_to_one :projects
       many_to_one :results
+      many_to_one :device
     end
 
     class Result < Sequel::Model

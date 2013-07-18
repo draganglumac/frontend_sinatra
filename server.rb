@@ -136,6 +136,12 @@ get '/dashboard' do
       @projects[project] << job
     end
 
+    if @project_devices[project].nil?
+      @project_devices[project] = [job['device_id']]
+    else
+      @project_devices[project] << job['device_id']
+    end
+
     if @statuses[project].nil?
       @statuses[project] = { :completed => 0, :failed => 0, :running => 0, :pending => 0 }
     end
@@ -146,9 +152,9 @@ get '/dashboard' do
     end
     current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') 
     if @last_run_times[project] < current_timestr 
-        @last_run_times[project] = current_timestr
+      @last_run_times[project] = current_timestr
     end  
-  end 
+  end
 
   @devices = AutomationStack::Infrastructure::Device.all
 

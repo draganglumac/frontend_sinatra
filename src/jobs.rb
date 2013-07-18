@@ -181,7 +181,40 @@ module Jobs
     end
 
     post '/jobs/:project/edit' do
-      puts "ToDo => add and remove devices to project"
+      preselected = params[:preselected].split(';')
+      the_project = AutomationStack::Infrastructure::Project.find(:name => params[:project])
+      
+      params.keys.each do | pline |
+        if pline.include? "SELECTED_DEVICE"
+          current_device = pline.split("=").last
+          
+          if preselected.include?(current_device)
+            preselected.delete(current_device)
+            next
+          end
+
+          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.nil?
+            current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.name
+          else
+            next
+          end
+
+          machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
+          machine = machine.first[:machine_id]
+          
+          trigger = Time.new.to_i
+          
+          canonical_string = the_project.commands
+          string = Jobhelper.replace_symbols(canonical_string,machine)	
+          Hound.add_job(machine,the_project.name + "-#{current_device_name}",string,trigger,0,0,the_project.id,current_device)
+        end
+      end
+
+      preselected.each do |device_id|
+        job = AutomationStack::Infrastructure::Job.find(:device_id => device_id)
+        job.delete
+      end
+ 
       redirect back
     end
 
@@ -207,7 +240,7 @@ module Jobs
           tempfile = params[:file_source][:tempfile]	
           filename = params[:file_source][:filename]
           
-          canonical_string = File.open(tempfile.path,'rb') { |file|file.read}
+          canonical_string = File.open(tempfile.path,'rb') { |file|file.read }
           
           email = params[:email]
           
@@ -232,7 +265,7 @@ module Jobs
           puts "interval = #{interval}"
           string = Jobhelper.replace_symbols(canonical_string,machine)	
           project_id = Hound.add_or_update_project(params[:lname],canonical_string,main_result_file,email)
-          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval,project_id)
+          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval,project_id,current_device)
         end
       end			
       redirect '/dashboard'

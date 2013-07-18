@@ -13,6 +13,9 @@ module Results
       Dir.chdir("public/uploads/results") do
         Dir.glob('*').each do |job_id_folder|
           job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+          if job.nil?
+            next
+          end
           project = project_name_from_job_name(job.name)
           if not @results.include? project
             @results << project 
@@ -20,7 +23,11 @@ module Results
         end
       end
 
-      erb :'results/index'
+      if @results.empty?
+        halt 404, "Results unavailable - May not have been processed yet"
+      else
+        erb :'results/index'
+      end
     end
 
     get '/results/:name' do
@@ -30,14 +37,22 @@ module Results
       Dir.chdir('public/uploads/results') do
         Dir.glob('*').each do |job_id_folder|
           job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+          if job.nil?
+            next
+          end
+
           if project_name_from_job_name(job.name) == project
             @results << [job.id, device_name_from_job_name(job.name)]
           end
         end
       end
 
-      @results.sort!
-      erb :'results/show'
+      if @results.empty?
+        halt 404, "Results unavailable - May not have been processed yet"
+      else
+        @results.sort!
+        erb :'results/show'
+      end
     end
 
     get '/results/job/:job_id' do

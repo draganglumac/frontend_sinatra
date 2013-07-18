@@ -43,9 +43,17 @@ module Results
     get '/results/job/:job_id' do
       job = AutomationStack::Infrastructure::Job.find(:id => params[:job_id]);
 
-      @project = project_name_from_job_name(job.name)
+      if job.project_id.nil?
+        @project = project_name_from_job_name(job.name)
+        main_file = "cukes.html"
+      else
+        project = AutomationStack::Infrastructure::Project.find(:id => job.project_id)
+        @project = project.name
+        main_file = project.main_result_file
+        puts "project.name = #{project.name}, main_file = #{main_file}"
+      end
       @device = device_name_from_job_name(job.name)
-      @main_paths = link_main_results(params[:job_id], "cukes.html")
+      @main_paths = link_main_results(params[:job_id], main_file)
       
       erb :'results/resultjob', :layout => :results_layout
     end

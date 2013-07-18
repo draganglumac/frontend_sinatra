@@ -1,5 +1,7 @@
 <div id="jobs-grid" class="row">
 	<% @projects.each do |project, jobs|%>
+		<%project_name = @project_names[project]%>
+		<%safe_project_name = url_escape(project_name)%>
 		<div class="span6 well">
 
 			<div class="btn-group pull-right">
@@ -8,51 +10,55 @@
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="/results/<%=project%>">Results</a></li>
+					<li><a href="/results/<%=safe_project_name%>">Results</a></li>
 					<%if can_edit?%>
+						<li><a href="/project/<%=safe_project_name%>">Edit project settings</a></li>
 						<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
-						<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal">Manage devices</a></li>
+						<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal" onclick="modal_on();">Manage devices</a></li>
 					<%end%>
 				</ul>
 			</div>
 
 			<%if can_edit?%>
-				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
-				<form id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
+				<form id="delete-<%=project%>" method="post" action="/jobs/<%=safe_project_name%>/delete"></form>
+				<form id="edit-<%=project%>" method="post" action="/jobs/<%=safe_project_name%>/edit">
 					<div id="device-modal" class="modal hide">
 						<div class="modal-header">
-							<a class="close" data-dismiss="modal">&times;</a>
+							<a class="close" data-dismiss="modal" onclick="modal_off();">&times;</a>
 							<h3>Device Selection</h3>
 						</div>
 						<div class="modal-body">
 							<ul id="device_list" style="list-style-type:none;text-decoration:none;">
-								<%for device in @devices %>
-									<% if device.ip %>
-										<% if check_availibility(device.id) == 1 %>
-											<li >
+							<%preselected_device_ids = ''%>
+							<%for device in @devices %>
+								<% if device.ip %>
+									<% if check_availibility(device.id) == 1 %>
+										<li >
 											<%if not @project_devices[project].nil? and @project_devices[project].include?(device.id)%>
 												<input type="checkbox" id="<%=device.tag%>" 
 												name="SELECTED_DEVICE=<%=device.id%>" checked  
 												style="margin-top:-5px;"><%=device.name%></input>
+												<%preselected_device_ids += "#{device.id};"%>
 											<% else %>
 												<input type="checkbox" id="<%=device.tag%>" 
 												name="SELECTED_DEVICE=<%=device.id%>"
 												style="margin-top:-5px;"><%=device.name%></input>
 											<% end %>
-											</li>
-										<% end %>
-									<%end%>
-								<%end %>
+										</li>
+									<% end %>
+								<%end%>
+							<%end %>
+							<input type="hidden" name="preselected" value="<%=preselected_device_ids%>">
 							</ul>
 						</div>
 						<div class="modal-footer">
-							<input class="btn"id="submit" type="submit" value="submit"/>
+							<input class="btn"id="submit" type="submit" value="submit" onclick="modal_off();"/>
 						</div>
 					</div>
 				</form>
 			<%end%>
 
-			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project%></h4>
+			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project_name%></h4>
 
 			<h5>Schedule</h5>
 			<% if @last_run_times[project].empty? %>
@@ -214,17 +220,28 @@
 			else
 			$.cookie(project_name, "collapsed");
 		}
+
+		function modal_on() {
+			not_modal = false;
+		}
+
+		function modal_off() {
+			not_modal = true;
+			location.reload(1);
+		}
 	</script>
 
 	<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
 	<script>
 		show_refresh_form = true;
+		not_modal = true;
 		<%if should_autorefresh? %>
 			setTimeout(
-			function () {
-				location.reload(1); 
-			}, 
-			15000
+				function () {
+					if (not_modal)
+						location.reload(1); 
+				}, 
+				15000
 			);
 		<%end%>
 	</script>

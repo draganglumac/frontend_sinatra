@@ -74,8 +74,24 @@ class Hound
   def self.turn_on_foreign_key_checks
     @@dbconnect.query("SET FOREIGN_KEY_CHECKS=1;")
   end
-  def self.add_job(machine_id,job_name,command,trigger_time,recursionflag,interval)
-    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag, :interval => interval
+  
+  def self.add_or_update_project(proj_name,commands,main_result_file,email)
+    project = AutomationStack::Infrastructure::Project.find(:name => proj_name)
+    if project.nil?
+      DB[:projects].insert :name => proj_name, :commands => commands, :main_result_file => main_result_file, :email => email
+    else
+      project.commands = commands
+      project.main_result_file = main_result_file
+      project.email = email
+      project.save
+    end
+
+    project = AutomationStack::Infrastructure::Project.find(:name => proj_name)
+    return project.id
+  end
+
+  def self.add_job(machine_id,job_name,command,trigger_time,recursionflag,interval,project_id,device_id)
+    DB[:jobs].insert :name => job_name, :machine_id => machine_id, :command => command, :trigger_time => trigger_time, :status => 'NOT STARTED', :recursion => recursionflag, :interval => interval, :project_id => project_id, :device_id => device_id
   end
   def self.add_machine(machine)
     DB[:machines].insert :call_sign => machine[:call_sign],:platform_id => machine[:platform_id],:ip_address => machine[:ip_address],:port => machine[:port]

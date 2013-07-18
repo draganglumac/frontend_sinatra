@@ -14,7 +14,7 @@
 					<%if can_edit?%>
 						<li><a href="/project/<%=safe_project_name%>">Edit project settings</a></li>
 						<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
-						<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal">Manage devices</a></li>
+						<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal" onclick="modal_on();">Manage devices</a></li>
 					<%end%>
 				</ul>
 			</div>
@@ -24,7 +24,7 @@
 				<form id="edit-<%=project%>" method="post" action="/jobs/<%=safe_project_name%>/edit">
 					<div id="device-modal" class="modal hide">
 						<div class="modal-header">
-							<a class="close" data-dismiss="modal">&times;</a>
+							<a class="close" data-dismiss="modal" onclick="modal_off();">&times;</a>
 							<h3>Device Selection</h3>
 						</div>
 						<div class="modal-body">
@@ -52,7 +52,7 @@
 							</ul>
 						</div>
 						<div class="modal-footer">
-							<input class="btn"id="submit" type="submit" value="submit"/>
+							<input class="btn"id="submit" type="submit" value="submit" onclick="modal_off();"/>
 						</div>
 					</div>
 				</form>
@@ -196,14 +196,25 @@
 			else
 			$.cookie(project_name, "collapsed");
 		}
+
+		function modal_on() {
+			not_modal = false;
+		}
+
+		function modal_off() {
+			not_modal = true;
+			location.reload(1);
+		}
 	</script>
 
 	<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
 	<script>
 		show_refresh_form = true;
+		not_modal = true;
 		<%if should_autorefresh? %>
 			setTimeout(
 				function () {
+					if (not_modal)
 						location.reload(1); 
 				}, 
 				15000

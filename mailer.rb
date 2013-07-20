@@ -33,6 +33,7 @@ class Mailer
     end
 
     send_emails(projects, projects_with_running_jobs)
+    puts "Email processing done."
   end
   
   private
@@ -43,7 +44,12 @@ class Mailer
         next
       end
       
-      if proj_hash[:ready_jobs].nil? or proj_hash[:ready_jobs].empty?
+      if proj_hash[:email].nil? or proj_hash[:email].empty?
+        proj_hash[:ready_jobs].each do |job|
+          job.email_results = false
+          job.save
+        end
+        
         next
       end
 

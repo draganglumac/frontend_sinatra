@@ -46,23 +46,29 @@ class Mailer
       
       if proj_hash[:email].nil? or proj_hash[:email].empty?
         proj_hash[:ready_jobs].each do |job|
-          job.email_results = false
-          job.save
+          update_processed_job(job)
         end
-        
         next
       end
 
       if not projects_with_running_jobs.include?(proj_name)
         puts "Emailing #{proj_hash[:email]} with:"
         proj_hash[:ready_jobs].each do |job|
-          puts "\t#{job.name} -> #{job.status}"
-          # update the email flag on the processed job
-          job.email_results = false
-          job.save
+          email_snippet = format_job_for_email(job)
+          puts email_snippet
+          update_processed_job(job)
         end
       end 
     end
+  end
+
+  def format_job_for_email(job)
+    "\t#{job.name} -> #{job.status}"
+  end
+
+  def update_processed_job(job)
+    job.email_results = false
+    job.save
   end
 
 end

@@ -1,0 +1,17 @@
+<div style="font-size: medium;">
+	<p>Results for <%= proj_name %> recently run jobs:</p>
+
+	<table style="font-size: large; text-align: left">
+		<thead>
+			<tr>
+				<th style="padding: 5px"><b>Job Name</b></th>
+				<th style="padding: 5px"><b>Status</b></th>
+			</tr>
+		</thead>
+		<tbody>
+		<% jobs.each do |job| %>
+			<%= format_job_for_email(job) %>
+		<% end %>
+		</tbody>
+	</table>
+</div>

@@ -1,7 +1,14 @@
 require_relative 'server'
+require 'pony'
+require 'erb'
 
 class Mailer
   include AutomationStackHelpers
+
+  def initialize(ip, port, smtp_server)
+    @base_url = "http://#{ip}:#{port}"
+    @smtp_server = smtp_server
+  end
 
   def process
     puts "[#{Time.new}] Processing results for emailing..."
@@ -52,18 +59,71 @@ class Mailer
       end
 
       if not projects_with_running_jobs.include?(proj_name)
-        puts "Emailing #{proj_hash[:email]} with:"
+        puts "\tEmailing results for #{proj_name}."
+        jobs = proj_hash[:ready_jobs]
+        renderer = ERB.new(File.read('views/email_template.erb'))
+        email_body = renderer.result(binding)
+        
         proj_hash[:ready_jobs].each do |job|
-          email_snippet = format_job_for_email(job)
-          puts email_snippet
           update_processed_job(job)
+        end
+        
+        if not @smtp_server.nil?
+          Pony.mail(:to => proj_hash[:email],
+                    :from => 'noreply@testlab',
+                    :subject => "#{proj_name} Test Lab Run Results",
+                    :html_body => email_body,
+                    :via => :smtp,
+                    :via_options => {
+                      :address => @smtp_server
+                    })
+        else
+          Pony.mail(:to => proj_hash[:email],
+                    :from => 'noreply@testlab',
+                    :subject => "#{proj_name} Test Lab Run Results",
+                    :html_body => email_body,
+                    :via => :sendmail
+                   )
         end
       end 
     end
   end
 
   def format_job_for_email(job)
-    "\t#{job.name} -> #{job.status}"
+    Dir.chdir("public/uploads/results") do
+      if Dir.glob('*').include?(job.id.to_s)
+        Dir.chdir(job.id.to_s) do
+          result_dirs = Dir.glob('*').sort { |x,y| y <=> x }
+          if job.trigger_time <= result_dirs.first.to_i
+            format_link_to_results(job)
+          else
+            format_link_to_dashboard(job)
+          end
+        end
+      else
+        format_link_to_dashboard(job)
+      end
+    end
+  end
+
+  def format_link_to_results(job)
+    if job.status == 'FAILED'
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/results/job/#{job.id}\" style=\"color: red\">#{job.status}</a></td></tr>\n"
+    elsif job.status == 'COMPLETED'
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/results/job/#{job.id}\" style=\"color: green\">#{job.status}</a></td></tr>\n"
+    else
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/results/job/#{job.id}\">#{job.status}</a></td></tr>\n"
+    end
+  end
+
+  def format_link_to_dashboard(job)
+    if job.status == 'FAILED'
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/dashboard\" style=\"color: red\">#{job.status}</a></td></tr>\n"
+    elsif job.status == 'COMPLETED'
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/dashboard\" style=\"color: green\">#{job.status}</a></td></tr>\n"
+    else
+      "<tr><td style=\"padding:5px\">#{job.name}</td><td style=\"padding:5px\"><a href=\"#{@base_url}/dashboard\">#{job.status}</a></td></tr>\n"
+    end
   end
 
   def update_processed_job(job)

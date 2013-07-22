@@ -11,7 +11,7 @@
 	<form id="restart-job" 
 		method="post" 
 		action="/job/restart/<%=@job.id%>">
-	</form> 
+	</form>
 	<form id="toggle-editing" action="/job/<%=@job.id%>">
 		<% if in_editing_mode? %>
 			<input id="edit" type="hidden" name="edit" value="on" />
@@ -19,8 +19,12 @@
 			<input id="edit" type="hidden" name="edit" value="off" />
 		<% end %>
 	</form>
-	<span class="pull-right">	
-		<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
+	<span class="pull-right">
+		<%if @job.status == 'QUEUED' or @job.status == 'IN PROGRESS' %>	
+			<a class="btn" href="#" data-toggle="tooltip" title="Restart job."><i class="icon-repeat"></i></a>
+		<%else%>
+			<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
+		<%end%>
 		<a class="btn" href="/results/job/<%=@job.id%>#" data-toggle="tooltip" title="View job reports."><i class="icon-list-alt icon-white"></i></a>
 		<% if can_edit? %>
 			<% if in_editing_mode? %>

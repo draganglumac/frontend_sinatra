@@ -21,7 +21,11 @@
 	</form>
 	<span class="pull-right">
 		<%if @job.status == 'QUEUED' or @job.status == 'IN PROGRESS' %>	
-			<a class="btn" href="#" data-toggle="tooltip" title="Restart job."><i class="icon-repeat"></i></a>
+			<%if can_edit?%>
+				<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
+			<%else%>
+				<a class="btn" href="#" data-toggle="tooltip" title="Restart job."><i class="icon-repeat"></i></a>
+			<%end%>
 		<%else%>
 			<a class="btn" href="#" onclick="$('#restart-job').submit();" data-toggle="tooltip" title="Restart job."><i class="icon-repeat icon-white"></i></a>
 		<%end%>

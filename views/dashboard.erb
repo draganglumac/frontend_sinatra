@@ -140,7 +140,11 @@
 									<div class="alert alert-info">
 										<%=device_name_from_job_name(job['name'])%> is IN PROGRESS.
 										<div class="pull-right" style="margin-right: -2em;">
-											<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+											<%if can_edit?%>
+												<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+											<%else%>
+												<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+											<%end%>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>
@@ -173,7 +177,11 @@
 									<div class="alert alert-warning">
 										<%=device_name_from_job_name(job['name'])%> is QUEUED.
 										<div class="pull-right" style="margin-right: -2em;">
-											<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+											<%if can_edit?%>
+												<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+											<%else%>
+												<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+											<%end%>
 											<span>&nbsp;</span>
 											<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
 											<span>&nbsp;</span>

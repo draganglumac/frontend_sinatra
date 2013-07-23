@@ -150,8 +150,8 @@ get '/dashboard' do
     if @last_run_times[project].nil?
       @last_run_times[project] = ''
     end
-    current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') 
-    if @last_run_times[project] < current_timestr 
+    current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') unless job['status'] == 'NOT STARTED' 
+    if not current_timestr.nil? and @last_run_times[project] < current_timestr 
       @last_run_times[project] = current_timestr
     end  
   end

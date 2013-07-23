@@ -1,7 +1,13 @@
 <div class="row">
 	<%for machine in @machines%>
 		<div class="span4 well">
-
+			<%if can_edit?%>
+				<%if machine.status.eql?('ONLINE')%>
+					<span class="pull-right"><a class="btn" href="/machines/restart/<%=machine.id%>"><i class="icon-repeat icon-white"></i></a></span>
+				<%else%>
+					<span class="pull-right"><button class="btn"><i class="icon-repeat"></i></button></span>
+				<%end%>
+			<%end%>
 			<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
 			<h4><%=machine.ip_address%></h4>
 			<% if !machine.connected_devices.empty? %>
@@ -28,6 +34,10 @@
 			<%if machine.status.eql?("ONLINE")%>
 				<div class="alert alert-success">
 					Status Online
+				</div>
+			<%elsif machine.status.eql?('RESTARTING')%>
+				<div class="alert alert-warning">
+					Status Restarting
 				</div>
 			<%else%>
 				<div class="alert alert-error">

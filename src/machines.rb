@@ -1,4 +1,5 @@
 require_relative "./model"
+require_relative './nodeboss'
 
 module Machines
 
@@ -68,6 +69,16 @@ module Machines
         @machine_available = Hound.get_machines
         redirect "/machines"
       end
+    end
+
+    get '/machines/restart/:id' do
+      machine = AutomationStack::Infrastructure::Machine.find(:id => params[:id])
+      boss = NodeBoss.new
+      boss.machine_reboot(machine.ip_address, machine.port)
+      machine.status = 'RESTARTING'
+      machine.save
+      
+      redirect back
     end
 
   end

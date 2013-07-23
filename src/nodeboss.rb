@@ -15,7 +15,7 @@ class NodeBoss
 		t.close
 	end	
 	def machine_reboot(hostip,hostport)
-		b.send_instruction(hostip,hostport,b.format_instruction("SYSTEM","","sudo reboot","","",""))
+	    send_instruction(hostip,hostport,b.format_instruction("SYSTEM","","sudo reboot","","",""))
 	end
 end
 

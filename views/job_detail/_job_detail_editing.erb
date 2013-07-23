@@ -63,12 +63,11 @@
 					<span>&nbsp;</span>
 					<span class="controls" >
 						<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
-							<option value="60" <%if time_unit_from_interval(@job.interval) == 'minutes'%>selected<%end%>>minutes</option>
 							<option value="3600" <%if time_unit_from_interval(@job.interval) == 'hours'%>selected<%end%>>hours</option>
 							<option value="86400" <%if time_unit_from_interval(@job.interval) == 'days'%>selected<%end%>>days</option>
 						</select>
 					</span>
-					<p><br/><small class="pull-left"><em>* minimum interval is 15 minutes.</em></small></p>
+					<p><br/><small class="pull-left"><em>* minimum interval is 1 hour.</em></small></p>
 				</h6>
 			</div>
 		</div>

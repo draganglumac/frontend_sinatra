@@ -135,6 +135,9 @@ module Jobs
       trigger = params[:ltrigger]
       trigger << '.000000'
       job.trigger_time = Time.parse(trigger).to_i
+      if job.trigger_time < Time.new.to_i
+        job.trigger_time += 60 * 60 * 24
+      end
 
       # new recursion
       job.recursion = params[:recursion].to_i
@@ -253,6 +256,9 @@ module Jobs
           trigger = params[:ltrigger] 
           trigger << ".000000"
           trigger = Time.parse(trigger).to_i
+          if trigger < Time.new.to_i
+            trigger += 60 * 60 * 24
+          end
           recursion=0
           if params[:is_private] == "0"
             recursion=0

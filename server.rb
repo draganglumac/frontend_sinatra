@@ -49,6 +49,10 @@ configure :test,:development do
   }
 end
 
+configure do
+  set :site_alert, ''
+end
+
 @@connections = []
 #instantiate our database connection
 #Entry page
@@ -57,6 +61,13 @@ helpers AutomationStackHelpers
 
 before do
   @cookies = request.cookies
+  
+  puts @cookies
+  puts "site_alert = #{settings.site_alert}"
+  
+  if settings.site_alert.nil? or settings.site_alert.empty?
+    response.set_cookie('hide_alerts', :value => 'false');
+  end
 end
 
 get '/home' do  
@@ -222,4 +233,12 @@ post '/project/:id' do
   project.save
   
   redirect '/dashboard' 
+end
+
+post '/alert' do
+  alert = params[:site_alert].strip
+  puts "Setting the site-wide alert: #{alert}"
+  settings.site_alert = alert
+
+  redirect back
 end

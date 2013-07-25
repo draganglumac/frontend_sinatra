@@ -239,4 +239,8 @@ module AutomationStackHelpers
 
     return percentages
   end 
+
+  def site_alert
+    settings.site_alert
+  end
 end

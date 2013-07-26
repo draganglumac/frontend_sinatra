@@ -25,6 +25,29 @@ body {
 	margin-top: -10px;
 	padding-top: 0px;
 }
+
+.sys-alert {
+	line-height: 2.5em;
+	text-align: center; 
+	height: 2.5em; 
+	margin-top: -1em;
+}
+
+.shade-notify {
+	background-color: lightgrey;
+	color: black;
+}
+
+.shade-warn {
+	background-color: orange;
+	color: black;
+}
+
+.shade-alert {
+	background-color: red;
+	color: white;
+}
+
 </style>
 
 <link href="/css/bootstrap-responsive.css" rel="stylesheet">
@@ -38,7 +61,7 @@ body {
 
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
-<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-58-precomposed.png">
 
 <script type="text/javascript">
 function dismiss_alerts() {
@@ -58,10 +81,22 @@ function send_alert() {
 
 <%if not site_alert.nil? and not site_alert.empty?%>
 	<%if not @cookies['hide_alerts'] == 'true'%>
-	<div class="alert" style="background-color: lightgrey; color: black; text-align: center;">
-	<button type="button" class="close" data-dismiss="alert" onclick="dismiss_alerts();">&times;</button>
-	<strong>Warning!</strong>&nbsp;<%=site_alert%>
-	</div>
+		<%if site_alert_type == 'warning'%>
+		<div class="sys-alert shade-warn"> 
+			<button type="button" class="close" data-dismiss="alert" style="margin-top: 6px; margin-right: 6px;" onclick="dismiss_alerts();">&times;</button>
+			<strong>Warning!</strong>&nbsp;<%=site_alert%>
+		</div>
+		<%elsif site_alert_type == 'alert'%>
+		<div class="sys-alert shade-alert">
+			<button type="button" class="close" data-dismiss="alert" style="margin-top: 6px; margin-right: 6px;" onclick="dismiss_alerts();">&times;</button>
+			<strong>Alert!</strong>&nbsp;<%=site_alert%>
+		</div>
+		<%else%>
+		<div class="sys-alert shade-notify"> 
+			<button type="button" class="close" data-dismiss="alert" style="margin-top: 6px; margin-right: 6px;" onclick="dismiss_alerts();">&times;</button>
+			<strong>System Message</strong>&nbsp;<%=site_alert%>
+		</div>
+		<%end%>
 	<%end%>
 <%end%>
 
@@ -123,10 +158,21 @@ function send_alert() {
 
 					<div class="control-group">
 						<!-- Text input-->
-						<label class="control-label" for="username">Message:</label>
+						<label class="control-label" for="alert_text">Message:</label>
 						<div class="controls">
 							<input type="hidden" id="site_alert" name="site_alert">
 							<textarea rows="3" id="alert_text" style="color: black;"></textarea>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="alert_type">Alert type:</label>
+						<div class="controls">
+							<select name="alert_type" style="color: black">
+								<option value="message" selected>message</option>
+								<option value="warning">warning</option>
+								<option value="alert">alert</option>
+							</select>
 						</div>
 					</div>
 

@@ -88,12 +88,12 @@ module Jobs
     end
 
     #new job page
-    get '/job' do
+    get '/project' do
       @errors    = {}
       @machines  = AutomationStack::Infrastructure::Machine.all
       @devices = AutomationStack::Infrastructure::Device.all
       @jobs_done = Hound.get_jobs
-      erb :jobs
+      erb :new_project
     end
 
     #Posting new jobs
@@ -221,7 +221,7 @@ module Jobs
       redirect back
     end
 
-    post '/job' do
+    post '/jobs' do
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"
           current_device = pline.split("=").last

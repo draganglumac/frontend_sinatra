@@ -243,4 +243,8 @@ module AutomationStackHelpers
   def site_alert
     settings.site_alert
   end
+
+  def site_alert_type
+    settings.site_alert_type
+  end
 end

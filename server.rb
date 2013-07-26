@@ -51,6 +51,7 @@ end
 
 configure do
   set :site_alert, ''
+  set :site_alert_type, 'message'
 end
 
 @@connections = []
@@ -61,10 +62,6 @@ helpers AutomationStackHelpers
 
 before do
   @cookies = request.cookies
-  
-  puts @cookies
-  puts "site_alert = #{settings.site_alert}"
-  
   if settings.site_alert.nil? or settings.site_alert.empty?
     response.set_cookie('hide_alerts', :value => 'false');
   end
@@ -237,7 +234,9 @@ end
 
 post '/alert' do
   alert = params[:site_alert].strip
-  puts "Setting the site-wide alert: #{alert}"
+  alert_style = params[:alert_type]
+  puts "Setting the site-wide #{alert_style}: #{alert}"
+  settings.site_alert_type = alert_style
   settings.site_alert = alert
 
   redirect back

@@ -145,7 +145,7 @@ jQuery(function($) {
 <div class="accordion" id="env-var-accordion" style="font-size: smaller;">
 	<div class="accordion-group">
 		<div class="accordion-heading">
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#env-var-accordion" href="#env-vars">
+			<a class="accordion-toggle" href="#" onclick="toggle_envvar_help();">
 				Environmental Variables <small><em>(click to show/hide)</em></small>
 			</a>
 		</div>
@@ -172,6 +172,10 @@ jQuery(function($) {
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
 <script type="text/javascript">
+function toggle_envvar_help() {
+	$('#env-vars').toggleClass('in');
+}
+
 function show_recurrence_form() {
 	$('#recurrence-div').removeClass("hidden");
 }

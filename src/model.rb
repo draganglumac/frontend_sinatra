@@ -42,7 +42,7 @@ module AutomationStack
 
     end
 
-    class DeviceType<Sequel::Model
+    class DeviceType < Sequel::Model
       one_to_many :devices
     end
 

@@ -109,37 +109,62 @@ jQuery(function($) {
 	</h6>
 	<small class="pull-right"><em>* minimum interval is 1 hour.</em></small>
 </div>
-<br />
+<br><br>
 
-		<ul class="nav nav-tabs">
-			<li><a href="#home" data-toggle="tab">Home</a></li>
-			<li><a href="#profile" data-toggle="tab">Profile</a></li>
-			<li><a href="#messages" data-toggle="tab">Messages</a></li>
-			<li><a href="#settings" data-toggle="tab">Settings</a></li>
+<ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
+	<li class="active"><a href="#" data-toggle="tab">New template</a></li>
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">+</a>
+		<ul class="dropdown-menu">
+			<li><a href="#">New template...</a></li>
+			<li><a href="#">Copy template...</a></li>
 		</ul>
+	</li>
+</ul>
 
-		<h5 style="margin-bottom: 1px;">Configuration file</h5>
-		<div style="position:relative;">
-			<a class='btn' href='javascript:;'>
-				Choose File...
-				<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
-			</a>
-			&nbsp;
-			<span class='label label-info' id="upload-file-info"></span>
-		</div>
+<div id="templateTabContent" class="tab-content well" style="margin-top: 0px;">
+	<h5 style="display: inline;">Template for</h5>
+	&nbsp;
+	<span>
+		<select name="platform" style="width: 10em; color: black;">
+			<option value="">Platform...</option>
+			<% @platforms.each do |platform| %>
+				<option value="<%= platform.name %>"><%= platform.name %></option>
+			<% end %>
+		</select>
+		&nbsp;
+		<select name="device_type" style="width: 10em; color: black;">
+			<option value="">Device type...</option>
+			<% @device_types.each do |type| %>
+				<option value="<%= type.name %>"><%= type.name %></option>
+			<% end %>
+		</select>
+	</span>
+	<h5 style="margin-bottom: 1px;">Configuration</h5>
+	<input type="hidden" id="commands" name="commands" value="">
+	<textarea id="template-commands" style="font-family: monospace; color: black; font-size: 90%; width: 100%; height: 200px; margin-bottom: 5px;"></textarea>
+	<div style="position:relative;">
+		<a class='btn' href='javascript:;'>
+			Choose a file instead...
+			<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
+		</a>
+		&nbsp;
+		<span class='label label-info' id="upload-file-info"></span>
+	</div>
 
-<input type="hidden" name="is_private" value="0" />
-<h5 style="margin-bottom: 1px;">Main result file name</h5>
-<input type="text" name="main_result_file" id="main_result_file" placeholder="cukes.html">
+	<input type="hidden" name="is_private" value="0" />
+	<h5 style="margin-bottom: 1px;">Main result file name</h5>
+	<input type="text" name="main_result_file" id="main_result_file" placeholder="cukes.html">
 
-<h5 style="margin-bottom: 1px;">Email reports to</h5>
-<input type="text" name="email" id="email">
-<div style="margin-top: -7px;"><small><em>* separate multiple emails by a space</em></small></div>
-</form>
+	<h5 style="margin-bottom: 1px;">Email reports to</h5>
+	<input type="text" name="email" id="email">
+	<div style="margin-top: -7px;"><small><em>* separate multiple emails with commas</em></small></div>
+</div>
 
 <h5 style="margin-bottom: 1px;">Select devices</h5>
 <a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal">Device selection</a>
 
+</form>
 </div>
 
 <div class="accordion" id="env-var-accordion" style="font-size: smaller;">
@@ -172,9 +197,9 @@ jQuery(function($) {
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
 <script type="text/javascript">
-function toggle_envvar_help() {
-	$('#env-vars').toggleClass('in');
-}
+	function toggle_envvar_help() {
+		$('#env-vars').toggleClass('in');
+	}
 
 function show_recurrence_form() {
 	$('#recurrence-div').removeClass("hidden");

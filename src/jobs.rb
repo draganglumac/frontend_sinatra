@@ -92,6 +92,10 @@ module Jobs
       @errors    = {}
       @machines  = AutomationStack::Infrastructure::Machine.all
       @devices = AutomationStack::Infrastructure::Device.all
+      @platforms = AutomationStack::Infrastructure::Platform.all
+      puts "@platforms = #{@platforms}"
+      @device_types = AutomationStack::Infrastructure::DeviceType.all
+      puts "@device_types = #{@device_types}"
       @jobs_done = Hound.get_jobs
       erb :new_project
     end

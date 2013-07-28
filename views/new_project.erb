@@ -113,11 +113,11 @@ jQuery(function($) {
 
 <ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
 	<li class="active"><a href="#" data-toggle="tab">New template</a></li>
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">+</a>
-		<ul class="dropdown-menu">
-			<li><a href="#">New template...</a></li>
-			<li><a href="#">Copy template...</a></li>
+	<li class="dropdown"> 
+		<a href="#" onclick="$(this).dropdown().click();" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
+		<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
+			<li role="presentation"><a href="#" role="menuitem">New template...</a></li>
+			<li role="presentation"><a href="#" role="menuitem">Copy template...</a></li>
 		</ul>
 	</li>
 </ul>
@@ -197,9 +197,9 @@ jQuery(function($) {
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
 <script type="text/javascript">
-	function toggle_envvar_help() {
-		$('#env-vars').toggleClass('in');
-	}
+function toggle_envvar_help() {
+	$('#env-vars').toggleClass('in');
+}
 
 function show_recurrence_form() {
 	$('#recurrence-div').removeClass("hidden");

@@ -281,7 +281,7 @@ function send_alert() {
 
 <script>
 $(window).load(function() {
-		if (show_refresh_form)
+		if (typeof show_refresh_form !== 'undefined' && show_refresh_form == true)
 		{
 		$('div.refresh-form').toggleClass('hidden-form');
 		}

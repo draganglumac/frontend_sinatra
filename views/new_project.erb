@@ -26,10 +26,10 @@
 	</div>
 </div>
 <% if not @errors.empty? %>
-<div class="errors">
+   <div class="errors">
 		<p>Validation errors:</p>
 		<% @errors.each do |key, value| %>
-<li><%= value %></li>
+   <li><%= value %></li>
 		<% end %>
 	</div>
 	<br>
@@ -41,6 +41,7 @@
 	<h5 style="margin-bottom: 1px;">Project name</h5>
 	<input type="text" name="lname" id="lname">
 
+	<input type="hidden" name="is_private" value="0" />
 	<h5 style="margin-bottom: 1px">Trigger time</h5>
 	<link rel="stylesheet" type="text/css" media="screen"
 	href="/css/bootstrap-datetimepicker.min.css">
@@ -111,8 +112,12 @@ jQuery(function($) {
 </div>
 <br><br>
 
+<div class="hidden" id="blank-template">
+	<%= erb :template %>
+</div>
+
 <ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
-<li class="active"><a href="#" data-toggle="tab">New template</a></li>
+<li class="active"><a href="#templateTabContent1" data-toggle="tab">Template 1</a></li>
 <li class="dropdown"> 
 	<a href="#" onclick="$(this).dropdown().click();" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
 	<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
@@ -122,27 +127,58 @@ jQuery(function($) {
 </li>
 </ul>
 
-<div id="templateTabContent" class="tab-content well" style="margin-top: 0px;">
+<div id="templateTabContent1" class="tab-content well" style="margin-top: 0px;">
+<form id="template-1" method="POST" action="/template">
 <h5 style="display: inline;">Template for</h5>
 &nbsp;
 <span>
-	<select name="platform" style="width: 10em; color: black;">
+	<select name="platform" style="width: 10em; color: black;" onchange="set_enabled_for_template_fields(this);">
 		<option value="0">Platform...</option>
 		<% @platforms.each do |platform| %>
-			<option value="<%= platform.id %>"><%= platform.name %></option>
+   <option value="<%= platform.id %>"><%= platform.name %></option>
 		<% end %>
 	</select>
 	&nbsp;
 	<select name="device_type" style="width: 10em; color: black;">
 		<option value="0">Device type...</option>
 		<% @device_types.each do |type| %>
-			<option value="<%= type.id %>"><%= type.name %></option>
+   <option value="<%= type.id %>"><%= type.name %></option>
 		<% end %>
 	</select>
 </span>
 
-<%= erb :template %>
+<div class="accordion" id="env-var-accordion" style="font-size: smaller; color: orange; margin-bottom: 5px;">
+	<div class="accordion-group" style="border-color: orange;">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" style="color: orange;" href="#" onclick="toggle_envvar_help();">
+				Environmental Variables <small><em>(click to show/hide)</em></small>
+			</a>
+		</div>
 
+		<div id="env-vars" class="accordion-body collapse">
+			<div class="accordion-inner" style="border-color: orange;">
+				<p>The following are the variables which you can put into your script and which will be resolved automatically to the device on which the job runs for each job in the project.
+				<p>IP addresses:
+				<ul>
+					<li>$PHONE_ENDPOINT</li>
+					<li>$PAD_ENDPOINT
+				</ul>
+				<p>Serial addresses:
+				<ul>
+					<li>$PHONE_SERIAL</li>
+					<li>$PAD_SERIAL</li>
+				</ul>
+				<p>e.g. "DEVICE_ENDPOINT=http://$PHONE_ENDPOINT cucumber"
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="template">
+<%= erb :template %>
+</div>
+
+</form>
 </div>
 
 <h5 style="margin-bottom: 1px;">Select devices</h5>
@@ -154,6 +190,26 @@ jQuery(function($) {
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
 <script type="text/javascript">
+function set_enabled_for_template_fields(el)
+{
+	if ($(el).val() == '0') {
+		$('#template input').attr('disabled', true);
+		$('#template textarea').attr('disabled', true);
+	}
+	else {
+		$('#template input').attr('disabled', false);
+		$('#template textarea').attr('disabled', false);
+	}
+}
+
+function add_tab()
+{
+}
+
+function copy_tab(tab)
+{
+}
+
 function toggle_envvar_help() {
 	$('#env-vars').toggleClass('in');
 }

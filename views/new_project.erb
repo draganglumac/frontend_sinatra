@@ -151,33 +151,6 @@ jQuery(function($) {
 </form>
 </div>
 
-<div class="accordion" id="env-var-accordion" style="font-size: smaller;">
-	<div class="accordion-group">
-		<div class="accordion-heading">
-			<a class="accordion-toggle" href="#" onclick="toggle_envvar_help();">
-				Environmental Variables <small><em>(click to show/hide)</em></small>
-			</a>
-		</div>
-
-		<div id="env-vars" class="accordion-body collapse">
-			<div class="accordion-inner">
-				<p>The following are the variables which you can put into your script and which will be resolved automatically to the device on which the job runs for each job in the project.
-				<p>IP addresses:
-				<ul>
-					<li>$PHONE_ENDPOINT</li>
-					<li>$PAD_ENDPOINT
-				</ul>
-				<p>Serial addresses:
-				<ul>
-					<li>$PHONE_SERIAL</li>
-					<li>$PAD_SERIAL</li>
-				</ul>
-				<p>e.g. "DEVICE_ENDPOINT=http://$PHONE_ENDPOINT cucumber"
-			</div>
-		</div>
-	</div>
-</div>
-
 <script src="/js/bootstrap-scroll-modal.js"></script>
 <script src="/js/bootstrap-transition.js"></script>
 <script type="text/javascript">

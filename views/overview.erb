@@ -1,53 +1,60 @@
-<div class="row">
-	<%for machine in @machines%>
-		<div class="span4 well">
-			<%if can_edit?%>
-				<%if machine.status.eql?('ONLINE')%>
-					<span class="pull-right"><a class="btn" href="/machines/restart/<%=machine.id%>"><i class="icon-repeat icon-white"></i></a></span>
-				<%else%>
-					<span class="pull-right"><button class="btn"><i class="icon-repeat"></i></button></span>
-				<%end%>
-			<%end%>
-			<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
-			<h4><%=machine.ip_address%></h4>
-			<% if !machine.connected_devices.empty? %>
-
-				<div class="accordion" id="accordion<%=machine.id%>">
-					<div class="accordion-group">
-						<div class="accordion-heading">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=machine.id%>" href="#collapse<%=machine.call_sign%>">
-								Connected devices
-							</a>
-						</div>
-						<div id="collapse<%=machine.call_sign%>" class="accordion-body collapse">
-							<div class="accordion-inner">
-								<% for device in machine.connected_devices%>
-									<p><%=device.device.tag%></p>
-								<%end%>
-							</div>
-						</div>
-
-					</div> 
-
-				</div>
-			<%end%>
-			<%if machine.status.eql?("ONLINE")%>
-				<div class="alert alert-success">
-					Status Online
-				</div>
-			<%elsif machine.status.eql?('RESTARTING')%>
-				<div class="alert alert-warning">
-					Status Restarting
-				</div>
+<%column_count = 0%>
+<%for machine in @machines%>
+	<% if column_count % 3 == 0 %>
+		<div class="row">
+	<%end%>
+	<div class="span4 well">
+		<%if can_edit?%>
+			<%if machine.status.eql?('ONLINE')%>
+				<span class="pull-right"><a class="btn" href="/machines/restart/<%=machine.id%>"><i class="icon-repeat icon-white"></i></a></span>
 			<%else%>
-				<div class="alert alert-error">
-					Status Offline
-				</div>
+				<span class="pull-right"><button class="btn"><i class="icon-repeat"></i></button></span>
 			<%end%>
+		<%end%>
+		<h3><a href="/machines/<%=machine.id%>"><%=machine.call_sign%></a></h4>
+		<h4><%=machine.ip_address%></h4>
+		<% if !machine.connected_devices.empty? %>
 
+			<div class="accordion" id="accordion<%=machine.id%>">
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=machine.id%>" href="#collapse<%=machine.call_sign%>">
+							Connected devices
+						</a>
+					</div>
+					<div id="collapse<%=machine.call_sign%>" class="accordion-body collapse">
+						<div class="accordion-inner">
+							<% for device in machine.connected_devices%>
+								<p><%=device.device.tag%></p>
+							<%end%>
+						</div>
+					</div>
+
+				</div> 
+
+			</div>
+		<%end%>
+		<%if machine.status.eql?("ONLINE")%>
+			<div class="alert alert-success">
+				Status Online
+			</div>
+		<%elsif machine.status.eql?('RESTARTING')%>
+			<div class="alert alert-warning">
+				Status Restarting
+			</div>
+		<%else%>
+			<div class="alert alert-error">
+				Status Offline
+			</div>
+		<%end%>
+
+	</div>
+	<% if column_count % 3 == 2 %>
 		</div>
 	<%end%>
-</div>
+
+	<% column_count += 1%>
+<%end%>
 
 <!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
 <script>

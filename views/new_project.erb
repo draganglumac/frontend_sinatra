@@ -15,150 +15,134 @@
    <% if check_availibility(device.id) == 1 %>	
    <li >
 					<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
-					</li>
-				<% end %>
-				<%end%>
-				<%end %>
-			</ul>
-		</div>
-		<div class="modal-footer">
-			<input class="btn"id="submit" type="submit" value="submit"/>
-		</div>
-	</div>
-	<% if not @errors.empty? %>
-   <div class="errors">
-			<p>Validation errors:</p>
-			<% @errors.each do |key, value| %>
-   <li><%= value %></li>
+				</li>
 			<% end %>
-		</div>
-		<br>
-	<% end %>
+			<%end%>
+			<%end %>
+		</ul>
+	</div>
+	<div class="modal-footer">
+		<input class="btn"id="submit" type="submit" value="submit"/>
+	</div>
+</div>
+<% if not @errors.empty? %>
+<div class="errors">
+		<p>Validation errors:</p>
+		<% @errors.each do |key, value| %>
+<li><%= value %></li>
+		<% end %>
+	</div>
+	<br>
+<% end %>
 
-	<div class="well">
-		<h1>New project</h1>
+<div class="well">
+	<h1>New project</h1>
 
-		<h5 style="margin-bottom: 1px;">Project name</h5>
-		<input type="text" name="lname" id="lname">
+	<h5 style="margin-bottom: 1px;">Project name</h5>
+	<input type="text" name="lname" id="lname">
 
-		<h5 style="margin-bottom: 1px">Trigger time</h5>
-		<link rel="stylesheet" type="text/css" media="screen"
-		href="/css/bootstrap-datetimepicker.min.css">
-		<div id="datetimepicker" class="input-append date">
-			<input type="text"  name="ltrigger" id="ltrigger"></input>
-			<span class="add-on">
-				<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-			</span>
-		</div>
+	<h5 style="margin-bottom: 1px">Trigger time</h5>
+	<link rel="stylesheet" type="text/css" media="screen"
+	href="/css/bootstrap-datetimepicker.min.css">
+	<div id="datetimepicker" class="input-append date">
+		<input type="text"  name="ltrigger" id="ltrigger"></input>
+		<span class="add-on">
+			<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+		</span>
+	</div>
+	<script type="text/javascript"
+		src="/js/jquery.min.js">
+		</script> 
 		<script type="text/javascript"
-			src="/js/jquery.min.js">
-			</script> 
+			src="/js/bootstrap.min.js">
+			</script>
 			<script type="text/javascript"
-				src="/js/bootstrap.min.js">
+				src="/js/bootstrap-datetimepicker.min.js">
 				</script>
-				<script type="text/javascript"
-					src="/js/bootstrap-datetimepicker.min.js">
-					</script>
-					<script type="text/javascript">
-						$('#datetimepicker').datetimepicker({
+				<script type="text/javascript">
+					$('#datetimepicker').datetimepicker({
 format: 'dd/MM/yyyy hh:mm:ss',
 pickDate: false
 });
 jQuery(function($) {
-		$('div.btn-group[data-toggle-name=*]').each(function(){
-			var group   = $(this);
-			var form    = group.parents('form').eq(0);
-			var name    = group.attr('data-toggle-name');
-			var hidden  = $('input[name="' + name + '"]', form);
-			$('button', group).each(function(){
-				var button = $(this);
-				button.live('click', function(){
-					hidden.val($(this).val());
-					});
-				if(button.val() == hidden.val()) {
-				button.addClass('active');
-				}
+	$('div.btn-group[data-toggle-name=*]').each(function(){
+		var group   = $(this);
+		var form    = group.parents('form').eq(0);
+		var name    = group.attr('data-toggle-name');
+		var hidden  = $('input[name="' + name + '"]', form);
+		$('button', group).each(function(){
+			var button = $(this);
+			button.live('click', function(){
+				hidden.val($(this).val());
 				});
-			});
-
-			if ($('#recursive').hasClass("active")) {
-				$('#recurrence-div').removeClass('hidden');
+			if(button.val() == hidden.val()) {
+			button.addClass('active');
 			}
+			});
 		});
+
+		if ($('#recursive').hasClass("active")) {
+			$('#recurrence-div').removeClass('hidden');
+		}
+	});
 </script>
 <br />
 <div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio">
-	<button id="single" type="button" value="0" class="btn" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
-	<button id="recursive" type="button" value="1" class="btn" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
+<button id="single" type="button" value="0" class="btn" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
+<button id="recursive" type="button" value="1" class="btn" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
 </div>
 <div class="well hidden" style="margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;" id="recurrence-div">
-	<h6>
-		<span>&nbsp;</span>
-		<span>Repeats every</span>
-		<span>&nbsp;</span>
-		<span>
-			<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="1"></input>
-		</span>
-		<span>&nbsp;</span>
-		<span class="controls" >
-			<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
-				<option value="3600">hours</option>
-				<option value="86400" selected>days</option>
-			</select>
-		</span>
-	</h6>
-	<small class="pull-right"><em>* minimum interval is 1 hour.</em></small>
+<h6>
+	<span>&nbsp;</span>
+	<span>Repeats every</span>
+	<span>&nbsp;</span>
+	<span>
+		<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="1"></input>
+	</span>
+	<span>&nbsp;</span>
+	<span class="controls" >
+		<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
+			<option value="3600">hours</option>
+			<option value="86400" selected>days</option>
+		</select>
+	</span>
+</h6>
+<small class="pull-right"><em>* minimum interval is 1 hour.</em></small>
 </div>
 <br><br>
 
 <ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
-	<li class="active"><a href="#" data-toggle="tab">New template</a></li>
-	<li class="dropdown"> 
-		<a href="#" onclick="$(this).dropdown().click();" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
-		<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
-			<li role="presentation"><a href="#" role="menuitem">New template...</a></li>
-			<li role="presentation"><a href="#" role="menuitem">Copy template...</a></li>
-		</ul>
-	</li>
+<li class="active"><a href="#" data-toggle="tab">New template</a></li>
+<li class="dropdown"> 
+	<a href="#" onclick="$(this).dropdown().click();" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
+	<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
+		<li role="presentation"><a href="#" role="menuitem">New template...</a></li>
+		<li role="presentation"><a href="#" role="menuitem">Copy template...</a></li>
+	</ul>
+</li>
 </ul>
 
 <div id="templateTabContent" class="tab-content well" style="margin-top: 0px;">
-	<h5 style="display: inline;">Template for</h5>
+<h5 style="display: inline;">Template for</h5>
+&nbsp;
+<span>
+	<select name="platform" style="width: 10em; color: black;">
+		<option value="0">Platform...</option>
+		<% @platforms.each do |platform| %>
+			<option value="<%= platform.id %>"><%= platform.name %></option>
+		<% end %>
+	</select>
 	&nbsp;
-	<span>
-		<select name="platform" style="width: 10em; color: black;">
-			<option value="">Platform...</option>
-			<% @platforms.each do |platform| %>
-				<option value="<%= platform.name %>"><%= platform.name %></option>
-			<% end %>
-		</select>
-		&nbsp;
-		<select name="device_type" style="width: 10em; color: black;">
-			<option value="">Device type...</option>
-			<% @device_types.each do |type| %>
-				<option value="<%= type.name %>"><%= type.name %></option>
-			<% end %>
-		</select>
-	</span>
-	<h5 style="margin-bottom: 1px;">Configuration</h5>
-	<input type="hidden" id="commands" name="commands" value="">
-	<textarea id="template-commands" style="font-family: monospace; color: black; font-size: 90%; width: 100%; height: 200px; margin-bottom: 5px;"></textarea>
-	<div style="position:relative;">
-		<a class='btn' href='javascript:;'>
-			Choose a file instead...
-			<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
-		</a>
-		&nbsp;
-		<span class='label label-info' id="upload-file-info"></span>
-	</div>
+	<select name="device_type" style="width: 10em; color: black;">
+		<option value="0">Device type...</option>
+		<% @device_types.each do |type| %>
+			<option value="<%= type.id %>"><%= type.name %></option>
+		<% end %>
+	</select>
+</span>
 
-	<input type="hidden" name="is_private" value="0" />
-	<h5 style="margin-bottom: 1px;">Main result file name</h5>
-	<input type="text" name="main_result_file" id="main_result_file" placeholder="cukes.html">
+<%= erb :template %>
 
-	<h5 style="margin-bottom: 1px;">Email reports to</h5>
-	<input type="text" name="email" id="email">
-	<div style="margin-top: -7px;"><small><em>* separate multiple emails with commas</em></small></div>
 </div>
 
 <h5 style="margin-bottom: 1px;">Select devices</h5>

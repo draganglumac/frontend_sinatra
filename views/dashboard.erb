@@ -1,5 +1,9 @@
-<div id="jobs-grid" class="row">
+<div id="jobs-grid">
+	<% column_count = 0 %>
 	<% @projects.each do |project, jobs|%>
+		<%if column_count % 2 == 0%>
+			<div class="row">
+		<%end%>
 		<%project_name = @project_names[project]%>
 		<%safe_project_name = url_escape(project_name)%>
 		<div class="span6 well">
@@ -211,6 +215,10 @@
 				</div>
 				<!-- well -->
 			</div>
+		<%if column_count % 2 == 1%>
+			</div>
+		<%end%>
+		<% column_count += 1%>
 		<% end %>
 	</div>
 

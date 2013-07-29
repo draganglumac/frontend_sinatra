@@ -21,7 +21,7 @@ module Overview
             @active_jobs[machine_id] = [entry]
           else
             if job.status == 'IN PROGRESS'
-              @active_jobs.unshift entry
+              @active_jobs[machine_id].unshift entry
             else
               @active_jobs[machine_id] << entry
             end

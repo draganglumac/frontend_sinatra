@@ -34,6 +34,26 @@
 
 			</div>
 		<%end%>
+		<div class="accordion" id="jobsOnMachine<%=machine.id%>">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#jobsOnMachine<%=machine.id%>" href="#collapseJobs<%=machine.id%>">
+						Active jobs
+					</a>
+				</div>
+				<div id="collapseJobs<%=machine.id%>" class="accordion-body collapse in">
+					<div class="accordion-inner">
+					<% if @active_jobs[machine.id].nil? %>
+						<p>No active jobs.</p>
+					<% else %>
+						<% @active_jobs[machine.id].each do |entry| %>
+						<%= entry %>
+						<% end %>
+					<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
 		<%if machine.status.eql?("ONLINE")%>
 			<div class="alert alert-success">
 				Status Online

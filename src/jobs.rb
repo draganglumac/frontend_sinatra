@@ -85,19 +85,32 @@ module Jobs
           "days"
         end
       end
+
+      def project_page_helper(project)
+        @machines  = AutomationStack::Infrastructure::Machine.all
+        @devices = AutomationStack::Infrastructure::Device.all
+        @platforms = AutomationStack::Infrastructure::Platform.all
+        @device_types = AutomationStack::Infrastructure::DeviceType.all
+        @jobs_done = Hound.get_jobs
+        @project = project
+        puts "@project = #{@project}"
+      end
+    
     end
 
     #new job page
     get '/project' do
       @errors    = {}
-      @machines  = AutomationStack::Infrastructure::Machine.all
-      @devices = AutomationStack::Infrastructure::Device.all
-      @platforms = AutomationStack::Infrastructure::Platform.all
-      puts "@platforms = #{@platforms}"
-      @device_types = AutomationStack::Infrastructure::DeviceType.all
-      puts "@device_types = #{@device_types}"
-      @jobs_done = Hound.get_jobs
-      @project = {}
+      project_page_helper({})
+      erb :project_form
+    end
+
+    post '/project' do
+      params.each do |key, value|
+        puts "params['#{key}'] = #{value}"
+      end
+      @errors = {'error1' => 'Here is an error!'}
+      project_page_helper(params)
       erb :project_form
     end
 
@@ -130,14 +143,6 @@ module Jobs
       @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
 
       erb :'job_detail/job_detail'
-    end
-
-    post '/project' do
-      params.each do |key, value|
-        puts "params['#{key}'] = #{value}"
-      end
-
-      redirect '/'
     end
 
     post '/job/:id/update' do
@@ -189,21 +194,21 @@ module Jobs
     post '/jobs/:project/delete' do
       AutomationStack::Infrastructure::Job.subset(:project, :name.like("#{params[:project]}%"))
       AutomationStack::Infrastructure::Job.project.delete
-      
+
       proj = AutomationStack::Infrastructure::Project.find(:name => params[:project])
       proj.delete
-      
+
       redirect back
     end
 
     post '/jobs/:project/edit' do
       preselected = params[:preselected].split(';')
       the_project = AutomationStack::Infrastructure::Project.find(:name => params[:project])
-      
+
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"
           current_device = pline.split("=").last
-          
+
           if preselected.include?(current_device)
             preselected.delete(current_device)
             next
@@ -217,9 +222,9 @@ module Jobs
 
           machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
           machine = machine.first[:machine_id]
-          
+
           trigger = Time.new.to_i
-          
+
           canonical_string = the_project.commands
           string = Jobhelper.replace_symbols(canonical_string,machine)	
           Hound.add_job(machine,the_project.name + "-#{current_device_name}",string,trigger,0,0,the_project.id,current_device)
@@ -230,7 +235,7 @@ module Jobs
         job = AutomationStack::Infrastructure::Job.find(:device_id => device_id)
         job.delete
       end
- 
+
       redirect back
     end
 
@@ -255,17 +260,17 @@ module Jobs
           #
           tempfile = params[:file_source][:tempfile]	
           filename = params[:file_source][:filename]
-          
+
           canonical_string = File.open(tempfile.path,'rb') { |file|file.read }
-          
+
           email = params[:email]
-          
+
           if params[:main_result_file].nil? or params[:main_result_file].strip == ''
             main_result_file = 'cukes.html'
           else
             main_result_file = params[:main_result_file]
           end
-          
+
           trigger = params[:ltrigger] 
           trigger << ".000000"
           trigger = Time.parse(trigger).to_i

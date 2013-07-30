@@ -10,16 +10,21 @@
 			<h3>Device Selection</h3>
 		</div>
 		<div class="modal-body">
+			<h5>Devices with templates</h5>
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 				<%for device in @devices %>
 					<% if device.ip %>
 						<% if check_availibility(device.id) == 1 %>	
 							<li >
-							<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
+							<input type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 							</li>
 						<% end %>
 					<%end%>
 				<%end %>
+			</ul>
+			<hr>	
+			<h5 class="text-warning">Devices that are connected but need a template</h5>
+			<ul id="missing_template" class="text-warning" style="list-style-type:none;text-decoration:none;">
 			</ul>
 		</div>
 		<div class="modal-footer">
@@ -37,21 +42,21 @@
 	<% end %>
 
 	<div class="well">
-		<%if @project['name'].nil? %>
+		<%if @project['lname'].nil? %>
 			<h1>New project</h1>
 		<%else%>
-			<h1><%=@project['name']%></h1>
+			<h1><%=@project['lname']%></h1>
 		<%end%>
 
 		<h5 style="margin-bottom: 1px;">Project name</h5>
-		<input type="text" name="lname" id="lname" value="<%=@project['name'] if not @project['name'].nil?%>">
+		<input type="text" name="lname" id="lname" value="<%=@project['lname'] unless @project['lname'].nil?%>">
 
-		<input type="hidden" name="is_private" value="0" />
+		<input type="hidden" name="is_recurrent" value="0" />
 		<h5 style="margin-bottom: 1px">Trigger time</h5>
 		<link rel="stylesheet" type="text/css" media="screen"
 		href="/css/bootstrap-datetimepicker.min.css">
 		<div id="datetimepicker" class="input-append date">
-			<input type="text"  name="ltrigger" id="ltrigger"></input>
+			<input type="text"  name="ltrigger" id="ltrigger" value="<%=@project['ltrigger'] unless @project['ltrigger'].nil?%>"></input>
 			<span class="add-on">
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
 			</span>
@@ -93,23 +98,23 @@ jQuery(function($) {
 		});
 	</script>
 	<br />
-	<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio">
-		<button id="single" type="button" value="0" class="btn" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
-		<button id="recursive" type="button" value="1" class="btn" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
+	<div class="btn-group" data-toggle-name="is_recurrent" data-toggle="buttons-radio">
+		<button id="single" type="button" value="0" class="btn <%='active' if @project['is_recurrent'].nil? or @project['is_recurrent'] == '0'%>" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
+		<button id="recursive" type="button" value="1" class="btn <%='active' if @project['is_recurrent'] == '1'%>" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
 	</div>
-	<div class="well hidden" style="margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;" id="recurrence-div">
+	<div class="well <%='hidden' if @project['is_recurrent'].nil? or @project['is_recurrent'] == '0'%>" style="margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;" id="recurrence-div">
 		<h6>
 			<span>&nbsp;</span>
 			<span>Repeats every</span>
 			<span>&nbsp;</span>
 			<span>
-				<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="1"></input>
+				<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="<%=@project['seconds_multiplier'] ||= 1%>"></input>
 			</span>
 			<span>&nbsp;</span>
 			<span class="controls" >
 				<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
-					<option value="3600">hours</option>
-					<option value="86400" selected>days</option>
+					<option value="3600" <%='selected' if @project['seconds'] == '3600'%>>hours</option>
+					<option value="86400" <%='selected' if @project['seconds'].nil? or @project['seconds'] == '86400'%>>days</option>
 				</select>
 			</span>
 		</h6>
@@ -118,25 +123,56 @@ jQuery(function($) {
 	<br><br>
 
 	<div id="blankTemplate" class="hidden">
-		<%= erb :template, :locals => { :tab_number => 0 } %>
+		<%= erb :template, :locals => { :tab_number => 0, :active => false } %>
 	</div>
+	<% templates = @project['template'] %>
 	<ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
-		<li id="tab-nav-1" class="active"><a id="tab-1" href="#templateTabContent1" data-toggle="tab">Template 1</a></li>
+		<% if not templates.nil?%>
+			<% count = 0 %>
+			<% templates.each do |tn, template|%>
+				<% if tn == '0'%>
+					<% next %>
+				<% end %>
+				<% if count == 0 %>
+					<li id="tab-nav-<%=tn%>" class="active"><a id="tab-<%=tn%>" href="#templateTabContent<%=tn%>" data-toggle="tab">Template <%=tn%></a></li>
+				<% else %>
+					<li id="tab-nav-<%=tn%>"><a id="tab-<%=tn%>" href="#templateTabContent<%=tn%>" data-toggle="tab">Template <%=tn%></a></li>
+				<% end %>
+				<% count += 1 %>
+			<% end %>
+		<% else %>
+			<li id="tab-nav-1" class="active"><a id="tab-1" href="#templateTabContent1" data-toggle="tab">Template 1</a></li>
+		<%end%>
 		<li class="dropdown" onclick="$('#addTemplate').dropdown().click();"> 
-		<a href="#" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
-		<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
-			<li role="presentation"><a href="#" role="menuitem" onclick="add_tab();">New template</a></li>
-			<li role="presentation"><a href="#" role="menuitem" onclick="copy_tab(1);">Copy template...</a></li>
-		</ul>
+			<a href="#" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
+			<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
+				<li role="presentation"><a href="#" role="menuitem" onclick="add_tab();">New template</a></li>
+				<li role="presentation"><a href="#" role="menuitem" onclick="copy_tab(1);">Copy template...</a></li>
+			</ul>
 		</li>
 	</ul>
 
-	<div id="templateContents" class="tab-content"> 
-		<%= erb :template, :locals => { :tab_number => 1 } %>
+	<div id="templateContents" class="tab-content">
+		<% if not templates.nil? %>
+			<% count = 0 %>
+			<% templates.each do |tn, template| %>
+				<% if tn == '0' %>
+					<% next %>
+				<% end %>
+				<% if count == 0 %>
+					<%= erb :template, :locals => { :tab_number => tn, :active => true } %>
+				<% else %>
+					<%= erb :template, :locals => { :tab_number => tn, :active => false } %>
+				<% end %>
+				<% count += 1 %>
+			<% end %>
+		<% else %>
+			<%= erb :template, :locals => { :tab_number => 1, :active => true } %>
+		<% end %>
 	</div>
 
 	<h5 style="margin-bottom: 1px;">Select devices</h5>
-	<a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal">Device selection</a>
+	<a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal" onclick="filter_devices_without_templates();">Device selection</a>
 
 </form>
 </div>
@@ -205,5 +241,65 @@ function show_recurrence_form() {
 
 function hide_recurrence_form() {
 	$('#recurrence-div').addClass("hidden");
+}
+
+function device_id_fits_one_of_the_templates(device_id, templates) {
+	// device_id format device-1-2 where 1 is platform id and 2 is device type id
+	var platform = device_id.split('-')[1];
+	var device_type = device_id.split('-')[2];
+
+	for (var i = 0; i < templates.length; i++) {
+		var suffix = templates[i];
+		if (suffix == (platform + '-' + device_type)) {
+			return true;
+		}
+		else if (suffix == (platform + '-0')) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function filter_devices_without_templates() {
+	var configured_templates = {};
+	$('#templateContents > div').each( function (i, el) {
+			var idx = $(el).attr('id').search(/\d/);
+			var tab_num = $(el).attr('id').substr(idx);
+
+			var platform = $('#platform-' + tab_num).val();
+			var device_type = $('#device_type-' + tab_num).val();
+			var commands = $('#commands-' + tab_num).val();
+			var config_file = $('#upload-file-info-' + tab_num).text().trim(); 
+			if (platform != "0") {
+			if (device_type != "0") {
+					if (commands != '' || config_file != '') {
+						configured_templates[platform + '-' + device_type] = true;
+					}
+				}
+				else {
+					if (commands != '' || config_file != '') {
+						configured_templates[platform + '-0'] = true;
+					}		
+				}
+			}
+		});
+
+	var keys = [];
+	for (var k in configured_templates) keys.push(k);
+
+	// assume all have templates first - this is a re-entrant function
+	$('ul#missing_template li input').each(function (i, e) {
+			$(e).attr('disabled', false);
+			$(e).parent().appendTo('ul#device_list');
+			});
+
+	$('ul#device_list li input').each(function (i, e) {
+			var dev_id = $(e).attr('id');
+			if (! device_id_fits_one_of_the_templates(dev_id, keys)) {
+				$(e).attr('disabled', true);
+				$(e).parent().appendTo($('ul#missing_template'));
+			}
+			});
 }
 </script>

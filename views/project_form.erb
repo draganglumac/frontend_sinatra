@@ -1,0 +1,209 @@
+<link href="/css/bootstrap-scroll-modal.css" res="stylesheet">
+<!-- Process the devices from the modal -->
+<!-- Our device modal --!>
+<!-- End --!>
+<!--form action="/jobs" method="post" enctype="multipart/form-data"-->
+<form action="/project" method="post" enctype="multipart/form-data">
+	<div id="deviceModal" class="modal hide">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">&times;</a>
+			<h3>Device Selection</h3>
+		</div>
+		<div class="modal-body">
+			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
+				<%for device in @devices %>
+					<% if device.ip %>
+						<% if check_availibility(device.id) == 1 %>	
+							<li >
+							<input type="checkbox" id="<%=device.tag%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
+							</li>
+						<% end %>
+					<%end%>
+				<%end %>
+			</ul>
+		</div>
+		<div class="modal-footer">
+			<input class="btn"id="submit" type="submit" value="submit"/>
+		</div>
+	</div>
+	<% if not @errors.empty? %>
+		<div class="errors">
+			<p>Validation errors:</p>
+			<% @errors.each do |key, value| %>
+				<li><%= value %></li>
+			<% end %>
+		</div>
+		<br>
+	<% end %>
+
+	<div class="well">
+		<%if @project['name'].nil? %>
+			<h1>New project</h1>
+		<%else%>
+			<h1><%=@project['name']%></h1>
+		<%end%>
+
+		<h5 style="margin-bottom: 1px;">Project name</h5>
+		<input type="text" name="lname" id="lname" value="<%=@project['name'] if not @project['name'].nil?%>">
+
+		<input type="hidden" name="is_private" value="0" />
+		<h5 style="margin-bottom: 1px">Trigger time</h5>
+		<link rel="stylesheet" type="text/css" media="screen"
+		href="/css/bootstrap-datetimepicker.min.css">
+		<div id="datetimepicker" class="input-append date">
+			<input type="text"  name="ltrigger" id="ltrigger"></input>
+			<span class="add-on">
+				<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+			</span>
+		</div>
+		<script type="text/javascript"
+			src="/js/jquery.min.js">
+			</script> 
+			<script type="text/javascript"
+				src="/js/bootstrap.min.js">
+				</script>
+				<script type="text/javascript"
+					src="/js/bootstrap-datetimepicker.min.js">
+					</script>
+					<script type="text/javascript">
+						$('#datetimepicker').datetimepicker({
+format: 'dd/MM/yyyy hh:mm:ss',
+pickDate: false
+});
+jQuery(function($) {
+		$('div.btn-group[data-toggle-name=*]').each(function(){
+			var group   = $(this);
+			var form    = group.parents('form').eq(0);
+			var name    = group.attr('data-toggle-name');
+			var hidden  = $('input[name="' + name + '"]', form);
+			$('button', group).each(function(){
+				var button = $(this);
+				button.live('click', function(){
+					hidden.val($(this).val());
+					});
+				if(button.val() == hidden.val()) {
+				button.addClass('active');
+				}
+				});
+			});
+
+		if ($('#recursive').hasClass("active")) {
+		$('#recurrence-div').removeClass('hidden');
+		}
+		});
+	</script>
+	<br />
+	<div class="btn-group" data-toggle-name="is_private" data-toggle="buttons-radio">
+		<button id="single" type="button" value="0" class="btn" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
+		<button id="recursive" type="button" value="1" class="btn" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
+	</div>
+	<div class="well hidden" style="margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;" id="recurrence-div">
+		<h6>
+			<span>&nbsp;</span>
+			<span>Repeats every</span>
+			<span>&nbsp;</span>
+			<span>
+				<input name="seconds_multiplier"style="color: black;width: 20%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" type="number" min="1" id="number-of-time-units" value="1"></input>
+			</span>
+			<span>&nbsp;</span>
+			<span class="controls" >
+				<select name="seconds" style="color: black;width: 32%;font-size: 1em;height: 1.75em;padding-top: 0px;padding-top: 0px;margin-top: 0px;margin-bottom: 0px;" name="time-period">
+					<option value="3600">hours</option>
+					<option value="86400" selected>days</option>
+				</select>
+			</span>
+		</h6>
+		<small class="pull-right"><em>* minimum interval is 1 hour.</em></small>
+	</div>
+	<br><br>
+
+	<div id="blankTemplate" class="hidden">
+		<%= erb :template, :locals => { :tab_number => 0 } %>
+	</div>
+	<ul id="templateTab" class="nav nav-tabs" style="margin-bottom: 0px;">
+		<li id="tab-nav-1" class="active"><a id="tab-1" href="#templateTabContent1" data-toggle="tab">Template 1</a></li>
+		<li class="dropdown" onclick="$('#addTemplate').dropdown().click();"> 
+		<a href="#" id="addTemplate" class="dropdown-toggle" data-toggle="dropdown" role="button" style="font-size: large;">+</a>
+		<ul class="dropdown-menu" role="menu" aria-labeledby="addTemplate">
+			<li role="presentation"><a href="#" role="menuitem" onclick="add_tab();">New template</a></li>
+			<li role="presentation"><a href="#" role="menuitem" onclick="copy_tab(1);">Copy template...</a></li>
+		</ul>
+		</li>
+	</ul>
+
+	<div id="templateContents" class="tab-content"> 
+		<%= erb :template, :locals => { :tab_number => 1 } %>
+	</div>
+
+	<h5 style="margin-bottom: 1px;">Select devices</h5>
+	<a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal">Device selection</a>
+
+</form>
+</div>
+
+<script src="/js/bootstrap-scroll-modal.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script type="text/javascript">
+function set_enabled_for_template_fields(el, tab)
+{
+	if ($(el).val() == '0') {
+		$('#template-' + tab + ' input').attr('disabled', true);
+		$('#template-' + tab + ' textarea').attr('disabled', true);
+	}
+	else {
+		$('#template-' + tab + ' input').attr('disabled', false);
+		$('#template-' + tab + ' textarea').attr('disabled', false);
+	}
+}
+
+function update_ids_and_names_with_new_ordinal(tab_content, ordinal) {
+	var new_id = '-' + ordinal + '"';
+	var new_html = $(tab_content).html().replace(/-0"/g, new_id);
+	new_html = new_html.replace(/template\[0\]/g, 'template[' + ordinal + ']');
+	new_html = new_html.replace('templateTabContent0', 'templateTabContent' + ordinal);
+	new_html = new_html.replace(' active in', '');
+	new_html = new_html.replace('_fields(this, 0)', '_fields(this, ' + ordinal + ')');
+	new_html = new_html.replace('_help(0)', '_help(' + ordinal + ')');
+	new_html = new_html.replace('_tab(0)', '_tab(' + ordinal + ')');
+	new_html = new_html.replace('pull-right close hidden', 'pull-right close');
+	new_html = new_html.replace('upload-file-info-0', 'upload-file-info-' + ordinal);
+		
+	$(tab_content).html(new_html);
+}
+
+function add_tab() {
+	var tab_count = ++max_tab;
+	var html = '<li id="tab-nav-' + tab_count + '"><a id="tab-' + tab_count + '"href="#templateTabContent' + tab_count + '" data-toggle="tab">Template ' + tab_count + '</a></li>';
+	var new_tab_nib = $('ul#templateTab > li:last').before(html);
+	
+	var new_tab_content = $('<div />').append($('#templateTabContent0').clone(false, false));
+	update_ids_and_names_with_new_ordinal(new_tab_content, tab_count);
+	$('#templateContents').append($(new_tab_content).html());
+
+	var a_selector = 'a#tab-' + tab_count;
+	$(a_selector).click();
+}
+
+function copy_tab(tab)
+{
+	add_tab();
+}
+
+function remove_tab(tab) {
+	$('li#tab-nav-' + tab).remove();
+	$('#templateTabContent' + tab).remove();
+	$('a#tab-1').click();
+}
+
+function toggle_envvar_help(tab) {
+	$('#env-vars-' + tab).toggleClass('in');
+}
+
+function show_recurrence_form() {
+	$('#recurrence-div').removeClass("hidden");
+}
+
+function hide_recurrence_form() {
+	$('#recurrence-div').addClass("hidden");
+}
+</script>

@@ -1,18 +1,69 @@
-<h5 style="margin-bottom: 1px;">Configuration</h5>
-<input disabled type="hidden" id="commands" name="commands" value="">
-<textarea disabled id="template-commands" style="font-family: monospace; color: black; font-size: 90%; width: 100%; height: 200px; margin-bottom: 5px;"></textarea>
-<div style="position:relative;">
-	<a class='btn' href='javascript:;'>
-		Choose a file instead...
-		<input disabled type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace("C:\\fakepath\\", ""));'>
-	</a>
+<div id="templateTabContent<%=tab_number%>" class="tab-pane well active in"  style="margin-top: 0px; margin-bottom: 0px;">
+	<a id="remove-tab-<%=tab_number%>" class="pull-right close hidden" style="margin-top: -<%=tab_number%>0px; font-size: large; color: white;" data-toggle="tooltip" title="Remove this tab" onclick="remove_tab(<%=tab_number%>);">&times;</a>
+	<h5 style="display: inline;">Template for</h5>
 	&nbsp;
-	<span class='label label-info' id="upload-file-info"></span>
+	<span>
+		<select name="template[<%=tab_number%>]platform" style="width: 10em; color: black;" onchange="set_enabled_for_template_fields(this, <%=tab_number%>);">
+			<option value="0">Platform...</option>
+			<% @platforms.each do |platform| %>
+				<option value="<%= platform.id %>"><%= platform.name %></option>
+			<% end %>
+		</select>
+		&nbsp;
+		<select name="template[<%=tab_number%>]device_type" style="width: 10em; color: black;">
+			<option value="0">Device type...</option>
+			<% @device_types.each do |type| %>
+				<option value="<%= type.id %>"><%= type.name %></option>
+			<% end %>
+		</select>
+	</span>
+
+	<div class="accordion" id="env-var-accordion-<%=tab_number%>" style="font-size: smaller; color: orange; margin-bottom: 5px;">
+		<div class="accordion-group" style="border-color: orange;">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" style="color: orange;" href="#" onclick="toggle_envvar_help(1);">
+					Environmental Variables <small><em>(click to show/hide)</em></small>
+				</a>
+			</div>
+
+			<div id="env-vars-<%=tab_number%>" class="accordion-body collapse">
+				<div class="accordion-inner" style="border-color: orange;">
+					<p>The following are the variables which you can put into your script and which will be resolved automatically to the device on which the job runs for each job in the project.
+					<p>IP addresses:
+					<ul>
+						<li>$PHONE_ENDPOINT</li>
+						<li>$PAD_ENDPOINT
+					</ul>
+					<p>Serial addresses:
+					<ul>
+						<li>$PHONE_SERIAL</li>
+						<li>$PAD_SERIAL</li>
+					</ul>
+					<p>e.g. "DEVICE_ENDPOINT=http://$PHONE_ENDPOINT cucumber"
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="template-<%=tab_number%>">
+		<h5 style="margin-bottom: 1px;">Configuration</h5>
+		<textarea disabled name="template[<%=tab_number%>]commands" style="font-family: monospace; color: black; font-size: 90%; width: 100%; height: 200px; margin-bottom: 5px;"></textarea>
+		<div style="position:relative;">
+			<a class='btn' href='javascript:;'>
+				Choose a file instead...
+				<input disabled type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="template[<%=tab_number%>]file_source" size="40"  onchange="$('#upload-file-info-<%=tab_number%>').html($(this).val().replace('C:\\fakepath\\', ''));">
+			</a>
+			&nbsp;
+			<span class='label label-info' id="upload-file-info-<%=tab_number%>"></span>
+		</div>
+
+		<h5 style="margin-bottom: 1px;">Main result file name</h5>
+		<input disabled type="text" name="template[<%=tab_number%>]main_result_file" id="main_result_file-<%=tab_number%>" placeholder="cukes.html">
+
+		<h5 style="margin-bottom: 1px;">Email reports to</h5>
+		<input disabled type="text" name="template[<%=tab_number%>]email" id="email-<%=tab_number%>">
+		<div style="margin-top: -7px;"><small><em>* separate multiple emails with commas</em></small></div>
+	</div>
+
 </div>
 
-<h5 style="margin-bottom: 1px;">Main result file name</h5>
-<input disabled type="text" name="main_result_file" id="main_result_file" placeholder="cukes.html">
-
-<h5 style="margin-bottom: 1px;">Email reports to</h5>
-<input disabled type="text" name="email" id="email">
-<div style="margin-top: -7px;"><small><em>* separate multiple emails with commas</em></small></div>

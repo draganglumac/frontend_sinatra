@@ -97,7 +97,8 @@ module Jobs
       @device_types = AutomationStack::Infrastructure::DeviceType.all
       puts "@device_types = #{@device_types}"
       @jobs_done = Hound.get_jobs
-      erb :new_project
+      @project = {}
+      erb :project_form
     end
 
     #Posting new jobs
@@ -129,6 +130,14 @@ module Jobs
       @machine = AutomationStack::Infrastructure::Machine.find(:id => @job.machine_id)
 
       erb :'job_detail/job_detail'
+    end
+
+    post '/project' do
+      params.each do |key, value|
+        puts "params['#{key}'] = #{value}"
+      end
+
+      redirect '/'
     end
 
     post '/job/:id/update' do

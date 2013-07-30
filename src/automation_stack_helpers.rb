@@ -36,7 +36,7 @@ module AutomationStackHelpers
   end
 
   def get_datetime_string_for_epoch(epoch)
-    datetime_parts = Time.at(epoch).split(' ')
+    datetime_parts = Time.at(epoch).to_s.split(' ')
     "#{datetime_parts[0]} #{datetime_parts[1]}"
   end
 

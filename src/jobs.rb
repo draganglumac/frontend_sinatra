@@ -17,6 +17,7 @@ module Jobs
           errors[:ltrigger] = "Trigger time is required." if params[:ltrigger].empty?
 
           templates = params[:template]
+          seen_templates = []
           if templates.nil?
             errors[:template] = "You must supply at least one template for a platform and optionally a device type."
           else
@@ -24,6 +25,13 @@ module Jobs
               next if k == '0'
               if t[:platform] == '0'
                 errors['platform-' + k] = "You have to choose the platform for template #{k}"
+              else
+                tid = t[:platform] + '-' + t[:device_type]
+                if seen_templates.include?(tid)
+                  errors['duplicate-'+ tid] = "You have already created a template for the platform and device type from template #{k}"
+                else
+                  seen_templates << tid
+                end
               end
 
               if (t[:commands].nil? or t[:commands].empty?) and (t[:file_source].nil? or t[:file_source].empty?)
@@ -49,6 +57,7 @@ module Jobs
         now = (Time.now).strftime('%d/%m/%Y %H:%M:%S')
         now.split(' ').first + ' ' + trigger.split(' ').last
       end
+
       def url_escape(text)
         return nil if text.nil?
         URI.escape(text)
@@ -110,6 +119,106 @@ module Jobs
         puts "@project = #{@project}"
       end
 
+      def add_project_helper(params)
+        # Create Project - guaranteed unique name
+        # as otherwise it would have been caught by validation
+        p = AutomationStack::Infrastructure::Project.new
+        p.name = params[:lname]
+        p.main_result_file = 'cukes.html'
+        p.save
+
+        # Create Templates - no duplicates here
+        # as otherwise they would have been caught by validation
+        templates_in = params['template']
+        templates = []
+        templates_in.each do |k, template|
+          next if k == '0'
+          t = AutomationStack::Infrastructure::Template.new
+          t.project = p
+          platform_id = template['platform'].to_i
+          t.platform = AutomationStack::Infrastructure::Platform.find(:id => platform_id)
+          if template['device_type'] != '0'
+            dt_id = template['device_type']
+            t.device_type = AutomationStack::Infrastructure::DeviceType.find(:id => dt_id)
+          end
+          t.commands = template['commands']
+          t.main_result_file = template['main_result_file']
+          if t.main_result_file.nil? or t.main_result_file.empty?
+            t.main_result_file = 'cukes.html'
+          end
+          t.email = template['email']
+          t.save
+
+          templates << t
+        end
+
+        puts "templates = #{templates}"
+
+        # Finally, create a job for each device
+        params.keys.each do | pline |
+          if pline.include? "SELECTED_DEVICE"
+            job = AutomationStack::Infrastructure::Job.new
+            job.project = p
+
+            current_device = pline.split("=").last
+            job.device = AutomationStack::Infrastructure::Device.find(:id => current_device)
+
+            job.name = p.name + '-' + job.device.name
+
+            machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
+            machine_id = machine.first[:machine_id]
+            job.machine_id = machine_id
+
+            template = nil
+            templates.each do |t|
+              if t.platform == job.device.platform
+                if t.device_type == job.device.device_type
+                  template = t
+                  break
+                elsif t.device_type.nil?
+                  template = t
+                end
+              end
+            end
+
+            raise RuntimeError, "Device doesn't match any templates which should not be possible. Aborting!" if template.nil? 
+            job.template = template
+
+            if not template.email.nil? and not template.email.empty?
+              job.email_results = true
+            else
+              job.email_results = false
+            end
+
+            trigger = params[:ltrigger] 
+            trigger << ".000000"
+            trigger = Time.parse(trigger).to_i
+            if trigger < Time.new.to_i
+              trigger += 60 * 60 * 24
+            end
+            job.trigger_time = trigger
+
+            recursion=0
+            if params[:is_recurrent] == "0"
+              recursion=0
+              interval=0
+            else
+              recursion=1
+              interval=params[:seconds_multiplier].to_i * params[:seconds].to_i
+              interval=interval < 900 ? 900 : interval
+            end
+            job.recursion = recursion
+            job.interval = interval
+
+            canonical_string =  template.commands
+            string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
+            job.command = string
+            job.status = 'NOT STARTED'
+
+            job.save
+          end			
+        end
+      end
     end
 
     #new job page
@@ -143,16 +252,20 @@ module Jobs
           end
         end
       end
- 
+
       if @notifications.empty?
         @errors = validate(params)
       else
         @errors = {}
       end
 
-      project_page_helper(params)
-
-      erb :project_form
+      if not @errors.empty?
+        project_page_helper(params)
+        erb :project_form
+      else
+        add_project_helper(params)
+        redirect '/dashboard'
+      end
     end
 
     #Posting new jobs

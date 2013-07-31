@@ -59,8 +59,9 @@ module AutomationStack
 
     class Job < Sequel::Model
       plugin :serialization, :json
-      many_to_one :projects
-      many_to_one :results
+      many_to_one :project
+      one_to_many :results
+      many_to_one :template
       many_to_one :device
     end
 
@@ -68,6 +69,12 @@ module AutomationStack
       many_to_one :job
     end
 
+    class Template < Sequel::Model
+      many_to_one :project
+      one_to_many :jobs
+      many_to_one :platform
+      many_to_one :device_type
+    end
   end
 
 end

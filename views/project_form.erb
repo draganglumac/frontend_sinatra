@@ -17,7 +17,7 @@
 					<% if device.ip %>
 						<% if check_availibility(device.id) == 1 %>	
 							<li >
-							<input type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
+							<input <%='checked' if not @project["SELECTED_DEVICE=#{device.id}"].nil?%> type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>" name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 							</li>
 						<% end %>
 					<%end%>
@@ -112,7 +112,7 @@ jQuery(function($) {
 		});
 	</script>
 	<br />
-	<div class="btn-group" data-toggle-name="is_recurrent" data-toggle="buttons-radio">
+	<div class="btn-group" data-toggle-name="is_recurrent" data-toggle="buttons-radio" style="margin-top: -5px;">
 		<button id="single" type="button" value="0" class="btn <%='active' if @project['is_recurrent'].nil? or @project['is_recurrent'] == '0'%>" data-toggle="button" onclick="hide_recurrence_form();">Single</button>
 		<button id="recursive" type="button" value="1" class="btn <%='active' if @project['is_recurrent'] == '1'%>" data-toggle="button" onclick="show_recurrence_form();">Recursive</button>
 	</div>
@@ -312,6 +312,7 @@ function filter_devices_without_templates() {
 			var dev_id = $(e).attr('id');
 			if (! device_id_fits_one_of_the_templates(dev_id, keys)) {
 				$(e).attr('disabled', true);
+				$(e).attr('checked', false);
 				$(e).parent().appendTo($('ul#missing_template'));
 			}
 			});

@@ -256,10 +256,11 @@ module Jobs
           trigger = params[:ltrigger] 
 		  if trigger.nil?
 			trigger = Time.new.to_i
-		  end
+		  else
 		  trigger << ".000000"
           trigger = Time.parse(trigger).to_i
-          if trigger < Time.new.to_i
+		  end
+		  if trigger < Time.new.to_i
             trigger += 60 * 60 * 24
           end
           recursion=0

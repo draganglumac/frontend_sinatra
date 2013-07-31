@@ -254,7 +254,7 @@ module Jobs
           end
           
           trigger = params[:ltrigger] 
-		  if trigger.nil?
+		  if trigger.empty?
 			trigger = Time.new.to_i
 		  else
 		  trigger << ".000000"

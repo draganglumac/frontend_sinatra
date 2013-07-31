@@ -33,15 +33,28 @@
 		</div>
 	</div>
 	<% if not @errors.empty? %>
-		<div class="errors">
-			<p>Validation errors:</p>
+		<div class="alert alert-error">
+			<p><strong>Validation errors!</strong></p>
+			<ul>
 			<% @errors.each do |key, value| %>
 				<li><%= value %></li>
 			<% end %>
+			</ul>
 		</div>
 		<br>
 	<% end %>
-
+	<% if not @notifications.empty? %>
+		<div class="alert alert-info">
+			<p><strong>Please note!</strong></p>
+			<ul>
+			<% @notifications.each do |key, value| %>
+				<li><%= value %></li>
+			<% end %>
+			</ul>
+		</div>
+		<br>
+	<% end %>
+	
 	<div class="well">
 		<%if @project['lname'].nil? %>
 			<h1>New project</h1>

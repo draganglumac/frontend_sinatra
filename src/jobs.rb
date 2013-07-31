@@ -8,16 +8,30 @@ module Jobs
     helpers do
       def validate(params)
         errors = {}
-        [:machine_id, :lname, :ltrigger].each do |key|
-          (params[key] || "").strip
-        end
+        if not params.nil? and not params.empty?
+          [:machine_id, :lname, :ltrigger].each do |key|
+            (params[key] || "").strip!
+          end
 
-        if params[:file_source].nil?
-          errors[:file_source] = "Configuration file is required."
+          errors[:lname] = "Project name is required." if params[:lname].empty?
+          errors[:ltrigger] = "Trigger time is required." if params[:ltrigger].empty?
+
+          templates = params[:template]
+          if templates.nil?
+            errors[:template] = "You must supply at least one template for a platform and optionally a device type."
+          else
+            templates.each do |k, t|
+              next if k == '0'
+              if t[:platform] == '0'
+                errors['platform-' + k] = "You have to choose the platform for template #{k}"
+              end
+
+              if (t[:commands].nil? or t[:commands].empty?) and (t[:file_source].nil? or t[:file_source].empty?)
+                errors['commands-' + k] = "You have to supply either commands or configuration file for template #{k}"
+              end
+            end
+          end
         end 
-        errors[:machine_id] = "Selected machine is required." if params[:machine_id].empty?
-        errors[:lname] = "Job name is required." if params[:lname].empty?
-        errors[:ltrigger] = "Trigger time is required." if params[:ltrigger].empty?
 
         errors
       end
@@ -95,32 +109,49 @@ module Jobs
         @project = project
         puts "@project = #{@project}"
       end
-    
+
     end
 
     #new job page
     get '/project' do
-      @errors    = {}
+      @errors = {}
+      @notifications = {}
       project_page_helper({})
       erb :project_form
     end
 
     post '/project' do
-      params.each do |key, value|
-        puts "params['#{key}'] = #{value}"
-      end
-      @errors = {'error1' => 'Here is an error!'}
       templates = params['template']
       templates.each do |k, t|
         if not t['file_source'].nil?
           tempfile = t['file_source'][:tempfile]	
-          #filename = params[:file_source][:filename]
           file_content = File.open(tempfile.path,'rb') { |file|file.read }
           t['commands'] = file_content
         end
       end
 
+      @notifications = {}
+      if not params[:lname].nil? and not params[:lname].empty?
+        projects = AutomationStack::Infrastructure::Project.all
+        projects.each do |p|
+          if p.name == params[:lname].strip
+            @notifications['existing_project'] = 'Project with the name ' + 
+              params[:lname].strip + ' already exists. ' + 
+              'If you would like to edit this project please go to ' + 
+              'the dashboard and choose edit project from the action menu. ' + 
+              'Otherwise please give the new project a different name.'
+          end
+        end
+      end
+ 
+      if @notifications.empty?
+        @errors = validate(params)
+      else
+        @errors = {}
+      end
+
       project_page_helper(params)
+
       erb :project_form
     end
 

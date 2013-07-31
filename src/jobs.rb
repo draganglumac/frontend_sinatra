@@ -254,7 +254,10 @@ module Jobs
           end
           
           trigger = params[:ltrigger] 
-          trigger << ".000000"
+		  if trigger.nil?
+			trigger = Time.new.to_i
+		  end
+		  trigger << ".000000"
           trigger = Time.parse(trigger).to_i
           if trigger < Time.new.to_i
             trigger += 60 * 60 * 24

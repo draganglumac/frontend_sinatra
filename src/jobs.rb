@@ -110,6 +110,16 @@ module Jobs
         puts "params['#{key}'] = #{value}"
       end
       @errors = {'error1' => 'Here is an error!'}
+      templates = params['template']
+      templates.each do |k, t|
+        if not t['file_source'].nil?
+          tempfile = t['file_source'][:tempfile]	
+          #filename = params[:file_source][:filename]
+          file_content = File.open(tempfile.path,'rb') { |file|file.read }
+          t['commands'] = file_content
+        end
+      end
+
       project_page_helper(params)
       erb :project_form
     end

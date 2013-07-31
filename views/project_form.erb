@@ -1,8 +1,9 @@
 <link href="/css/bootstrap-scroll-modal.css" res="stylesheet">
-<!-- Process the devices from the modal -->
-<!-- Our device modal --!>
-<!-- End --!>
-<!--form action="/jobs" method="post" enctype="multipart/form-data"-->
+<!-- Not pre-selecting devices in the modal because the user   --
+  -- can decide to remove a template and that means we would   --
+  -- have to filter the devices that are no longer applicable. --
+  -- It is not difficult, it would just mean we would have to  --
+  -- deselect them when we move them down to the orange zone.  -->
 <form action="/project" method="post" enctype="multipart/form-data">
 	<div id="deviceModal" class="modal hide">
 		<div class="modal-header">

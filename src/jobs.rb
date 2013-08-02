@@ -38,6 +38,7 @@ module Jobs
                 errors['commands-' + k] = "You have to supply either commands or configuration file for template #{k}"
               end
             end
+            puts "seen_templates = #{seen_templates}"
           end
         end 
 
@@ -183,12 +184,7 @@ module Jobs
 
             raise RuntimeError, "Device doesn't match any templates which should not be possible. Aborting!" if template.nil? 
             job.template = template
-
-            if not template.email.nil? and not template.email.empty?
-              job.email_results = true
-            else
-              job.email_results = false
-            end
+            job.email_results = false
 
             trigger = params[:ltrigger] 
             trigger << ".000000"
@@ -219,6 +215,25 @@ module Jobs
           end			
         end
       end
+
+      def platform_name_for_id(id)
+        p = AutomationStack::Infrastructure::Platform.find(:id => id)
+        p.name
+      end
+
+      def device_type_for_id(id)
+        dt = AutomationStack::Infrastructure::Platform.find(:id => id)
+        dt.name
+      end
+
+      def template_moniker(template)
+        if template.device_type.nil?
+          return platform_name_for_id(template.platform_id)
+        else
+          return platform_name_for_id(template.platform_id) + '-' +
+            device_type_for_id(template.device_type_id)
+        end
+      end
     end
 
     #new job page
@@ -226,7 +241,29 @@ module Jobs
       @errors = {}
       @notifications = {}
       project_page_helper({})
-      erb :project_form
+      erb :'projects/project_add'
+    end
+
+    get '/project/:id' do
+      @errors = {}
+      @notifications = {}
+
+      @project = AutomationStack::Infrastructure::Project.find(:id => params[:id])
+      @templates = AutomationStack::Infrastructure::Template.where(:project_id => params[:id])
+      jobs = AutomationStack::Infrastructure::Job.where(:project_id => params[:id])
+      @devices = AutomationStack::Infrastructure::Device.all
+      @selected_device_ids = []
+      jobs.each do |job|
+        @selected_device_ids << job.device_id
+      end
+      @platforms = AutomationStack::Infrastructure::Platform.all
+      @device_types = AutomationStack::Infrastructure::DeviceType.all
+
+      erb :'projects/project_edit'
+    end
+
+    post '/project/:id' do
+      puts 'To Do'
     end
 
     post '/project' do
@@ -259,9 +296,9 @@ module Jobs
         @errors = {}
       end
 
-      if not @errors.empty?
+      if not @notifications.empty? or not @errors.empty?
         project_page_helper(params)
-        erb :project_form
+        erb :'projects/project_add'
       else
         add_project_helper(params)
         redirect '/dashboard'
@@ -345,108 +382,80 @@ module Jobs
       redirect '/job'
     end
 
-    post '/jobs/:project/delete' do
-      AutomationStack::Infrastructure::Job.subset(:project, :name.like("#{params[:project]}%"))
+    post '/jobs/:project_id/delete' do
+      AutomationStack::Infrastructure::Job.subset(:project, :project_id => params[:project_id])
       AutomationStack::Infrastructure::Job.project.delete
 
-      proj = AutomationStack::Infrastructure::Project.find(:name => params[:project])
+      AutomationStack::Infrastructure::Template.subset(:project, :project_id => params[:project_id])
+      AutomationStack::Infrastructure::Template.project.delete
+
+      proj = AutomationStack::Infrastructure::Project.find(:id => params[:project_id])
       proj.delete
 
       redirect back
     end
 
-    post '/jobs/:project/edit' do
+    post '/jobs/:project_id/edit' do
       preselected = params[:preselected].split(';')
-      the_project = AutomationStack::Infrastructure::Project.find(:name => params[:project])
+      the_project = AutomationStack::Infrastructure::Project.find(:id => params[:project_id])
 
       params.keys.each do | pline |
         if pline.include? "SELECTED_DEVICE"
-          current_device = pline.split("=").last
+          current_device_id = pline.split("=").last
 
-          if preselected.include?(current_device)
-            preselected.delete(current_device)
+          if preselected.include?(current_device_id)
+            preselected.delete(current_device_id)
             next
           end
 
-          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.nil?
-            current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.name
+          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device_id).first.nil?
+            current_device = AutomationStack::Infrastructure::Device.find(:id => current_device_id)
           else
             next
           end
 
-          machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
-          machine = machine.first[:machine_id]
+          machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device_id)
 
           trigger = Time.new.to_i
 
-          canonical_string = the_project.commands
-          string = Jobhelper.replace_symbols(canonical_string,machine)	
-          Hound.add_job(machine,the_project.name + "-#{current_device_name}",string,trigger,0,0,the_project.id,current_device)
+          the_template = AutomationStack::Infrastructure::Template.where(:project_id => params[:project_id],
+                                                                         :platform_id => current_device.platform_id,
+                                                                         :device_type_id => current_device.device_type_id)
+          if the_template.first.nil?
+            the_template = AutomationStack::Infrastructure::Template.where(:project_id => params[:project_id],
+                                                                           :platform_id => current_device.platform_id,
+                                                                           :device_type_id => nil)
+          end
+
+          if the_template.first.nil?
+            puts "No matching template found for device #{current_device.name}. Skipping the device"
+            next
+          end
+
+          canonical_string = the_template.first.commands
+          string = Jobhelper.replace_symbols(canonical_string,machine_id.first.machine_id)
+
+          job = AutomationStack::Infrastructure::Job.new
+          job.name = the_project.name + '-' + current_device.name
+          job.project = the_project
+          job.template = the_template.first
+          job.trigger_time = trigger
+          job.status = 'NOT STARTED'
+          job.email_results = false
+          job.machine_id = machine_id.first.machine_id
+          job.command = string
+          job.device = current_device
+
+          job.save
         end
       end
 
       preselected.each do |device_id|
-        job = AutomationStack::Infrastructure::Job.find(:device_id => device_id)
+        job = AutomationStack::Infrastructure::Job.where(:project_id => params[:project_id], :device_id => device_id)
         job.delete
       end
 
       redirect back
-    end
-
-    post '/jobs' do
-      params.keys.each do | pline |
-        if pline.include? "SELECTED_DEVICE"
-          current_device = pline.split("=").last
-          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.nil?
-            current_device_name = AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device).first.name
-          else
-            next
-          end
-
-          puts "Device name #{current_device_name}"
-          puts "Current device #{current_device}"
-          machine = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device)
-          machine = machine.first[:machine_id]
-          puts "Device machine is #{machine}"
-          #We have our current device, so lets build a job for each device
-          ####
-          ####
-          #
-          tempfile = params[:file_source][:tempfile]	
-          filename = params[:file_source][:filename]
-
-          canonical_string = File.open(tempfile.path,'rb') { |file|file.read }
-
-          email = params[:email]
-
-          if params[:main_result_file].nil? or params[:main_result_file].strip == ''
-            main_result_file = 'cukes.html'
-          else
-            main_result_file = params[:main_result_file]
-          end
-
-          trigger = params[:ltrigger] 
-          trigger << ".000000"
-          trigger = Time.parse(trigger).to_i
-          if trigger < Time.new.to_i
-            trigger += 60 * 60 * 24
-          end
-          recursion=0
-          if params[:is_private] == "0"
-            recursion=0
-            interval=0
-          else
-            recursion=1
-            interval=params[:seconds_multiplier].to_i * params[:seconds].to_i
-            interval=interval < 900 ? 900 : interval
-          end
-          puts "interval = #{interval}"
-          string = Jobhelper.replace_symbols(canonical_string,machine)	
-          project_id = Hound.add_or_update_project(params[:lname],canonical_string,main_result_file,email)
-          Hound.add_job(machine,params[:lname] + "-#{current_device_name}",string,trigger,recursion,interval,project_id,current_device)
-        end
-      end			
-      redirect '/dashboard'
     end
 
   end

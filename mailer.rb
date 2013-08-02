@@ -13,63 +13,66 @@ class Mailer
   def process
     puts "[#{Time.new}] Processing results for emailing..."
 
-    projects = {}
-    AutomationStack::Infrastructure::Project.all.each { |p| projects[p.name] = {:email => p.email} }
+    templates = {}
+    AutomationStack::Infrastructure::Template.all.each do |t|
+      templates[t.id] = { :project => t.project.name, :email => t.email }
+    end
 
     jobs_awaiting_email = AutomationStack::Infrastructure::Job.where(:email_results => true)
     queued_or_in_progress = AutomationStack::Infrastructure::Job.where(:status.like('%QUEUED%') | :status.like('%IN PROGRESS%'))
 
     jobs_awaiting_email.each do |job|
-      project_name = project_name_from_job_name(job.name)
-      if projects.keys.include?(project_name)
-        project = projects[project_name]
-        if project[:ready_jobs].nil?
-          project[:ready_jobs] = [job]
+      template_id = job.template_id
+      if templates.keys.include?(template_id)
+        template = templates[template_id]
+        if template[:ready_jobs].nil?
+          template[:ready_jobs] = [job]
         else
-          project[:ready_jobs] << job
+          template[:ready_jobs] << job
         end
       end
     end
 
-    projects_with_running_jobs = []
+    templates_with_running_jobs = []
     queued_or_in_progress.each do |job|
-      project_name = project_name_from_job_name(job.name)
-      if not projects_with_running_jobs.include?(project_name)
-        projects_with_running_jobs << project_name
+      template_id = job.template_id
+      if not templates_with_running_jobs.include?(template_id)
+        templates_with_running_jobs << template_id
       end
     end
 
-    send_emails(projects, projects_with_running_jobs)
+    send_emails(templates, templates_with_running_jobs)
     puts "Email processing done."
   end
   
   private
 
-  def send_emails(projects, projects_with_running_jobs)
-    projects.each do |proj_name, proj_hash|
-      if proj_hash[:ready_jobs].nil?
+  def send_emails(templates, templates_with_running_jobs)
+    templates.each do |template_id, template_hash|
+      if template_hash[:ready_jobs].nil?
         next
       end
       
-      if proj_hash[:email].nil? or proj_hash[:email].empty?
-        proj_hash[:ready_jobs].each do |job|
+      if template_hash[:email].nil? or template_hash[:email].empty?
+        template_hash[:ready_jobs].each do |job|
           update_processed_job(job)
         end
         next
       end
 
-      if not projects_with_running_jobs.include?(proj_name)
-        puts "\tEmailing results for #{proj_name}."
-        jobs = proj_hash[:ready_jobs]
+      if not templates_with_running_jobs.include?(template_id)
+        puts "\tEmailing results for template #{template_id}."
+        jobs = template_hash[:ready_jobs]
         renderer = ERB.new(File.read('views/email_template.erb'))
         email_body = renderer.result(binding)
         
-        proj_hash[:ready_jobs].each do |job|
+        template_hash[:ready_jobs].each do |job|
           update_processed_job(job)
         end
-        
+
+        proj_name = template_hash[:project] 
         if not @smtp_server.nil?
-          Pony.mail(:to => proj_hash[:email],
+          Pony.mail(:to => template_hash[:email],
                     :from => 'noreply@testlab',
                     :subject => "#{proj_name} Test Lab Run Results",
                     :html_body => email_body,
@@ -78,7 +81,7 @@ class Mailer
                       :address => @smtp_server
                     })
         else
-          Pony.mail(:to => proj_hash[:email],
+          Pony.mail(:to => template_hash[:email],
                     :from => 'noreply@testlab',
                     :subject => "#{proj_name} Test Lab Run Results",
                     :html_body => email_body,

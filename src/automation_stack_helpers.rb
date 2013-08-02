@@ -1,5 +1,17 @@
 module AutomationStackHelpers
 
+  def has_templates?(device)
+    templates = AutomationStack::Infrastructure::Template.where(:platform_id => device.platform_id)
+    return false if templates.nil?
+
+    templates.each do |t|
+      return true if t.device_type_id == device.device_type_id
+      return true if t.device_type_id.nil?
+    end
+
+    return false
+  end
+
   def update_job_names_for_project(project_id, new_project_name)
     jobs = AutomationStack::Infrastructure::Job.where(:project_id => project_id)
     jobs.each do |job|

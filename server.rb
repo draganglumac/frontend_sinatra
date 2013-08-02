@@ -133,8 +133,8 @@ get '/dashboard' do
   @project_names = {}
 
   @current_jobs.each do |job|
+    project = job['project_id']
     project_name = project_name_from_job_name(job['name'])
-    project = project_name.split(' ').join('-')
   
     @project_names[project] = project_name
 

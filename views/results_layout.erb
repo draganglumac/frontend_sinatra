@@ -134,6 +134,7 @@
 
 					<ul class="nav">
 						<li><a href="/">Home</a></li>
+						<li><a href="/dashboard">Dashboard</a></li>
 						<li><a href="/contact">Contact</a></li>
 					<li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
 					</ul>

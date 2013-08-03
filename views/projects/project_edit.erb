@@ -43,14 +43,9 @@
 		</div>
 		<br>
 	<% end %>
-	<% if not @notifications.empty? %>
-		<div class="alert alert-info">
-			<p><strong>Please note!</strong></p>
-			<ul>
-			<% @notifications.each do |key, value| %>
-				<li><%= value %></li>
-			<% end %>
-			</ul>
+	<% if not @notifications['success'].nil? %>
+		<div class="alert alert-success">
+			<p><strong>Changes saved successfully.</strong></p>
 		</div>
 		<br>
 	<% end %>

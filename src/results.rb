@@ -10,15 +10,17 @@ module Results
     get '/results' do
       @results = []
 
-      Dir.chdir("public/uploads/results") do
-        Dir.glob('*').each do |job_id_folder|
-          job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
-          if job.nil?
-            next
-          end
-          project = project_name_from_job_name(job.name)
-          if not @results.include? project
-            @results << [project, job.project_id] 
+      if Dir.exists?('public/uploads/results')
+        Dir.chdir("public/uploads/results") do
+          Dir.glob('*').each do |job_id_folder|
+            job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+            if job.nil?
+              next
+            end
+            project = project_name_from_job_name(job.name)
+            if not @results.include? project
+              @results << [project, job.project_id] 
+            end
           end
         end
       end
@@ -33,16 +35,18 @@ module Results
     get '/results/:project_id' do
       project_id = params[:project_id]
       @results = []
-      
-      Dir.chdir('public/uploads/results') do
-        Dir.glob('*').each do |job_id_folder|
-          job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
-          if job.nil?
-            next
-          end
 
-          if job.project_id == project_id
-            @results << [job.id, device_name_from_job_name(job.name)]
+      if Dir.exists?('public/uploads/results')
+        Dir.chdir('public/uploads/results') do
+          Dir.glob('*').each do |job_id_folder|
+            job = AutomationStack::Infrastructure::Job.find(:id => job_id_folder)
+            if job.nil?
+              next
+            end
+
+            if job.project_id == project_id
+              @results << [job.id, device_name_from_job_name(job.name)]
+            end
           end
         end
       end
@@ -69,7 +73,7 @@ module Results
       end
       @device = device_name_from_job_name(job.name)
       @main_paths = link_main_results(params[:job_id], main_file)
-      
+
       erb :'results/resultjob', :layout => :results_layout
     end
 

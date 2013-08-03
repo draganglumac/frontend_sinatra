@@ -222,7 +222,7 @@ function update_ids_and_names_with_new_ordinal(tab_content, ordinal) {
 }
 
 function add_tab() {
-	var tab_count = ++max_tab;
+	var tab_count = $('#templateTab > li > a').size();
 	var html = '<li id="tab-nav-' + tab_count + '"><a id="tab-' + tab_count + '"href="#templateTabContent' + tab_count + '" data-toggle="tab">Template ' + tab_count + '</a></li>';
 	var new_tab_nib = $('ul#templateTab > li:last').before(html);
 	

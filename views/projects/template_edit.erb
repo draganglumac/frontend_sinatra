@@ -1,6 +1,12 @@
 <div id="templateTabContent<%=tab_number%>" class="tab-pane well <%='active in' if active%>"  style="margin-top: 0px; margin-bottom: 0px;">
 	<a id="remove-tab-<%=tab_number%>" class="pull-right close" style="margin-top: -10px; font-size: large; color: white;" data-toggle="tooltip" title="Remove this tab" onclick="remove_tab(<%=tab_number%>);">&times;</a>
 	<h5 style="display: inline;">Template for <h4 style="display: inline;" class="text-warning"><%=template_moniker(template).sub(/-/, ' ')%></h4> devices.</h5>
+	<input type="hidden" id="platform-<%=tab_number%>" name="template[<%=tab_number%>]platform" value="<%=template.platform_id%>">
+	<% if template.device_type.nil? %>
+		<input type="hidden" id="device_type-<%=tab_number%>" name="template[<%=tab_number%>]device_type" value="0">
+	<% else %>	
+		<input type="hidden" id="device_type-<%=tab_number%>" name="template[<%=tab_number%>]device_type" value="<%=template.device_type_id%>">
+	<% end %>	
 	<br><br>
 	<div class="accordion" id="env-var-accordion-<%=tab_number%>" style="font-size: smaller; color: orange; margin-bottom: 5px;">
 		<div class="accordion-group" style="border-color: orange;">

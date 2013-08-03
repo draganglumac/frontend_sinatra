@@ -206,32 +206,6 @@ post '/refresh' do
   redirect params[:redirect_url]
 end
 
-get '/project/:name' do
-  @project = AutomationStack::Infrastructure::Project.find(:name => url_unescape(params[:name]))
-  puts @project.commands
-  erb :project
-end
-
-post '/project/:id' do
-  project = AutomationStack::Infrastructure::Project.find(:id => params[:id])
-  
-  project.name = params[:name]
-  update_job_names_for_project(project.id, project.name)
-  if not params[:file_source].nil?
-    tempfile = params[:file_source][:tempfile]	
-    #filename = params[:file_source][:filename]
-    file_content = File.open(tempfile.path,'rb') { |file|file.read}
-    project.commands = file_content
-  else
-    project.commands = url_unescape(params[:commands]).strip
-  end
-  project.main_result_file = params[:main_result_file]
-  project.email = params[:email]
-  project.save
-  
-  redirect '/dashboard' 
-end
-
 post '/alert' do
   alert = params[:site_alert].strip
   alert_style = params[:alert_type]

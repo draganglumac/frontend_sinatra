@@ -95,7 +95,7 @@
 			<h5>Status of jobs on devices</h5>
 
 			<div class="accordion" id="accordion-<%=project%>">
-				<div class="accordion-heading" onclick="toggle_expand_cookie('<%=project%>');" >
+				<div class="accordion-heading" onclick="toggle_expand_cookie('project-<%=project%>');" >
 					<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=project%>" href="#collapse-<%=project%>">
 
 
@@ -135,7 +135,7 @@
 					</div>
 				</div>
 
-				<%if @cookies[project] == "expanded"%>
+				<%if @cookies["project-#{project}"] == "expanded"%>
 					<div id="collapse-<%=project%>" class="accordion-body collapse in">
 					<%else%>
 						<div id="collapse-<%=project%>" class="accordion-body collapse">

@@ -222,7 +222,7 @@ module Jobs
       end
 
       def device_type_for_id(id)
-        dt = AutomationStack::Infrastructure::Platform.find(:id => id)
+        dt = AutomationStack::Infrastructure::DeviceType.find(:id => id)
         dt.name
       end
 
@@ -263,7 +263,7 @@ module Jobs
     end
 
     post '/project/:id' do
-      puts 'To Do'
+      puts "params = #{params}" 
     end
 
     post '/project' do

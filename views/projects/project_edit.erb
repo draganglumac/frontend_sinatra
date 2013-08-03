@@ -227,7 +227,13 @@ function copy_tab(tab)
 function remove_tab(tab) {
 	$('li#tab-nav-' + tab).remove();
 	$('#templateTabContent' + tab).remove();
-	$('a#tab-1').click();
+	if ($('#templateTab > li > a').size() > 1) {
+		$('#templateTab > li > a').first().click();
+	}
+	else {
+		max_tab--;
+		add_tab();
+	}
 }
 
 function toggle_envvar_help(tab) {

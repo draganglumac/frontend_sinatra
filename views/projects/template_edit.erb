@@ -1,8 +1,7 @@
 <div id="templateTabContent<%=tab_number%>" class="tab-pane well <%='active in' if active%>"  style="margin-top: 0px; margin-bottom: 0px;">
-	<a id="remove-tab-<%=tab_number%>" class="pull-right close hidden" style="margin-top: -<%=tab_number%>0px; font-size: large; color: white;" data-toggle="tooltip" title="Remove this tab" onclick="remove_tab(<%=tab_number%>);">&times;</a>
-	<h5 style="display: inline;">Template for <h4 class="text-warning" style="display: inline;"><%=template_moniker(template).sub(/-/, ' ')%></h4> devices.</h5>
-	&nbsp;
-
+	<a id="remove-tab-<%=tab_number%>" class="pull-right close" style="margin-top: -10px; font-size: large; color: white;" data-toggle="tooltip" title="Remove this tab" onclick="remove_tab(<%=tab_number%>);">&times;</a>
+	<h5 style="display: inline;">Template for <h4 style="display: inline;" class="text-warning"><%=template_moniker(template).sub(/-/, ' ')%></h4> devices.</h5>
+	<br><br>
 	<div class="accordion" id="env-var-accordion-<%=tab_number%>" style="font-size: smaller; color: orange; margin-bottom: 5px;">
 		<div class="accordion-group" style="border-color: orange;">
 			<div class="accordion-heading">

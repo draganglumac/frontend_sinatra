@@ -297,7 +297,6 @@ function filter_devices_without_templates() {
 			var dev_id = $(e).attr('id');
 			if (! device_id_fits_one_of_the_templates(dev_id, keys)) {
 				$(e).attr('disabled', true);
-				$(e).attr('checked', false);
 				$(e).parent().appendTo($('ul#missing_template'));
 			}
 			});

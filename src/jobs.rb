@@ -328,11 +328,12 @@ module Jobs
           end
 
           template_ids_to_delete = old_template_ids - old_template_ids_not_deleted
-          template_ids_to_delete.each do |t|
-            AutomationStack::Infrastructure::Job.where(:template_id => t.id).each do |j|
+          template_ids_to_delete.each do |tid|
+            AutomationStack::Infrastructure::Job.where(:template_id => tid).each do |j|
               j.template = nil
               j.save
             end
+            t = AutomationStack::Infrastructure::Template.find(:id => tid)
             t.delete
           end
 
@@ -341,6 +342,19 @@ module Jobs
             j.save
           end
         end
+      end
+
+      def match_job_to_template(job, proj)
+        device = job.device
+        templates_for_platform = AutomationStack::Infrastructure::Template.where(:project_id => proj.id, :platform_id => device.platform_id)
+        templates_for_platform.each do |t|
+          if t.device_type_id == device.device_type_id
+            return t
+          elsif t.device_type_id.nil?
+            return t
+          end
+        end
+        nil
       end
 
       def devices_used_by_project(proj)

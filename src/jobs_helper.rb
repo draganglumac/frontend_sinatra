@@ -1,9 +1,9 @@
 #Scan and replace from string
 require 'hound'
+
 class Jobhelper
 
   def self.replace_symbols(string,target_machine)
-
     phone_endpoint = Hound.get_device_ip_from_type_and_machine(1,target_machine).first['ip']
     pad_endpoint = Hound.get_device_ip_from_type_and_machine(2,target_machine).first['ip']
     puts "Phone endpoint for target machine #{target_machine} is #{phone_endpoint} and Pad endpoint is #{pad_endpoint}"
@@ -26,9 +26,11 @@ class Jobhelper
 
     return string
   end
+
 end
 
 module JobsHelpers
+
   def validate(params)
     errors = {}
     if not params.nil? and not params.empty?

@@ -1,3 +1,6 @@
+<%if not can_edit?%>
+	<p>You have to be logged in to add projects.</p>
+<% else %>
 <link href="/css/bootstrap-scroll-modal.css" res="stylesheet">
 <!-- Not pre-selecting devices in the modal because the user   --
   -- can decide to remove a template and that means we would   --
@@ -318,3 +321,4 @@ function filter_devices_without_templates() {
 			});
 }
 </script>
+<% end %>

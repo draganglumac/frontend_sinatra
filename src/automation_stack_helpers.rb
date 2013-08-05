@@ -1,5 +1,17 @@
 module AutomationStackHelpers
 
+  def has_templates?(device)
+    templates = AutomationStack::Infrastructure::Template.where(:platform_id => device.platform_id)
+    return false if templates.nil?
+
+    templates.each do |t|
+      return true if t.device_type_id == device.device_type_id
+      return true if t.device_type_id.nil?
+    end
+
+    return false
+  end
+
   def update_job_names_for_project(project_id, new_project_name)
     jobs = AutomationStack::Infrastructure::Job.where(:project_id => project_id)
     jobs.each do |job|
@@ -35,6 +47,11 @@ module AutomationStackHelpers
     erb page, options.merge!(:layout => false)
   end
 
+  def get_datetime_string_for_epoch(epoch)
+    datetime_parts = Time.at(epoch).to_s.split(' ')
+    "#{datetime_parts[0]} #{datetime_parts[1]}"
+  end
+
   def link_main_results(job_id_folder, main_result_file)
     epoch_file_map = {}
     job_id_results_path = "public/uploads/results/#{job_id_folder}" 
@@ -45,7 +62,7 @@ module AutomationStackHelpers
             Dir.glob("*").each do |filename|
               href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
               if (filename == main_result_file) 
-                display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                display_name = get_datetime_string_for_epoch(epoch.to_i) 
                 epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}'); reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
                                             "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i>"\
                                         "</a>"
@@ -119,7 +136,7 @@ module AutomationStackHelpers
       Dir.chdir("public/uploads/" + folder) do
         Dir.glob("*").reverse.each do |f|
           epoch,filename = f.split('.',2)
-          display_name = Time.at(epoch.to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S ") + filename
+          display_name = get_datetime_string_for_epoch(epoch.to_i) + filename
           file_list << "<a href=\"/uploads/#{folder}/#{f}\" target=\"main-content\">#{display_name}</a>"
         end
         return file_list

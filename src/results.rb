@@ -67,8 +67,13 @@ module Results
         main_file = "cukes.html"
       else
         project = AutomationStack::Infrastructure::Project.find(:id => job.project_id)
+        template = AutomationStack::Infrastructure::Template.find(:id => job.template_id)
         @project = project.name
-        main_file = project.main_result_file
+        if template.nil?
+          main_file = project.main_result_file
+        else
+            main_file = template.main_result_file
+        end
         puts "project.name = #{project.name}, main_file = #{main_file}"
       end
       @device = device_name_from_job_name(job.name)

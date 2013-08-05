@@ -80,6 +80,11 @@ module AutomationStackHelpers
 
   def create_link_for_supporting_result(job_id_folder, relative_file_path, display_name)
     href = "/uploads/results/#{job_id_folder}#{relative_file_path}"
+    puts relative_file_path
+
+    if relative_file_path =~ /console_log\.txt$/
+      return "<a class=\"btn\" href=\"#{href}\" target=\"_blank\" style=\"width: 100%\"><img src=\"/img/icon-console.png\" style=\"width: 32px;\"></img>&nbsp;Console Log</a>"
+    end
 
     images = [/\.jpg$/, /\.jpeg$/, /\.gif$/, /\.png$/]
     images.each do |img_regex|
@@ -114,7 +119,11 @@ module AutomationStackHelpers
                 if epoch_file_map[epoch].nil?
                   epoch_file_map[epoch] = [create_link_for_supporting_result(job_id_folder, f, display_name)]
                 else
-                  epoch_file_map[epoch] << create_link_for_supporting_result(job_id_folder, f, display_name)
+                  if filename == 'console_log.txt'
+                    epoch_file_map[epoch] = [create_link_for_supporting_result(job_id_folder, f, display_name)] + epoch_file_map[epoch]
+                  else
+                    epoch_file_map[epoch] << create_link_for_supporting_result(job_id_folder, f, display_name)
+                  end
                 end
               end
             end

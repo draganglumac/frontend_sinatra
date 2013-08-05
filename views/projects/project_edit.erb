@@ -7,7 +7,7 @@
   -- have to filter the devices that are no longer applicable. --
   -- It is not difficult, it would just mean we would have to  --
   -- deselect them when we move them down to the orange zone.  -->
-<form action="/project/<%=@project.id%>" method="post" enctype="multipart/form-data">
+<form id="edit-project-form" action="/project/<%=@project.id%>" method="post" enctype="multipart/form-data">
 	<div id="deviceModal" class="modal hide">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">&times;</a>
@@ -170,7 +170,7 @@ jQuery(function($) {
 
 	<h5 style="margin-bottom: 1px;">Select devices</h5>
 	<a class="btn btn-info" data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#deviceModal" onclick="filter_devices_without_templates();">Device selection</a>
-
+	<button class="btn btn-info pull-right" onclick="$('form#edit-project-form').submit();">Save Changes</button>
 </form>
 </div>
 

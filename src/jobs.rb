@@ -159,5 +159,69 @@ module Jobs
 
       redirect back
     end
+
+    post '/jobs/:project_id/edit' do
+      preselected = params[:preselected].split(';')
+      the_project = AutomationStack::Infrastructure::Project.find(:id => params[:project_id])
+
+      params.keys.each do | pline |
+        if pline.include? "SELECTED_DEVICE"
+          current_device_id = pline.split("=").last
+
+          if preselected.include?(current_device_id)
+            preselected.delete(current_device_id)
+            next
+          end
+
+          if not AutomationStack::Infrastructure::Device.select(:name).where(:id => current_device_id).first.nil?
+            current_device = AutomationStack::Infrastructure::Device.find(:id => current_device_id)
+          else
+            next
+          end
+
+          machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => current_device_id)
+
+          trigger = Time.new.to_i
+
+          the_template = AutomationStack::Infrastructure::Template.where(:project_id => params[:project_id],
+                                                                         :platform_id => current_device.platform_id,
+                                                                         :device_type_id => current_device.device_type_id)
+          if the_template.first.nil?
+            the_template = AutomationStack::Infrastructure::Template.where(:project_id => params[:project_id],
+                                                                           :platform_id => current_device.platform_id,
+                                                                           :device_type_id => nil)
+          end
+
+          if the_template.first.nil?
+            puts "No matching template found for device #{current_device.name}. Skipping the device"
+            next
+          end
+
+          canonical_string = the_template.first.commands
+          string = Jobhelper.replace_symbols(canonical_string,machine_id.first.machine_id)
+
+          job = AutomationStack::Infrastructure::Job.new
+          job.name = the_project.name + '-' + current_device.name
+          job.project = the_project
+          job.template = the_template.first
+          job.trigger_time = trigger
+          job.status = 'NOT STARTED'
+          job.email_results = false
+          job.machine_id = machine_id.first.machine_id
+          job.command = string
+          job.device = current_device
+
+          job.save
+        end
+      end
+
+      preselected.each do |device_id|
+        job = AutomationStack::Infrastructure::Job.where(:project_id => params[:project_id], :device_id => device_id)
+        job.delete
+      end
+
+      redirect back
+    end
+
   end
 end

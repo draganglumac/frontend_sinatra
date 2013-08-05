@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module AutomationStackHelpers
 
   def has_templates?(device)
@@ -59,6 +61,11 @@ module AutomationStackHelpers
       Dir.chdir(job_id_results_path) do
         Dir.glob("*").reverse.each do |epoch|
           Dir.chdir(epoch) do
+            if not Dir.glob('*').include?(main_result_file)
+              File.open(main_result_file, 'w') do |f|
+                f.puts "#{main_result_file} not found!"
+              end
+            end
             Dir.glob("*").each do |filename|
               href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
               if (filename == main_result_file) 

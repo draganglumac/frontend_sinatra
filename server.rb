@@ -101,11 +101,19 @@ get '/' do
 end
 
 get '/maintenance' do
-  erb :maintenance, :layout => :maintenance_layout
+  if settings.maintenance_mode == 'on'
+    erb :maintenance, :layout => :maintenance_layout
+  else
+    redirect '/'
+  end
 end
 
 post '/maintenance' do
-  settings.maintenance_mode = 'on'
+  if settings.maintenance_mode == 'off'
+    settings.maintenance_mode = 'on'
+  else
+    settings.maintenance_mode = 'off'
+  end
   redirect back
 end
 

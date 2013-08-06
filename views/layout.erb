@@ -214,9 +214,6 @@ function send_alert() {
 
 </div>
 
-
-
-
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 
@@ -244,13 +241,21 @@ function send_alert() {
 
 			</div><!--/.nav-collapse -->
 			
-		<%if current_user and current_user.username == 'alex.jones'%>
-			<button class="btn btn-default pull-right" id="alert" data-toggle="modal" data-target="#raise-alert"><i class="icon-warning-sign icon-white"></i></button>
-		<%end%>
+			<%if current_user and current_user.username == 'alex.jones'%>
+				<button class="btn btn-default pull-right" id="alert" data-toggle="modal" data-target="#raise-alert"><i class="icon-warning-sign icon-white"></i></button>
+				<%if settings.maintenance_mode == 'on'%>
+					<button class="btn pull-right btn-danger" id="maintenance" style="margin-right: 10px;" onclick="$('form#maintenance').submit();">Maintenance</button>
+				<%else%>
+					<button class="btn pull-right" id="maintenance" style="margin-right: 10px;" onclick="$(this).toggleClass('btn-danger'); $('form#maintenance').submit();">Maintenance</button>
+				<%end%>
+			<%end%>
 		</div>
 
 	</div>
 </div>
+
+<!-- Maintenance form -->
+<form class="hidden" id="maintenance" method="post" action="/maintenance"></form>
 
 <div class="container">
 	<div>

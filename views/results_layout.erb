@@ -139,12 +139,24 @@
 					<li><% if current_user %><a href="/session/destroy"><button id="login" class="btn btn-default"> Logout <%=current_user.username%>  <i class="icon-lock"></i></button></a><%else%> <button id="login" data-toggle="modal" data-target="#sign_in" class="btn btn-default"> login <i class="icon-lock"></i> <% end %> </li>
 					</ul>
 				</div><!--/.nav-collapse -->
+	
+				<%if current_user and current_user.username == 'alex.jones'%>
+				<button class="btn btn-default pull-right" id="alert" data-toggle="modal" data-target="#raise-alert"><i class="icon-warning-sign icon-white"></i></button>
+					<%if settings.maintenance_mode == 'on'%>
+						<button class="btn pull-right btn-danger" id="maintenance" style="margin-right: 10px;" onclick="$('form#maintenance').submit();">Maintenance</button>
+					<%else%>
+						<button class="btn pull-right" id="maintenance" style="margin-right: 10px;" onclick="$(this).toggleClass('btn-danger'); $('form#maintenance').submit();">Maintenance</button>
+					<%end%>
+				<%end%>
 
 			</div>
 
 
 		</div>
 	</div>
+	
+	<!-- Maintenance form -->
+	<form class="hidden" id="maintenance" method="post" action="/maintenance"></form>
 
 	<%= yield %>
 

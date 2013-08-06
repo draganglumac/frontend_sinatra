@@ -8,11 +8,11 @@
 <% end %> 
 
 <div class="well">
-	<form id="restart-job" 
+	<form charset="UTF-8" id="restart-job" 
 		method="post" 
 		action="/job/restart/<%=@job.id%>">
 	</form>
-	<form id="toggle-editing" action="/job/<%=@job.id%>">
+	<form charset="UTF-8" id="toggle-editing" action="/job/<%=@job.id%>">
 		<% if in_editing_mode? %>
 			<input id="edit" type="hidden" name="edit" value="on" />
 		<% else %>

@@ -107,7 +107,7 @@ function send_alert() {
 	</div>
 	<div class="modal-body">
 		<div id="sign_in_form">
-			<form class="form-horizontal" action="/session" method="POST">
+			<form charset="UTF-8" class="form-horizontal" action="/session" method="POST">
 				<fieldset>
 					<div id="legend" class="">
 						<legend class="">Login</legend>
@@ -150,7 +150,7 @@ function send_alert() {
 	</div>
 	<div class="modal-body">
 		<div id="alert-form-div">
-			<form id="alert-form" class="form-horizontal" action="/alert" method="POST">
+			<form charset="UTF-8" id="alert-form" class="form-horizontal" action="/alert" method="POST">
 				<fieldset>
 					<div id="legend" class="">
 						<legend class="">Set Site-Wide Alert</legend>
@@ -188,7 +188,7 @@ function send_alert() {
 <div class="modal-footer">
 
 	<div class="refresh-form hidden-form">
-		<form id="toggle_refresh" action="/refresh" method="POST">
+		<form charset="UTF-8" id="toggle_refresh" action="/refresh" method="POST">
 			<input type="hidden" name="redirect_url" value="<%=URI.escape(request.path)%>">
 			<div id="refresh-toggle" style="float: right">
 				<%if should_autorefresh? %> 
@@ -255,7 +255,7 @@ function send_alert() {
 </div>
 
 <!-- Maintenance form -->
-<form class="hidden" id="maintenance" method="post" action="/maintenance"></form>
+<form charset="UTF-8" class="hidden" id="maintenance" method="post" action="/maintenance"></form>
 
 <div class="container">
 	<div>

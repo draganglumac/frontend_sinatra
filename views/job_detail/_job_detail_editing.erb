@@ -1,4 +1,4 @@
-<form id="update-job" action="/job/<%=@job.id%>/update" method="post" enctype="multipart/form-data">
+<form charset="UTF-8" id="update-job" action="/job/<%=@job.id%>/update" method="post" enctype="multipart/form-data">
 
 	<input type="hidden" id="recursion" name="recursion" value="<%=@job.recursion%>" >
 	<input type="hidden" id="command" name="command" value="<%=url_escape(@job.command)%>" >

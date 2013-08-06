@@ -33,7 +33,7 @@
 				<td><%=device.ip%></td>
 				<td><%=device.device_type.name%></td>
 				<td>
-					<form method="post" action="/devices/<%=device.id%>/delete"> 
+					<form charset="UTF-8" method="post" action="/devices/<%=device.id%>/delete"> 
 						<%if can_edit?%>
 							<button type="submit"class="btn delete" data-id=<%=device.tag%> id="">Delete</button>
 						<%end%>

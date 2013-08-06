@@ -231,6 +231,11 @@ module AutomationStackHelpers
     job_name.split('-').last
   end
 
+  def machine_name_for_job(job)
+    m = AutomationStack::Infrastructure::Machine.find(:id => job['machine_id'])
+    m.call_sign
+  end
+
   def device_report_folder_name(job_name)
     device_name = device_name_from_job_name(job_name)
     device_name.split('/').join('-')

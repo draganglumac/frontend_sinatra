@@ -31,6 +31,10 @@ end
 
 module JobsHelpers
 
+  def strip_carriage_retruns(string)
+    string.gsub(/\r/, '')
+  end
+
   def selected_devices?(params)
     selected_devices = false
     params.keys.each do |pline|
@@ -192,7 +196,7 @@ module JobsHelpers
         dt_id = template['device_type']
         t.device_type = AutomationStack::Infrastructure::DeviceType.find(:id => dt_id)
       end
-      t.commands = template['commands']
+      t.commands = strip_carriage_retruns(template['commands'])
       t.main_result_file = template['main_result_file']
       if t.main_result_file.nil? or t.main_result_file.empty?
         t.main_result_file = 'cukes.html'
@@ -258,7 +262,7 @@ module JobsHelpers
 
         canonical_string =  template.commands
         string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
-        job.command = string
+        job.command = strip_carriage_retruns(string)
         job.status = 'NOT STARTED'
 
         job.save
@@ -278,7 +282,7 @@ module JobsHelpers
   end
 
   def fill_in_template_fields(t, template)
-    t.commands = template['commands']
+    t.commands = strip_carriage_retruns(template['commands'])
     t.main_result_file = template['main_result_file']
     if t.main_result_file.nil? or t.main_result_file.empty?
       t.main_result_file = 'cukes.html'
@@ -461,7 +465,7 @@ module JobsHelpers
   def update_job_commands_after_template_update(job)
     canonical_string =  job.template.commands
     string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
-    job.command = string
+    job.command = strip_carriage_retruns(string)
   end
 
   def update_jobs(params, proj)
@@ -510,7 +514,7 @@ module JobsHelpers
       if not t['file_source'].nil?
         tempfile = t['file_source'][:tempfile]	
         file_content = File.open(tempfile.path,'rb') { |file|file.read }
-        t['commands'] = file_content
+        t['commands'] = strip_carriage_retruns(file_content)
       end
     end
   end

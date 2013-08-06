@@ -126,9 +126,9 @@ module Jobs
         tempfile = params[:file_source][:tempfile]	
         #filename = params[:file_source][:filename]
         file_content = File.open(tempfile.path,'rb') { |file|file.read}
-        job.command = file_content
+        job.command = strip_carriage_returns(file_content)
       else
-        job.command = url_unescape(params[:command])
+        job.command = strip_carriage_retruns(url_unescape(params[:command]))
       end
 
       job.save
@@ -209,7 +209,7 @@ module Jobs
             job.status = 'NOT STARTED'
             job.email_results = false
             job.machine_id = machine_id.first.machine_id
-            job.command = string
+            job.command = strip_carriage_retruns(string)
             job.device = current_device
 
             job.save

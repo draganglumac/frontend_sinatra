@@ -31,6 +31,16 @@ end
 
 module JobsHelpers
 
+  def selected_devices?(params)
+    selected_devices = false
+    params.keys.each do |pline|
+      if pline.include?('SELECTED_DEVICE')
+        selected_devices = true
+      end
+    end
+    selected_devices
+  end
+
   def validate(params)
     errors = {}
     if not params.nil? and not params.empty?
@@ -38,6 +48,9 @@ module JobsHelpers
         (params[key] || "").strip!
       end
 
+      if not selected_devices?(params) 
+        errors[:selected_devices] = 'You have to select at least one device.'
+      end
       errors[:lname] = "Project name is required." if params[:lname].empty?
       errors[:ltrigger] = "Trigger time is required." if params[:ltrigger].empty?
 
@@ -482,6 +495,10 @@ module JobsHelpers
     errors = {}
     update_project_name(params, proj, errors)
     update_project_templates(params, proj, errors)
+    if not selected_devices?(params) 
+      errors[:selected_devices] = 'You have to select at least one device.'
+    end
+
     if errors.empty?
       update_jobs(params, proj)
     end

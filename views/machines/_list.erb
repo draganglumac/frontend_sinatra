@@ -17,7 +17,7 @@
       <td><%=row.port%></td>	  
       <td><%=row.status%></td>	  
 	  <td>
-	    <form method="post" action="/machines/<%=row.id%>/delete"> 
+	    <form charset="UTF-8" method="post" action="/machines/<%=row.id%>/delete"> 
         	<%if can_edit?%><button type="submit"class="btn" id="">Delete</button><%end%>
     	</form> 
 	  </td>

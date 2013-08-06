@@ -24,8 +24,8 @@
 			</div>
 
 			<%if can_edit?%>
-				<form id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
-				<form id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
+				<form charset="UTF-8" id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+				<form charset="UTF-8" id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
 					<div id="device-modal" class="modal hide">
 						<div class="modal-header">
 							<a class="close" data-dismiss="modal" onclick="modal_off();">&times;</a>
@@ -145,7 +145,7 @@
 							<%jobs.each do |job|%>
 
 								<!-- Restart the job form - submitted by an icon-repeat link. -->
-								<form id="restart-job-<%=job['id']%>" 
+								<form charset="UTF-8" id="restart-job-<%=job['id']%>" 
 									method="post" 
 									action="/dashboard/job/restart/<%=job['id']%>">
 								</form> 

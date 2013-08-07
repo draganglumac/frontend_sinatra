@@ -66,21 +66,26 @@ helpers AutomationStackHelpers
 class AllButPattern
   Match = Struct.new(:captures)
 
-  def initialize(except)
-    @except   = except
+  def initialize(exceptions)
+    @exceptions = exceptions
     @captures = Match.new([])
   end
 
   def match(str)
-    @captures unless @except === str
+    @exceptions.each do |except|
+      if except === str
+        return nil
+      end
+    end
+    @captures
   end
 end
 
-def all_but(pattern)
-  AllButPattern.new(pattern)
+def all_but(patterns)
+  AllButPattern.new(patterns)
 end
 
-before all_but('/maintenance') do
+before all_but(['/maintenance', '/session', '/session/destroy']) do
   if settings.maintenance_mode == 'on' and (not can_edit? or current_user.username != 'alex.jones')
     redirect '/maintenance'
   else
@@ -104,7 +109,8 @@ end
 
 get '/maintenance' do
   if settings.maintenance_mode == 'on'
-    erb :maintenance, :layout => :maintenance_layout
+    #erb :maintenance, :layout => :maintenance_layout
+    erb :maintenance
   else
     redirect '/'
   end

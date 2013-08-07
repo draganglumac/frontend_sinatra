@@ -137,13 +137,17 @@ module Jobs
 
     get '/job/:id/delete' do
       job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-      job.delete
+      if job.status != 'IN PROGRESS' and job.status != 'QUEUED'
+        job.delete
+      end
       redirect '/dashboard' 
     end
 
     post '/job/:id/delete' do
       job = AutomationStack::Infrastructure::Job.find(:id => params[:id])
-      job.delete
+      if job.status != 'IN PROGRESS' and job.status != 'QUEUED'
+        job.delete
+      end
       redirect '/job'
     end
 
@@ -217,8 +221,10 @@ module Jobs
         end
 
         preselected.each do |device_id|
-          job = AutomationStack::Infrastructure::Job.where(:project_id => params[:project_id], :device_id => device_id)
-          job.delete
+          job = AutomationStack::Infrastructure::Job.where(:project_id => params[:project_id], :device_id => device_id).first
+          if job.status != 'IN PROGRESS' and job.status != 'QUEUED'
+            job.delete
+          end
         end
       end
 

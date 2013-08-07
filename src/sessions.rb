@@ -19,9 +19,7 @@ module Sessions
 
 	module Routes
 		post '/session' do
-
 			user = UserRepository.get_by_username_and_password params[:username ],params[:password]
-
 
 			if user
 
@@ -30,7 +28,11 @@ module Sessions
 				redirect "/?login=failed"
 			end
 
-			redirect back
+      if user.username == 'alex.jones' and settings.maintenance_mode == 'on'
+        redirect '/'
+      else
+			  redirect back
+      end
 		end
 
 		get '/session/destroy' do

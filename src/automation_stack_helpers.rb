@@ -2,8 +2,8 @@ require 'fileutils'
 
 module AutomationStackHelpers
 
-  def has_templates?(device)
-    templates = AutomationStack::Infrastructure::Template.where(:platform_id => device.platform_id)
+  def has_templates?(project_id, device)
+    templates = AutomationStack::Infrastructure::Template.where(:project_id => project_id, :platform_id => device.platform_id)
     return false if templates.nil?
 
     templates.each do |t|
@@ -24,25 +24,28 @@ module AutomationStackHelpers
 
   def check_availibility(id)
     if AutomationStack::Infrastructure::Job.count == 0
-      puts "No jobs found in database"
       return 1
     end
-    machine_id = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id)
-    puts "Checking availbility of machine #{machine_id}"
-
-    machine_status = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id).last
-
-    if !machine_status
-      puts "no status found for #{machine_id} assuming ready..."
-      return 1
-    end
-    if machine_status[:status].include? "IN PROGRESS"
-      puts "Machine #{machine_id} is currently in progress..."
+    
+    m = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first
+    if m.nil?
       return 0
-    else
-      puts "Machine #{machine_id} is currently ready for action..."
-      return 1 
     end
+    machine_id = m.machine_id
+
+    machine_statuses = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id)
+    if machine_statuses.count == 0
+      return 1
+    end
+
+    machine_statuses.each do |mstatus|
+      machine_status = mstatus.status
+      if machine_status == 'IN PROGRESS'
+        return 0
+      end
+    end
+
+    return 1
   end
 
   def partial(page, options={})

@@ -38,13 +38,14 @@
 							<%for device in @devices %>
 								<% if device.ip %>
 								<% if check_availibility(device.id) == 1 %>
-								<% if has_templates?(device) %>
+								<% if has_templates?(project, device) %>
 								<li >
 							<%if not @project_devices[project].nil? and @project_devices[project].include?(device.id)%>
 								<input type="checkbox" id="<%=device.tag%>" 
-							name="SELECTED_DEVICE=<%=device.id%>" checked  
-							style="margin-top:-5px;"><%=device.name%></input>
-							<%preselected_device_ids += "#{device.id};"%>
+								name="SELECTED_DEVICE=<%=device.id%>" checked 
+								<%='disabled' if device_has_active_job(AutomationStack::Infrastructure::Project.find(:id => project), device.id)%>
+								style="margin-top:-5px;"><%=device.name%></input>
+								<%preselected_device_ids += "#{device.id};"%>
 						<% else %>
 								<input type="checkbox" id="<%=device.tag%>" 
 							name="SELECTED_DEVICE=<%=device.id%>"
@@ -62,7 +63,7 @@
 							<%for device in @devices %>
 								<% if device.ip %>
 								<% if check_availibility(device.ip) == 1 %>
-								<% if not has_templates?(device) %>
+								<% if not has_templates?(project, device) %>
 								<li>
 							<input disabled type="checkbox" id="<%=device.tag%>" 
 							name="SELECTED_DEVICE=<%=device.id%>"

@@ -407,6 +407,18 @@ module JobsHelpers
     devices
   end
 
+  def device_has_active_job(project, device_id)
+    jobs = AutomationStack::Infrastructure::Job.where(:project_id => project.id)
+    jobs.each do |job|
+      if job.device_id == device_id
+        if job.status == 'QUEUED' or job.status == 'IN PROGRESS'
+          return true
+        end
+      end
+    end
+    false
+  end
+
   def create_new_job(params, current_device, proj)
     job = AutomationStack::Infrastructure::Job.new
     job.project = proj
@@ -491,7 +503,9 @@ module JobsHelpers
     device_ids_for_jobs_to_delete = old_device_ids_for_jobs - old_device_ids_for_jobs_not_deleted
     device_ids_for_jobs_to_delete.each do |did|
       job = AutomationStack::Infrastructure::Job.where(:project_id => proj.id, :device_id => did).first
-      job.delete
+      if job.status != 'IN PROGRESS' and job.status != 'QUEUED'
+        job.delete
+      end
     end
   end
 

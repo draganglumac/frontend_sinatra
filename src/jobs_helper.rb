@@ -260,7 +260,7 @@ module JobsHelpers
         job.recursion = recursion
         job.interval = interval
 
-        canonical_string =  template.commands
+        canonical_string =  template.commands.dup
         string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
         job.command = strip_carriage_retruns(string)
         job.status = 'NOT STARTED'
@@ -475,7 +475,7 @@ module JobsHelpers
   end
 
   def update_job_commands_after_template_update(job)
-    canonical_string =  job.template.commands
+    canonical_string =  job.template.commands.dup
     string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
     job.command = strip_carriage_retruns(string)
   end

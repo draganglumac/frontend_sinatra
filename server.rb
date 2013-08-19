@@ -40,7 +40,7 @@ set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
 
-enable :sessions  
+enable :sessions 
 configure :test,:development do
   Pony.options = {
     :via => :smtp,

@@ -22,11 +22,11 @@ module Analytics
 			return nodes
 		end
 		def get_last_job_run
-			candidate_job = 0
+			candidate_job = nil
 			@jobs.each do | job |
 				current_time = Time.now.to_i
 			diff = job.trigger_time - current_time
-			if candidate_job == 0 
+			if candidate_job.nil? 
 				candidate_job = job
 			else
 				if candidate_job.trigger_time - current_time < diff
@@ -62,7 +62,7 @@ end
 p = Analytics::Parser.new
 p.projects.each do | a |
 	puts "Found project #{a.name}"
-puts "Last job run was #{a.get_last_job_run.name}" 
+  puts "Last job run was #{a.get_last_job_run.name}" if not a.get_last_job_run.nil?
 end
 
 

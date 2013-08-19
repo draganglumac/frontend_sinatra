@@ -2,13 +2,37 @@
 
 #ps -ef | grep -v grep | grep ruby
 
-if [ -e sinatra.lock ]; then
-    echo "lock file exists"
-    spid=`cat sinatra.lock`
-    kill $spid
-    rm sinatra.lock 
-fi
-   rackup &
-   SPID=$! 
-   echo "$SPID" >> sinatra.lock 
-   echo "Stored pid"
+function start() {
+	rackup &
+	SPID=$! 
+	echo "$SPID" >> sinatra.lock 
+	echo "Stored pid"
+}
+
+function stop() {
+	if [ -e sinatra.lock ]; then
+		echo "lock file exists"
+		spid=`cat sinatra.lock`
+		kill $spid
+		rm sinatra.lock 
+	fi
+}
+
+function restart() {
+	stop
+	start
+}
+
+case $1 in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	*)
+		echo "Usage: sinatra_control start|stop|restart"
+esac

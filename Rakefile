@@ -12,9 +12,15 @@ task :default => :tests
 
 namespace :db do
     desc "reset"
+
+    `if [ -d automation_stack_backend ]; then rm -rf automation_stack_backend; fi`
+    `git clone git@github.com:draganglumac/automation_stack_backend.git`
+    `cp features/supported/settings.yaml ./automation_stack_backend/`
+    `pushd automation_stack_backend; ./build_and_install.sh; popd;`
+
     task :reset  do
-        path_to_rake ="../automation_stack_backend"
-        `cd #{path_to_rake} && rake reset`
+        path_to_rake ="automation_stack_backend"
+        `cd #{path_to_rake} && rake reset_frontend`
     end
 end
 

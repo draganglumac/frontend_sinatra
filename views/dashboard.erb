@@ -2,8 +2,8 @@
 	<% column_count = 0 %>
 	<% @projects.each do |project, jobs|%>
 		<%if column_count % 2 == 0%>
-		<div class="row">
-	<%end%>
+			<div class="row">
+		<%end%>
 		<%project_name = @project_names[project]%>
 		<%safe_project_name = url_escape(project_name)%>
 		<div class="span6 well">
@@ -18,15 +18,15 @@
 					<%if can_edit?%>
 						<li><a href="/project/<%=project%>">Edit project settings</a></li>
 					<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
-					<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal" onclick="modal_on();">Manage devices</a></li>
+					<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal-<%=project%>" onclick="modal_on();">Manage devices</a></li>
 				<%end%>
 				</ul>
 			</div>
 
 			<%if can_edit?%>
-				<form charset="UTF-8" id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+			<form charset="UTF-8" id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
 			<form charset="UTF-8" id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
-				<div id="device-modal" class="modal hide">
+				<div id="device-modal-<%=project%>" class="modal hide">
 					<div class="modal-header">
 						<a class="close" data-dismiss="modal" onclick="modal_off();">&times;</a>
 						<h3>Device Selection</h3>
@@ -89,9 +89,9 @@
 			<h5>Schedule</h5>
 			<% if @last_run_times[project].empty? %>
 				<p style="padding-left: 1em;">Jobs never run</p>
-		<% else %>
+			<% else %>
 				<p style="padding-left: 1em;">Last job run on  <%=@last_run_times[project]%></p>
-		<% end %>
+			<% end %>
 
 			<h5>Status of jobs on devices</h5>
 

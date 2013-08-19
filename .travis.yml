@@ -11,7 +11,7 @@ before_install:
 before_script:
     - mysql -e 'create database AUTOMATION;'
 
-script: rake cukes:all
+script: rake
 
 after_script:
     - mysql -e "drop database AUTOMATION;'

@@ -14,5 +14,12 @@ before_script:
 script: rake
 
 after_script:
-    - mysql -e "drop database AUTOMATION;'
+    - mysql -e 'drop database AUTOMATION;'
 
+notifications:
+    email:
+        recipients:
+            - alexsimonjones@gmail.com
+            - dragan.glumac@gmail.com
+        on_sucess: [never]
+        on_failure: [always] # default: always

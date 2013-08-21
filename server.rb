@@ -24,7 +24,7 @@ require 'overview'
 require "pry-remote"
 require "json_api"
 require 'cgi'
-
+require 'api'
 include FileUtils::Verbose   
 include Devices::Routes
 include Machines::Routes
@@ -33,6 +33,7 @@ include Admin::Routes
 include Jobs::Routes
 include Sessions::Routes
 include Results::Routes
+include Api::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'

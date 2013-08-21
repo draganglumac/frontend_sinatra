@@ -3,8 +3,7 @@ task :default => [:setup, "cukes:all", :teardown]
 task :setup do
   `if [ -d automation_stack_backend ]; then rm -rf automation_stack_backend; fi`
   `git clone git@github.com:draganglumac/automation_stack_backend.git`
-  `cp ./features/support/settings.yaml ./automation_stack_backend/`
-  `pushd automation_stack_backend; ./build_and_install.sh; popd;`
+  `pushd automation_stack_backend; ./build_and_install.sh 127.0.0.1 AUTOMATION dummy dummy test; popd;`
   system "./sinatra_control restart"
 end
 

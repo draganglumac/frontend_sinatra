@@ -11,6 +11,7 @@ gem "pony"
 gem "sinatra-flash"  
 gem "configatron"
 gem "mailcatcher", "~> 0.5.11"
+gem "rspec-expectations"
 
 group :test do
 	gem "cucumber"

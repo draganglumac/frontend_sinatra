@@ -17,7 +17,8 @@ namespace :cukes do
   
   task :all do
     `mailcatcher`
-    system "cucumber features/login.feature features/contact_us.feature features/connect_device.feature"
+#    system "cucumber features/login.feature features/contact_us.feature features/connect_device.feature"
+    system "cucumber features/login.feature"
   end
   
   task :wip => ["db:reset"]do

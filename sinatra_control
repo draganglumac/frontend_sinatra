@@ -35,4 +35,5 @@ case $1 in
 		;;
 	*)
 		echo "Usage: sinatra_control start|stop|restart"
+		;;
 esac

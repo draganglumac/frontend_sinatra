@@ -69,22 +69,13 @@ module AutomationStackHelpers
                 f.puts "#{main_result_file} not found!"
               end
             end
-            console_log_present = Dir.glob('*').include?('console_log.txt')
             Dir.glob("*").each do |filename|
               href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
-              console_href = "/uploads/results/#{job_id_folder}/#{epoch}/console_log.txt" 
               if filename == main_result_file 
                 display_name = get_datetime_string_for_epoch(epoch.to_i)
-                if console_log_present
-                  epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframes('#{href}',"\
-                    "'#{console_href}'); reload_other_files('#{job_id_folder}','#{epoch}',"\
-                    "'#{filename}');\">#{display_name}<span>&nbsp;</span>"\
-                    "<i class=\"icon-chevron-right\"></i></a>"
-                else
                   epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}'); "\
                     "reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
                     "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
-                end
               end
             end
           end
@@ -111,8 +102,7 @@ module AutomationStackHelpers
         return "<a href=\"#img-modal\" data-toggle=\"modal\" class=\"thumbnail\""\
           " data-dynamic=\"true\" data-backdrop=\"false\""\
           " onclick=\"set_modal_image_src('#{href}', '#{display_name}');\">"\
-          "<img class=\"pull-left\""\
-          " src=\"#{href}\""\
+          "<img src=\"#{href}\""\
           " style=\"width: 90px; height: 120px;\""\
           " alt=\"#{display_name}\">"\
           "#{display_name}"\

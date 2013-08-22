@@ -54,7 +54,8 @@ module AutomationStack
     end
 
     class Project < Sequel::Model
-      one_to_many :jobs
+		plugin :serialization, :json
+	 	one_to_many :jobs
     end
 
     class Job < Sequel::Model

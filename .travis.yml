@@ -1,0 +1,25 @@
+language: ruby
+rvm:
+    - 1.9.3
+
+env: DB=mysql
+
+before_install:
+    - gem update --system
+    - gem --version
+
+before_script:
+    - mysql -e 'create database AUTOMATION;'
+
+script: rake
+
+after_script:
+    - mysql -e 'drop database AUTOMATION;'
+
+notifications:
+    email:
+        recipients:
+            - alexsimonjones@gmail.com
+            - dragan.glumac@gmail.com
+        on_sucess: [never]
+        on_failure: [always] # default: always

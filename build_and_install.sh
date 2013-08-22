@@ -55,11 +55,14 @@ check_all_rubies
 check_and_update_gems
 bundle install
 
-touch conf/db.conf
-echo "host : $sqlhost" >> conf/db.conf
-echo "username : $sqluser" >> conf/db.conf
-echo "password : $sqlpass" >> conf/db.conf
-echo "database : $sqldb" >> conf/db.conf
+if [ ! -f conf/db.conf ]
+then
+	touch conf/db.conf
+	echo "host : $sqlhost" >> conf/db.conf
+	echo "username : $sqluser" >> conf/db.conf
+	echo "password : $sqlpass" >> conf/db.conf
+	echo "database : $sqldb" >> conf/db.conf
+fi
 
 
 #add beacon log 

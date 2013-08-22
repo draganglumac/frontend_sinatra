@@ -1,43 +1,38 @@
-require 'rake/testtask'
-require 'pry'
+task :default => [:setup, "cukes:all", :teardown]
 
-Rake::TestTask.new(:tests) do |t|
-    t.test_files = FileList['tests/*_tests.rb']
-    t.verbose = true
+task :setup do
+  `if [ -d automation_stack_backend ]; then rm -rf automation_stack_backend; fi`
+  `git clone git@github.com:draganglumac/automation_stack_backend.git`
+  `pushd automation_stack_backend; ./build_and_install.sh 127.0.0.1 AUTOMATION dummy dummy test; popd;`
+  system "./sinatra_control restart"
 end
 
-task :default => :tests
-
-
-
-namespace :db do
-    desc "reset"
-    task :reset  do
-        path_to_rake ="../automation_stack_backend"
-        `cd #{path_to_rake} && rake reset`
-    end
+task :teardown do
+  system "./sinatra_control stop"
+  `if [ -d automation_stack_backend ]; then rm -rf automation_stack_backend; fi`
 end
-
-desc "Task description"
-task :task_name => [:dependent, :tasks] do
-
-end
-
 
 namespace :cukes do
- 
-desc "all"
-task :all => ["db:reset"]do
+  desc "all"
+  
+  task :all do
     `mailcatcher`
-    system "./sinatra_control"
-    system "cucumber --tags ~@wip"
-end
-
-task :wip => ["db:reset"]do
+#    system "cucumber features/login.feature features/contact_us.feature features/connect_device.feature"
+    system "cucumber features/login.feature"
+  end
+  
+  task :wip => ["db:reset"]do
     `mailcatcher`
-    system "./sinatra_control"
     system "cucumber --tags @wip"
+  end
 end
 
+namespace :db do
+   desc "reset"
+
+   task :reset  do
+        path_to_rake ="automation_stack_backend"
+        `cd #{path_to_rake} && rake reset_frontend`
+   end
 end
 

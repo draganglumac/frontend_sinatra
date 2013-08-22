@@ -20,6 +20,7 @@ require 'rspec-expectations'
 def navigate_to_url(url)
   @driver = Selenium::WebDriver.for :firefox
   @driver.navigate.to "http://localhost:9292#{url}"
+  @wait ||= Selenium::WebDriver::Wait.new(:timeout => 10)
 end
 
 def end_session

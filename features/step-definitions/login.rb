@@ -5,10 +5,11 @@ Given(/^I am on the "Home" screen$/) do
 end
 
 When(/^I press login$/)do
+  @wait.until { @driver.find_element(:id, 'login') }
   login = @driver.find_element(:id, 'login')
   login.click
 
-  sleep(1)
+  @wait.until { @driver.find_element(:id, 'sign_in_submit') }
 
   username = @driver.find_element(:name, 'username')
   password = @driver.find_element(:name, 'password')
@@ -21,7 +22,7 @@ When(/^I press login$/)do
 end
 
 Then(/^I am authenticated$/)do
-  sleep(1)
+  @wait.until { @driver.find_element(:id, 'login') }
 
   text = @driver.find_element(:id, 'login').text
   text.should include('Logout alex.jones')

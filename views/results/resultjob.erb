@@ -29,7 +29,6 @@
 
 		<div class="span8">
 			<iframe id="main-content" style="position: absolute; width: 64%; height: 100%; margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 0px; border-width: 0px;"></iframe>
-			<iframe id="console-log" class="hidden" style="z-index: 3; background-color: white; position: absolute; top: 67%; width: 64%; height: 33%; margin-right: 0px; padding-left: 0px; padding-right: 0px; border-width: 0px;"></iframe>
 		</div> <!-- class="span8" -->
 
 		<div id="support-files" class="span2">
@@ -56,23 +55,10 @@
 
 <script type="text/javascript">
 function reload_iframe(url) {
-	$('#console-log-div').addClass('hidden');
 	$('#main-content-div').css('height', '100%');
 
 	var ifr = document.getElementById('main-content');
 	ifr.contentWindow.location.replace(url);
-}
-
-function reload_iframes(main, console) {
-	$('#main-content-div').css('height', '66%');
-	
-	var cifr = document.getElementById('console-log');
-	cifr.contentWindow.location.replace(console);
-
-	var ifr = document.getElementById('main-content');
-	ifr.contentWindow.location.replace(main);
-	
-	$('#console-log-div').removeClass('hidden');
 }
 
 function reload_other_files(job_id, epoch, main_file) {

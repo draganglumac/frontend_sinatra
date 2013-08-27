@@ -1,0 +1,14 @@
+<h2>CI Status for Automation Stack Projects</h2>
+
+<div class="well row span6">
+	<%@lab_projects.each do |p, info|%>
+		<a href="<%=info[1]%>" data-toggle="tooltip" title="Click to open CI job page in new tab." target="_blank">
+		<div class="progress <%=@status_classes[info[0]]%>" style="height: 3em">
+			<div class="bar" style="width: 100%">
+				<h5><%=p%></h5>
+			</div>
+		</div>
+		</a>
+	<%end%>
+</div>
+

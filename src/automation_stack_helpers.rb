@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'jenkins_api_client'
 
 module AutomationStackHelpers
 
@@ -287,4 +288,19 @@ module AutomationStackHelpers
   def site_alert_type
     settings.site_alert_type
   end
+
+  def get_ci_jobs_info
+    jobs_info = {}
+    
+    client = JenkinsApi::Client.new(:server_url => settings.ci_url) 
+    jobs = client.job.list_all
+    job_url = "#{settings.ci_url}/job"
+    jobs.each do |j|
+      status = client.job.get_current_build_status(j) 
+      jobs_info[j] = [status, "#{job_url}/#{j}"]
+    end
+
+    return jobs_info
+  end
+
 end

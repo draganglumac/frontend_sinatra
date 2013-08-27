@@ -40,6 +40,7 @@ set :bind, '0.0.0.0'
 set :environment, :development
 set :public_folder, 'public'
 set :views ,'views'
+set :ci_url, 'http://10.65.82.93:8080'
 
 enable :sessions 
 configure :test,:development do
@@ -263,4 +264,23 @@ post '/alert' do
   settings.site_alert = alert
 
   redirect back
+end
+
+get '/ci' do
+  @status_classes = {
+    'success' => 'progress-success',
+    'failure' => 'progress-danger',
+    'unstable' => 'progress-warning',
+    'running' => 'progress-info progress-striped',
+    'not_run' => '',
+    'aborted' => 'progress-danger',
+    'invalid' => 'progress-danger'
+  }
+
+  # @lab_projects is a hash of the following project info:
+  #   proj_name => [ proj_status, proj_url_on_ci_server ]
+  #
+  @lab_projects = get_ci_jobs_info
+  
+  erb :ci
 end

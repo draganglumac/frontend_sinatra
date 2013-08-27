@@ -37,7 +37,9 @@ include Api::Routes
 
 set :port, 8091
 set :bind, '0.0.0.0'
-set :environment, :development
+if ENV['RACK_ENV'].nil?
+  set :environment, :development
+end
 set :public_folder, 'public'
 set :views ,'views'
 set :ci_url, 'http://10.65.82.93:8080'

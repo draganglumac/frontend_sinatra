@@ -217,7 +217,7 @@ get '/dashboard' do
     end  
   end
 
-  @devices = AutomationStack::Infrastructure::Device.all
+  @device_suggestions = create_device_suggestions_for_all_projects 
 
   erb :'dashboard/system'
 end
@@ -264,7 +264,7 @@ get '/dashboard/:id' do
     end  
   end
 
-  @devices = AutomationStack::Infrastructure::Device.all
+  @devices = create_device_suggestion_for_project(params[:id]) 
 
   erb :'dashboard/single_project'
 end

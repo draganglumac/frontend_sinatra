@@ -1,6 +1,7 @@
-<h2>CI Status for Automation Stack Projects</h2>
+<h2 style="text-align: center">CI Status for Automation Stack Projects</h2>
 
-<div class="well row span6">
+<div class="row">
+	<div class="well span6 offset3">
 	<%if @lab_projects.nil? or @lab_projects.empty?%>
 		<h3>Cannot obtain CI status currently. Either the CI server is down or it cannot be reached."<h3>
 	<%else%>
@@ -14,6 +15,7 @@
 			</a>
 		<%end%>
 	<%end%>
+	</div>
 </div>
 
 <!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->

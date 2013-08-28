@@ -292,7 +292,7 @@ module AutomationStackHelpers
   def get_ci_jobs_info
     begin    
       jobs_info = {}
-      client = JenkinsApi::Client.new(:server_url => settings.ci_url) 
+      client = JenkinsApi::Client.new(:server_url => settings.ci_url, :timeout => 10) 
       jobs = client.job.list_all
       job_url = "#{settings.ci_url}/job"
       jobs.each do |j|

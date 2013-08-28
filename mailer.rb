@@ -11,6 +11,12 @@ class Mailer
   end
 
   def process
+    puts "ENV['RACK_ENV'] = #{ENV['RACK_ENV']}"
+    if ENV['RACK_ENV'] == 'test'
+      puts 'Not processing emails for test runs.'
+      return
+    end
+
     puts "[#{Time.new}] Processing results for emailing..."
 
     templates = {}

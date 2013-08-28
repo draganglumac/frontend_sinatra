@@ -25,6 +25,9 @@ class Hound
   def self.get_jobs
     return @@dbconnect.query("SELECT * from `jobs`")
   end
+  def self.get_jobs_for_project(pid)
+    return @@dbconnect.query("SELECT * from `jobs` where `project_id` = '#{pid}'")
+  end
   def self.get_results
     return @@dbconnect.query("SELECT * FROM results")
   end

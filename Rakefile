@@ -4,7 +4,7 @@ task :setup do
   `if [ -d automation_stack_backend ]; then rm -rf automation_stack_backend; fi`
   `git clone git@github.com:draganglumac/automation_stack_backend.git`
   `pushd automation_stack_backend; ./build_and_install.sh 127.0.0.1 AUTOMATION dummy dummy test; popd;`
-  system "./sinatra_control restart"
+  system "export RACK_ENV=\"test\" && ./sinatra_control restart"
 end
 
 task :teardown do
@@ -17,8 +17,7 @@ namespace :cukes do
   
   task :all do
     `mailcatcher`
-#    system "cucumber features/login.feature features/contact_us.feature features/connect_device.feature"
-    system "cucumber features/login.feature"
+    system "cucumber features/contact_us.feature features/login.feature features/connect_device.feature"
   end
   
   task :wip => ["db:reset"]do

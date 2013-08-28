@@ -12,6 +12,7 @@ gem "sinatra-flash"
 gem "configatron"
 gem "mailcatcher", "~> 0.5.11"
 gem "rspec-expectations"
+gem "jenkins_api_client", "~> 0.14.1"
 
 group :test do
 	gem "cucumber"

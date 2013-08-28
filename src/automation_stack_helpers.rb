@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'jenkins_api_client'
 
 module AutomationStackHelpers
 
@@ -26,7 +27,7 @@ module AutomationStackHelpers
     if AutomationStack::Infrastructure::Job.count == 0
       return 1
     end
-    
+
     m = AutomationStack::Infrastructure::ConnectedDevice.select(:machine_id).where(:device_id => id).first
     if m.nil?
       return 0
@@ -73,9 +74,9 @@ module AutomationStackHelpers
               href = "/uploads/results/#{job_id_folder}/#{epoch}/#{filename}"
               if filename == main_result_file 
                 display_name = get_datetime_string_for_epoch(epoch.to_i)
-                  epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}'); "\
-                    "reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
-                    "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
+                epoch_file_map[epoch] = "<a href=\"#\" onclick=\"reload_iframe('#{href}'); "\
+                  "reload_other_files('#{job_id_folder}','#{epoch}','#{filename}');\">"\
+                  "#{display_name}<span>&nbsp;</span><i class=\"icon-chevron-right\"></i></a>"
               end
             end
           end
@@ -287,4 +288,22 @@ module AutomationStackHelpers
   def site_alert_type
     settings.site_alert_type
   end
+
+  def get_ci_jobs_info
+    begin    
+      jobs_info = {}
+      client = JenkinsApi::Client.new(:server_url => settings.ci_url) 
+      jobs = client.job.list_all
+      job_url = "#{settings.ci_url}/job"
+      jobs.each do |j|
+        status = client.job.get_current_build_status(j) 
+        jobs_info[j] = [status, "#{job_url}/#{j}"]
+      end
+
+      return jobs_info
+    rescue
+      return {}
+    end
+  end
+
 end

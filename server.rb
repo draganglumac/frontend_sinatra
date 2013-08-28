@@ -43,6 +43,7 @@ end
 set :public_folder, 'public'
 set :views ,'views'
 set :ci_url, 'http://10.65.82.93:8080'
+set :action_timeout, 10
 
 enable :sessions 
 configure :test,:development do

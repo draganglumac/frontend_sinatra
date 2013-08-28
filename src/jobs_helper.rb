@@ -154,7 +154,7 @@ module JobsHelpers
 
   def set_data_for_project_add_page(project)
     @machines  = AutomationStack::Infrastructure::Machine.all
-    @devices = AutomationStack::Infrastructure::Device.all
+    @devices = create_device_suggestion_for_new_project(project) 
     @platforms = AutomationStack::Infrastructure::Platform.all
     @device_types = AutomationStack::Infrastructure::DeviceType.all
     @jobs_done = Hound.get_jobs

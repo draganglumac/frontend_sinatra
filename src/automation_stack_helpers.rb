@@ -369,4 +369,40 @@ module AutomationStackHelpers
     return devices
   end
 
+  def extract_selected_ids_from_params(params)
+    device_ids = []
+    params.each do |key, value|
+      if key.match(/SELECTED_DEVICE=/)
+        device_ids << key.sub(/SELECTED_DEVICE=/, '')
+      end
+    end
+
+    return device_ids
+  end
+
+  def create_device_suggestion_for_new_project(params)
+    devices = AutomationStack::Infrastructure::Device.all
+    project_device_ids = extract_selected_ids_from_params(params)
+    unique_names = {}
+
+    project_device_ids.each do |did|
+      d = AutomationStack::Infrastructure::Device.find(:id => did)
+      name = d.name
+      unique_names[name] = d
+    end
+
+    devices.each do |d|
+      name = d.name
+      if unique_names[name].nil?
+        unique_names[name] = pick_connected_device_with_name(name)
+      elsif not d.ip.nil?
+        if unique_names[name].ip.nil?
+          unique_names[name] = d
+        end
+      end
+    end
+
+    return unique_names.values.reject { |x| x.nil? }
+  end
+
 end

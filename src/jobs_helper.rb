@@ -165,7 +165,7 @@ module JobsHelpers
     @project = AutomationStack::Infrastructure::Project.find(:id => project.id)
     @templates = AutomationStack::Infrastructure::Template.where(:project_id => project.id)
     jobs = AutomationStack::Infrastructure::Job.where(:project_id => project.id)
-    @devices = AutomationStack::Infrastructure::Device.all
+    @devices = create_device_suggestion_for_project(project.id) 
     @selected_device_ids = []
     jobs.each do |job|
       @selected_device_ids << job.device_id
@@ -518,6 +518,7 @@ module JobsHelpers
     end
 
     if errors.empty?
+      puts "Before update_jobs proj = #{proj}"
       update_jobs(params, proj)
     end
     errors

@@ -306,7 +306,7 @@ module AutomationStackHelpers
     end
   end
 
-  def devices_used_by_project(pid)
+  def devices_already_used_by_project_with_id(pid)
     device_ids = []
     jobs = AutomationStack::Infrastructure::Job.select(:device_id).where(:project_id => pid)
     jobs.each do |j|
@@ -336,7 +336,7 @@ module AutomationStackHelpers
 
   def create_device_suggestion_for_project(pid)
     devices = AutomationStack::Infrastructure::Device.all
-    project_device_ids = devices_used_by_project(pid)
+    project_device_ids = devices_already_used_by_project_with_id(pid)
     unique_names = {}
 
     project_device_ids.each do |did|

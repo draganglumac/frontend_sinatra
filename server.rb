@@ -218,7 +218,54 @@ get '/dashboard' do
 
   @devices = AutomationStack::Infrastructure::Device.all
 
-  erb :dashboard
+  erb :'dashboard/system'
+end
+
+#project dashboard
+get '/dashboard/:id' do
+  @current_jobs = Hound.get_jobs_for_project(params[:id]) 
+
+  @projects = {}
+  @project_devices = {}
+  @statuses = {}
+  @last_run_times = {}
+  @project_names = {}
+
+  @current_jobs.each do |job|
+    project = job['project_id']
+    project_name = project_name_from_job_name(job['name'])
+
+    @project_names[project] = project_name
+
+    if @projects[project].nil?
+      @projects[project] = [job]
+    else
+      @projects[project] << job
+    end
+
+    if @project_devices[project].nil?
+      @project_devices[project] = [job['device_id']]
+    else
+      @project_devices[project] << job['device_id']
+    end
+
+    if @statuses[project].nil?
+      @statuses[project] = { :completed => 0, :failed => 0, :running => 0, :pending => 0 }
+    end
+    increment_status_count(job['status'], @statuses[project])
+
+    if @last_run_times[project].nil?
+      @last_run_times[project] = ''
+    end
+    current_timestr = job['TIMESTAMP'].strftime('%A, %d-%m-%Y at %H:%M:%S') unless job['status'] == 'NOT STARTED' 
+    if not current_timestr.nil? and @last_run_times[project] < current_timestr 
+      @last_run_times[project] = current_timestr
+    end  
+  end
+
+  @devices = AutomationStack::Infrastructure::Device.all
+
+  erb :'dashboard/single_project'
 end
 
 get '/contact' do

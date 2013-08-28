@@ -1,0 +1,59 @@
+<h2 style="text-align: center; margin-top: -1em; margin-bottom: 1em;">Dashboard for <%=@project_names[@projects.keys.first]%></h2>
+<div id="jobs-grid">
+	<% @projects.each do |project, jobs|%>
+			<div class="row">
+			<%project_name = @project_names[project]%>
+			<%safe_project_name = url_escape(project_name)%>
+
+			<%= erb :'dashboard/_dashboard_item', 
+				locals: {
+					system_dash: false,
+					offset: 'offset3', 
+					project: project, 
+					jobs: jobs, 
+					project_name: project_name, 
+					safe_project_name: safe_project_name} %>
+
+			</div>
+	<% end %>
+</div>
+
+<script>
+	function toggle_expand_cookie(project_name)
+	{
+		var old_value = $.cookie(project_name);
+		if (typeof old_value === 'undefined')
+		{
+			$.cookie(project_name, "expanded");
+			location.reload();
+		}
+		else if (old_value == "collapsed")
+		$.cookie(project_name, "expanded");
+		else
+		$.cookie(project_name, "collapsed");
+	}
+
+	function modal_on() {
+		not_modal = false;
+	}
+
+	function modal_off() {
+		not_modal = true;
+		location.reload(1);
+	}
+</script>
+
+<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
+<script>
+	show_refresh_form = true;
+	not_modal = true;
+	<%if should_autorefresh? %>
+		setTimeout(
+		function () {
+			if (not_modal)
+			location.reload(1); 
+		}, 
+		15000
+		);
+	<%end%>
+</script>

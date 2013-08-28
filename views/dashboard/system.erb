@@ -1,0 +1,65 @@
+<div id="jobs-grid">
+	<% column_count = 0 %>
+	<% @projects.each do |project, jobs|%>
+		<%if column_count % 2 == 0%>
+			<div class="row">
+			<%end%>
+			<%project_name = @project_names[project]%>
+			<%safe_project_name = url_escape(project_name)%>
+
+			<%= erb :'dashboard/_dashboard_item', 
+				locals: {
+					system_dash: true,
+					offset: nil, 
+					project: project, 
+					jobs: jobs, 
+					project_name: 
+					project_name, 
+					safe_project_name: safe_project_name} %>
+
+			<%if column_count % 2 == 1%>
+			</div>
+		<%end%>
+		<% column_count += 1%>
+	<% end %>
+</div>
+
+<script>
+	function toggle_expand_cookie(project_name)
+	{
+		var old_value = $.cookie(project_name);
+		if (typeof old_value === 'undefined')
+		{
+			$.cookie(project_name, "expanded");
+			location.reload();
+		}
+		else if (old_value == "collapsed")
+		$.cookie(project_name, "expanded");
+		else
+		$.cookie(project_name, "collapsed");
+	}
+
+	function modal_on() {
+		not_modal = false;
+	}
+
+	function modal_off() {
+		not_modal = true;
+		location.reload(1);
+	}
+</script>
+
+<!-- Auto-refresh script - include this snippet on any page from which you wish to control auto-refresh. -->
+<script>
+	show_refresh_form = true;
+	not_modal = true;
+	<%if should_autorefresh? %>
+		setTimeout(
+		function () {
+			if (not_modal)
+			location.reload(1); 
+		}, 
+		15000
+		);
+	<%end%>
+</script>

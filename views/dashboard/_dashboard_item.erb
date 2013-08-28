@@ -58,7 +58,7 @@
 					<ul id="missing_template" class="text-warning" style="list-style-type:none;text-decoration:none;">
 						<%for device in @devices %>
 							<% if device.ip %>
-								<% if check_availibility(device.ip) == 1 %>
+								<% if check_availibility(device.id) == 1 %>
 									<% if not has_templates?(project, device) %>
 										<li>
 										<input disabled type="checkbox" id="<%=device.tag%>" 

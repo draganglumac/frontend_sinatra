@@ -231,5 +231,19 @@ module Jobs
       redirect back
     end
 
+    get '/project/:id/startall' do
+      settings.banner_message = 'Your jobs will start within the next minute.'
+      
+      jobs = AutomationStack::Infrastructure::Job.where(:project_id => params[:id])
+      jobs.each do |job|
+        status = job.status
+        if status != 'QUEUED' and status != 'IN PROGRESS'
+          Hound.set_job_restart(job.id)
+        end
+      end
+
+      redirect back 
+    end
+
   end
 end

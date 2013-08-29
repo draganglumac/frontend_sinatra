@@ -306,4 +306,103 @@ module AutomationStackHelpers
     end
   end
 
+  def devices_already_used_by_project_with_id(pid)
+    device_ids = []
+    jobs = AutomationStack::Infrastructure::Job.select(:device_id).where(:project_id => pid)
+    jobs.each do |j|
+      device_ids << j.device_id
+    end
+
+    device_ids
+  end
+
+  def pick_connected_device_with_name(name)
+    devs_with_name = AutomationStack::Infrastructure::Device.where(:name => name)
+    devices = []
+    devs_with_name.each do |d|
+      if not d.ip.nil?
+        devices << d
+      end
+    end
+
+    count = devices.count
+    if count > 0
+      r = Random.rand(0...count)
+      return devices[r]
+    else
+      return nil
+    end
+  end
+
+  def create_device_suggestion_for_project(pid)
+    devices = AutomationStack::Infrastructure::Device.all
+    project_device_ids = devices_already_used_by_project_with_id(pid)
+    unique_names = {}
+
+    project_device_ids.each do |did|
+      d = AutomationStack::Infrastructure::Device.find(:id => did)
+      name = d.name
+      unique_names[name] = d
+    end
+
+    devices.each do |d|
+      name = d.name
+      if unique_names[name].nil?
+        unique_names[name] = pick_connected_device_with_name(name)
+      elsif not d.ip.nil?
+        if unique_names[name].ip.nil?
+          unique_names[name] = d
+        end
+      end
+    end
+
+    return unique_names.values.reject { |x| x.nil? }
+  end
+
+  def create_device_suggestions_for_all_projects
+    devices = {}
+    projects = AutomationStack::Infrastructure::Project.all
+    projects.each do |p|
+      devices[p.id] = create_device_suggestion_for_project(p.id)
+    end
+
+    return devices
+  end
+
+  def extract_selected_ids_from_params(params)
+    device_ids = []
+    params.each do |key, value|
+      if key.match(/SELECTED_DEVICE=/)
+        device_ids << key.sub(/SELECTED_DEVICE=/, '')
+      end
+    end
+
+    return device_ids
+  end
+
+  def create_device_suggestion_for_new_project(params)
+    devices = AutomationStack::Infrastructure::Device.all
+    project_device_ids = extract_selected_ids_from_params(params)
+    unique_names = {}
+
+    project_device_ids.each do |did|
+      d = AutomationStack::Infrastructure::Device.find(:id => did)
+      name = d.name
+      unique_names[name] = d
+    end
+
+    devices.each do |d|
+      name = d.name
+      if unique_names[name].nil?
+        unique_names[name] = pick_connected_device_with_name(name)
+      elsif not d.ip.nil?
+        if unique_names[name].ip.nil?
+          unique_names[name] = d
+        end
+      end
+    end
+
+    return unique_names.values.reject { |x| x.nil? }
+  end
+
 end

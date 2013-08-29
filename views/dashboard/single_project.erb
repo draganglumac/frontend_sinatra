@@ -1,3 +1,8 @@
+<%if not @banner.nil?%>
+<div id="banner" class="alert alert-success">
+	<h5><%=@banner%></h5>
+</div>
+<%end%>
 <h2 style="text-align: center; margin-top: -1em; margin-bottom: 1em;">Dashboard for <%=@project_names[@projects.keys.first]%></h2>
 <div id="jobs-grid">
 	<% @projects.each do |project, jobs|%>
@@ -54,6 +59,14 @@
 			location.reload(1); 
 		}, 
 		15000
+		);
+	<%end%>
+	<%if not @banner.nil?%>
+		setTimeout(
+		function() {
+			$('#banner').hide();
+		},
+		7500
 		);
 	<%end%>
 </script>

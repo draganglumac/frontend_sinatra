@@ -44,6 +44,7 @@ set :public_folder, 'public'
 set :views ,'views'
 set :ci_url, 'http://10.65.82.93:8080'
 set :action_timeout, 10
+set :banner_message, nil
 
 enable :sessions 
 configure :test,:development do
@@ -219,6 +220,13 @@ get '/dashboard' do
 
   @device_suggestions = create_device_suggestions_for_all_projects 
 
+  if not settings.banner_message.nil?
+    @banner = settings.banner_message.clone
+    settings.banner_message = nil
+  else
+    @banner = nil
+  end
+
   erb :'dashboard/system'
 end
 
@@ -265,6 +273,13 @@ get '/dashboard/:id' do
   end
 
   @devices = create_device_suggestion_for_project(params[:id]) 
+  
+  if not settings.banner_message.nil?
+    @banner = settings.banner_message.clone
+    settings.banner_message = nil
+  else
+    @banner = nil
+  end
 
   erb :'dashboard/single_project'
 end

@@ -11,6 +11,7 @@
 		</a>
 		<ul class="dropdown-menu">
 			<li><a href="/results/<%=project%>">Results</a></li>
+			<li><a href="/project/<%=project%>/startall">Start all jobs</a></li>
 			<%if can_edit?%>
 				<li><a href="/project/<%=project%>">Edit project settings</a></li>
 				<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>

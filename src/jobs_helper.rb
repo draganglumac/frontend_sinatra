@@ -1,5 +1,7 @@
 #Scan and replace from string
 require 'hound'
+require 'pry'
+require 'pry-debugger'
 
 class Jobhelper
 
@@ -490,14 +492,17 @@ module JobsHelpers
         if job.nil?
           job = create_new_job(params, current_device, proj)
         else
-          if not job.template.nil?
-            update_job_commands_after_template_update(job)
-          end
           old_device_ids_for_jobs_not_deleted << job.device_id
         end
 
         job.save
       end
+    end
+
+    jobs = AutomationStack::Infrastructure::Job.where(:project_id => proj.id)
+    jobs.each do |jobbie|
+      update_job_commands_after_template_update(jobbie)
+      jobbie.save
     end
 
     device_ids_for_jobs_to_delete = old_device_ids_for_jobs - old_device_ids_for_jobs_not_deleted
@@ -513,9 +518,9 @@ module JobsHelpers
     errors = {}
     update_project_name(params, proj, errors)
     update_project_templates(params, proj, errors)
-    if not selected_devices?(params) 
-      errors[:selected_devices] = 'You have to select at least one device.'
-    end
+    #    if not selected_devices?(params) 
+    #      errors[:selected_devices] = 'You have to select at least one device.'
+    #    end
 
     if errors.empty?
       puts "Before update_jobs proj = #{proj}"

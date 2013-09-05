@@ -1,8 +1,8 @@
 module Overview
 
-	module Routes
-		get '/overview' do
-			@machines = AutomationStack::Infrastructure::Machine.all
+  module Routes
+    get '/overview' do
+      @machines = AutomationStack::Infrastructure::Machine.all
       @active_jobs = {}
       jobs = AutomationStack::Infrastructure::Job.all
       jobs.each do |job|
@@ -29,7 +29,7 @@ module Overview
         end
       end
 
-			erb :overview
-		end
-	end
+      erb :overview
+    end
+  end
 end

@@ -81,5 +81,22 @@ module Machines
       redirect back
     end
 
+    get '/machine/:id/killjob' do
+      job = AutomationStack::Infrastructure::Job.where(:machine_id => params[:id], :status => 'IN PROGRESS').first
+      if job.nil?
+        job = AutomationStack::Infrastructure::Job.where(:machine_id => params[:id], :status => 'QUEUED').first
+      end
+
+      if not job.nil?
+        boss = NodeBoss.new
+        boss.kill_job_on_machine(job, machine)
+      
+        job.status = 'FAILED'
+        job.save
+      end
+
+      redirect back
+    end
+
   end
 end

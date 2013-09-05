@@ -1,7 +1,6 @@
 #Scan and replace from string
 require 'hound'
 require 'pry'
-require 'pry-debugger'
 
 class Jobhelper
 

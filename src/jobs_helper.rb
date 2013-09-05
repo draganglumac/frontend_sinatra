@@ -166,6 +166,7 @@ module JobsHelpers
     @templates = AutomationStack::Infrastructure::Template.where(:project_id => project.id)
     jobs = AutomationStack::Infrastructure::Job.where(:project_id => project.id)
     @devices = create_device_suggestion_for_project(project.id) 
+    puts "@devices for project #{@project} => #{@devices}"
     @selected_device_ids = []
     jobs.each do |job|
       @selected_device_ids << job.device_id

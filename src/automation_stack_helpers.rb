@@ -1,7 +1,5 @@
 require 'fileutils'
 require 'jenkins_api_client'
-require 'pry'
-require 'pry-debugger'
 
 module AutomationStackHelpers
 

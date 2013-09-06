@@ -23,14 +23,14 @@
 							<%puts "device available"%>	
 							<li >
 							<input <%='checked' if @selected_device_ids.include?(device.id)%> 
-								<%='disabled' if device_has_active_job(@project, device.id)%> 
+								<%='readonly="readonly"' if device_has_active_job(@project, device.id)%> 
 								type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>" 
 								name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 							</li>
 						<% else %>
 							<% if @selected_device_ids.include?(device.id) %>
 								<li>
-								<input checked disabled
+								<input checked readonly="readonly"
 									type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>"
 									name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 								</li>

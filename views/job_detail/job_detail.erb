@@ -50,25 +50,25 @@
 
 	<%if @job.status.eql?("FAILED")%>
 		<div class="alert alert-error">
-			<strong>FAILED</strong>
+			<strong><%=@job.status%></strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("IN PROGRESS")%>
 		<div class="alert alert-info">
-			<strong>RUNNING</strong>
+			<strong><%=@job.status%></strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%elsif @job.status.eql?("COMPLETED")%>
 		<div class="alert alert-success">
-			<strong>COMPLETED</strong>
+			<strong><%=@job.status%></strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>
 	<%else%>
 		<div class="alert alert-warning">
-			<strong>PENDING</strong>
+			<strong><%=@job.status%></strong>
 			<span>&nbsp;</span>
 			Last run on <%=@job.TIMESTAMP.strftime('%A, %d-%m-%Y at %H:%M:%S')%>.
 		</div>

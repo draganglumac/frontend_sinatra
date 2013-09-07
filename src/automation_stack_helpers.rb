@@ -32,16 +32,15 @@ module AutomationStackHelpers
     if m.nil?
       return 0
     end
-    machine_id = m.machine_id
 
-    machine_statuses = AutomationStack::Infrastructure::Job.select(:status).where(:machine_id =>machine_id)
-    if machine_statuses.count == 0
+    device_statuses = AutomationStack::Infrastructure::Job.select(:status).where(:device_id => id)
+    if device_statuses.count == 0
       return 1
     end
 
-    machine_statuses.each do |mstatus|
-      machine_status = mstatus.status
-      if machine_status == 'IN PROGRESS'
+    device_statuses.each do |dstatus|
+      device_status = dstatus.status
+      if device_status == 'IN PROGRESS' or device_status == 'QUEUED'
         return 0
       end
     end
@@ -321,7 +320,11 @@ module AutomationStackHelpers
     devices = []
     devs_with_name.each do |d|
       if not d.ip.nil?
-        devices << d
+        running_job = AutomationStack::Infrastructure::Job.where(:device_id => d.id, :status => 'IN PROGRESS').first
+        queued_job = AutomationStack::Infrastructure::Job.where(:device_id => d.id, :status => 'QUEUED').first
+        if running_job.nil? and queued_job.nil?
+            devices << d
+        end
       end
     end
 

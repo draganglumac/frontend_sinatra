@@ -1,28 +1,28 @@
 <%if offset.nil?%>
 	<div class="span6 well">
 <%else%>
-	<div class="span6 <%=offset%> well">
-<%end%>
+		<div class="span6 <%=offset%> well">
+	<%end%>
 
-	<div class="btn-group pull-right">
-		<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-			Action
-			<span class="caret"></span>
-		</a>
-		<ul class="dropdown-menu">
-			<li><a href="/results/<%=project%>">Results</a></li>
-			<li><a href="/project/<%=project%>/startall">Start all jobs</a></li>
-			<%if can_edit?%>
-				<li><a href="/project/<%=project%>">Edit project settings</a></li>
+		<div class="btn-group pull-right">
+			<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+				Action
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a href="/results/<%=project%>">Results</a></li>
+				<li><a href="/project/<%=project%>/startall">Start all jobs</a></li>
+				<%if can_edit?%>
+					<li><a href="/project/<%=project%>">Edit project settings</a></li>
 				<li><a href="#" onclick="$('form#delete-<%=project%>').submit();">Delete project</a></li>
 				<li><a data-dynamic="true" data-backdrop="false" data-toggle="modal" href="#device-modal-<%=project%>" onclick="modal_on();">Manage devices</a></li>
 			<%end%>
-		</ul>
-	</div>
+			</ul>
+		</div>
 
-	<%if can_edit?%>
-		<form charset="UTF-8" id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
-		<form charset="UTF-8" id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
+		<%if can_edit?%>
+			<form charset="UTF-8" id="delete-<%=project%>" method="post" action="/jobs/<%=project%>/delete"></form>
+			<form charset="UTF-8" id="edit-<%=project%>" method="post" action="/jobs/<%=project%>/edit">
 			<div id="device-modal-<%=project%>" class="modal hide">
 				<div class="modal-header">
 					<a class="close" data-dismiss="modal" onclick="modal_off();">&times;</a>
@@ -32,44 +32,60 @@
 					<h5>Devices with templates</h5>
 					<ul id="device_list" style="list-style-type:none;text-decoration:none;">
 						<%preselected_device_ids = ''%>
-						<%for device in @devices %>
-							<% if device.ip %>
-								<% if check_availibility(device.id) == 1 %>
-									<% if has_templates?(project, device) %>
+						<%for device in @devices%>
+							<%if device.ip%>
+								<%if check_availibility(device.id) == 1%>
+									<%if has_templates?(project, device)%>
 										<li >
 										<%if not @project_devices[project].nil? and @project_devices[project].include?(device.id)%>
-											<input type="checkbox" id="<%=device.tag%>" 
+										<input type="checkbox" id="<%=device.tag%>" 
 											name="SELECTED_DEVICE=<%=device.id%>" checked 
 											<%='disabled' if device_has_active_job(AutomationStack::Infrastructure::Project.find(:id => project), device.id)%>
 											style="margin-top:-5px;"><%=device.name%></input>
 											<%preselected_device_ids += "#{device.id};"%>
-										<% else %>
-											<input type="checkbox" id="<%=device.tag%>" 
+											<%if device_has_active_job(AutomationStack::Infrastructure::Project.find(:id => project), device.id)%>
+												<input type="hidden" name="SELECTED_DEVICE=<%=device.id%>" value="on"/>
+											<%end%>
+										<%else%>
+										<input type="checkbox" id="<%=device.tag%>" 
 											name="SELECTED_DEVICE=<%=device.id%>"
 											style="margin-top:-5px;"><%=device.name%></input>
-										<% end %>
+										<%end%>
 										</li>
-									<% end %>
-								<% end %>
-							<%end%>
-						<%end %>
+									<%end%>
+								<%else%>
+									<%if has_templates?(project, device)%>
+										<%if not @project_devices[project].nil? and @project_devices[project].include?(device.id)%>
+										<li>
+										<input type="hidden" name="SELECTED_DEVICE=<%=device.id%>" value="on"/>
+										<input checked disabled 
+											type="checkbox" id="<%=device.tag%>"
+											name="SELECTED_DEVICE=<%=device.id%>"
+											style="margin-top:-5px;"><%=device.name%></input>
+										</li>
+										<%preselected_device_ids += "#{device.id};"%>
+										<%end%>
+									<%end%>
+								<%end%>
+							<%end%> <!-- if device.ip -->
+						<%end%> <!-- for device in @devices -->
 					</ul>
 					<hr>	
 					<h5 class="text-warning">Devices that are connected but need a template</h5>
 					<ul id="missing_template" class="text-warning" style="list-style-type:none;text-decoration:none;">
-						<%for device in @devices %>
-							<% if device.ip %>
-								<% if check_availibility(device.id) == 1 %>
-									<% if not has_templates?(project, device) %>
-										<li>
-										<input disabled type="checkbox" id="<%=device.tag%>" 
-										name="SELECTED_DEVICE=<%=device.id%>"
-										style="margin-top:-5px;"><%=device.name%></input>
-										</li>
-									<% end %>
-								<% end %>
-							<% end %>
-						<% end %>
+						<%for device in @devices%>
+							<%if device.ip%>
+							<%if check_availibility(device.id) == 1%>
+							<%if not has_templates?(project, device)%>
+							<li>
+						<input disabled type="checkbox" id="<%=device.tag%>" 
+						name="SELECTED_DEVICE=<%=device.id%>"
+						style="margin-top:-5px;"><%=device.name%></input>
+						</li>
+					<%end%>
+					<%end%>
+					<%end%>
+					<%end%>
 					</ul>
 
 					<input type="hidden" name="preselected" value="<%=preselected_device_ids%>">
@@ -81,74 +97,74 @@
 		</form>
 	<%end%>
 
-	<%if system_dash%>
-		<a href="/dashboard/<%=project%>" data-toggle="tooltip" title="Show dashboard for this project only.">
+		<%if system_dash%>
+			<a href="/dashboard/<%=project%>" data-toggle="tooltip" title="Show dashboard for this project only.">
 			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project_name%></h4>
 		</a>
 	<%else%>
-		<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project_name%></h4>
+			<h4 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:200px;"><%=project_name%></h4>
 	<%end%>
 
-	<h5>Schedule</h5>
-	<% if @last_run_times[project].empty? %>
-		<p style="padding-left: 1em;">Jobs never run</p>
-	<% else %>
-		<p style="padding-left: 1em;">Last job run on  <%=@last_run_times[project]%></p>
-	<% end %>
+		<h5>Schedule</h5>
+		<%if @last_run_times[project].empty?%>
+			<p style="padding-left: 1em;">Jobs never run</p>
+	<%else%>
+			<p style="padding-left: 1em;">Last job run on  <%=@last_run_times[project]%></p>
+	<%end%>
 
-	<h5>Status of jobs on devices</h5>
+		<h5>Status of jobs on devices</h5>
 
-	<div class="accordion" id="accordion-<%=project%>">
-		<div class="accordion-heading" onclick="toggle_expand_cookie('project-<%=project%>');" >
-			<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=project%>" href="#collapse-<%=project%>">
+		<div class="accordion" id="accordion-<%=project%>">
+			<div class="accordion-heading" onclick="toggle_expand_cookie('project-<%=project%>');" >
+				<div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-<%=project%>" href="#collapse-<%=project%>">
 
 
-				<div class="progress" style="height: 3em">
-					<%statuses = @statuses[project]%>
-					<%percentages = get_percentages_for_statuses(statuses)%>
-					<%if statuses[:completed] > 0%>
-						<div class="bar bar-success" 
+					<div class="progress" style="height: 3em">
+						<%statuses = @statuses[project]%>
+						<%percentages = get_percentages_for_statuses(statuses)%>
+						<%if statuses[:completed] > 0%>
+							<div class="bar bar-success" 
 							style="text-align: center; width: <%=percentages[:completed]%>%;"
 							data-toggle="tooltip" title="<%=statuses[:completed]%> jobs Completed">
 							<h4><%=statuses[:completed]%></h4>
 						</div>
 					<%end%>
-					<%if statuses[:failed] > 0%>
-						<div class="bar bar-danger" 
+						<%if statuses[:failed] > 0%>
+							<div class="bar bar-danger" 
 							style="text-align: center; width: <%=percentages[:failed]%>%;"
 							data-toggle="tooltip" title="<%=statuses[:failed]%> jobs Failed">
 							<h4><%=statuses[:failed]%></h4>
 						</div>
 					<%end%>
-					<%if statuses[:running] > 0%>
-						<div class="bar bar-info"
+						<%if statuses[:running] > 0%>
+							<div class="bar bar-info"
 							style="text-align: center; width: <%=percentages[:running]%>%;" 
 							data-toggle="tooltip" title="<%=statuses[:running]%> jobs Running">
 							<h4><%=statuses[:running]%></h4>
 						</div>
 					<%end%>
-					<%if statuses[:pending] > 0%>
-						<div class="bar bar-warning" 
+						<%if statuses[:pending] > 0%>
+							<div class="bar bar-warning" 
 							style="text-align: center; width: <%=percentages[:pending]%>%;"
 							data-toggle="tooltip" title="<%=statuses[:pending]%> jobs Pending">
 							<h4><%=@statuses[project][:pending]%></h4>
 						</div>
 					<%end%>
+					</div>
+
 				</div>
-
 			</div>
-		</div>
 
-		<%if @cookies["project-#{project}"] == "expanded"%>
-			<div id="collapse-<%=project%>" class="accordion-body collapse in">
+			<%if @cookies["project-#{project}"] == "expanded"%>
+				<div id="collapse-<%=project%>" class="accordion-body collapse in">
 			<%else%>
-				<div id="collapse-<%=project%>" class="accordion-body collapse">
+					<div id="collapse-<%=project%>" class="accordion-body collapse">
 				<%end%>
-				<div class="accordion-inner">
+					<div class="accordion-inner">
 
-					<%jobs.each do |job|%>
+						<%jobs.each do |job|%>
 
-						<!-- Restart the job form - submitted by an icon-repeat link. -->
+							<!-- Restart the job form - submitted by an icon-repeat link. -->
 						<form charset="UTF-8" id="restart-job-<%=job['id']%>" 
 							method="post" 
 							action="/dashboard/job/restart/<%=job['id']%>">
@@ -156,99 +172,99 @@
 
 						<%if job["status"].eql?("FAILED")%>
 							<div class="alert alert-error">
-								<%=device_name_from_job_name(job['name'])%> has FAILED.
-								<div class="pull-right" style="margin-right: -2em;">
-									<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
+							<%=device_name_from_job_name(job['name'])%> has FAILED.
+							<div class="pull-right" style="margin-right: -2em;">
+								<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 							</div>
-						<%elsif job["status"].eql?("IN PROGRESS")%>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
+					<%elsif job["status"].eql?("IN PROGRESS")%>
 							<div class="alert alert-info">
-								<%=device_name_from_job_name(job['name'])%> is IN PROGRESS.
-								<div class="pull-right" style="margin-right: -2em;">
-									<%if can_edit?%>
-										<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<%else%>
-										<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
-									<%end%>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
+							<%=device_name_from_job_name(job['name'])%> is IN PROGRESS.
+							<div class="pull-right" style="margin-right: -2em;">
+								<%if can_edit?%>
+									<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+							<%else%>
+									<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+							<%end%>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 							</div>
-						<%elsif job["status"].eql?("COMPLETED")%>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
+					<%elsif job["status"].eql?("COMPLETED")%>
 							<div class="alert alert-success">
-								<%=device_name_from_job_name(job['name'])%> has COMPLETED.
-								<div class="pull-right" style="margin-right: -2em;">
-									<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
+							<%=device_name_from_job_name(job['name'])%> has COMPLETED.
+							<div class="pull-right" style="margin-right: -2em;">
+								<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 							</div>
-						<%elsif job["status"].eql?("NOT STARTED")%>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
+					<%elsif job["status"].eql?("NOT STARTED")%>
 							<div class="alert alert-warning">
-								<%=device_name_from_job_name(job['name'])%> NOT STARTED.
-								<div class="pull-right" style="margin-right: -2em;">
-									<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
+							<%=device_name_from_job_name(job['name'])%> NOT STARTED.
+							<div class="pull-right" style="margin-right: -2em;">
+								<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 							</div>
-						<%elsif job["status"].eql?("QUEUED")%>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
+					<%elsif job["status"].eql?("QUEUED")%>
 							<div class="alert alert-warning">
-								<%=device_name_from_job_name(job['name'])%> on <%=machine_name_for_job(job)%> is QUEUED.
-								<div class="pull-right" style="margin-right: -2em;">
-									<%if can_edit?%>
-										<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<%else%>
-										<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
-									<%end%>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
-							</div>
-						<%else%>
-							<div class="alert alert-warning">
-								<%=device_name_from_job_name(job['name'])%> UNKNOWN.
-								<div class="pull-right" style="margin-right: -2em;">
+							<%=device_name_from_job_name(job['name'])%> on <%=machine_name_for_job(job)%> is QUEUED.
+							<div class="pull-right" style="margin-right: -2em;">
+								<%if can_edit?%>
 									<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
-									<span>&nbsp;</span>
-									<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
-									<span>&nbsp;</span>
-									<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
-								</div>
-								<br>
-								<em>Running on <%=machine_name_for_job(job)%></em> 
+							<%else%>
+									<a class="icon-repeat" href="#" data-toggle="tooltip" title="Restart"></a>
+							<%end%>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
 							</div>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
+					<%else%>
+							<div class="alert alert-warning">
+							<%=device_name_from_job_name(job['name'])%> UNKNOWN.
+							<div class="pull-right" style="margin-right: -2em;">
+								<a class="icon-repeat icon-white" href="#" onclick="$('#restart-job-<%=job['id']%>').submit();" data-toggle="tooltip" title="Restart"></a>
+								<span>&nbsp;</span>
+								<a class="icon-list-alt icon-white" href="/results/job/<%=job['id']%>#" data-toggle="tooltip" title="Results"></a>
+								<span>&nbsp;</span>
+								<a class="icon-circle-arrow-right icon-white" href="/job/<%=job['id']%>" data-toggle="tooltip" title="View/Edit details"></a>
+							</div>
+							<br>
+							<em>Running on <%=machine_name_for_job(job)%></em> 
+						</div>
 
-
-						<%end%>
 
 					<%end%>
 
+					<%end%>
+
+					</div>
 				</div>
+				<!-- accordion -->
 			</div>
-			<!-- accordion -->
+			<!-- well -->
 		</div>
-		<!-- well -->
-	</div>

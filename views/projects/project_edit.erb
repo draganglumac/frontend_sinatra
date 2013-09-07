@@ -16,15 +16,27 @@
 		<div class="modal-body">
 			<h5>Devices with templates</h5>
 			<ul id="device_list" style="list-style-type:none;text-decoration:none;">
-				<%for device in @devices %>
+				<%@devices.each do |device|%>
 					<% if device.ip %>
-						<% if check_availibility(device.id) == 1 %>	
-							<li >
+						<% if check_availibility(device.id) == 1 %>
+							<li>
 							<input <%='checked' if @selected_device_ids.include?(device.id)%> 
 								<%='disabled' if device_has_active_job(@project, device.id)%> 
 								type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>" 
 								name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
 							</li>
+							<%if device_has_active_job(@project, device.id)%>
+								<input type="hidden" name="SELECTED_DEVICE=<%=device.id%>" value="on"/>
+							<%end%>
+						<% else %>
+							<% if @selected_device_ids.include?(device.id) %>
+								<li>
+								<input checked disabled
+									type="checkbox" id="device-<%=device.platform_id%>-<%=device.device_type_id%>"
+									name="SELECTED_DEVICE=<%=device.id%>" style="margin-top:-5px;"><%=device.name%></input>
+								</li>
+								<input type="hidden" name="SELECTED_DEVICE=<%=device.id%>" value="on"/>
+							<% end %>
 						<% end %>
 					<%end%>
 				<%end %>

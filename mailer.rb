@@ -99,6 +99,8 @@ class Mailer
   end
 
   def format_job_for_email(job)
+    return if not File.directory?("public/uploads/results")
+
     Dir.chdir("public/uploads/results") do
       if Dir.glob('*').include?(job.id.to_s)
         Dir.chdir(job.id.to_s) do

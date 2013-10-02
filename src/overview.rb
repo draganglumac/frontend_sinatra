@@ -1,14 +1,23 @@
 module Overview
 
 	module Routes
-		get '/overview' do
+
+    before do
+      @cookies = request.cookies
+    end
+
+    get '/overview' do
+      @y_pos = @cookies['overview_y_pos']
+      @cookies.each do |k, v|
+        puts "@cookies[#{k}] = #{v}"
+      end
 			@machines = AutomationStack::Infrastructure::Machine.all
       @active_jobs = {}
       jobs = AutomationStack::Infrastructure::Job.all
       jobs.each do |job|
         if job.status == 'IN PROGRESS' or job.status == 'QUEUED'
           machine_id = job.machine_id
-          text = "#{job.name} - #{job.status}"
+      text = "#{job.name} - #{job.status}"
           entry = "<a href=\"/job/#{job.id}\" class=\""
           if job.status == 'IN PROGRESS'
             entry += 'text-info'

@@ -80,6 +80,8 @@
 <script>
 	show_refresh_form = true;
 	<%if should_autorefresh? %>
-		setTimeout(function () { location.reload(1); }, 15000);
+		setTimeout(function () {
+			$.cookie('overview_y_pos', $(window).scrollTop()); 
+			location.reload(1); }, 15000);
 	<%end%>
 </script>

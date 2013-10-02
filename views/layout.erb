@@ -293,6 +293,11 @@ $(window).load(function() {
 	if (typeof show_refresh_form !== 'undefined' && show_refresh_form == true) {
 		$('div.refresh-form').toggleClass('hidden-form');
 	}
+	
+	<%if not @y_pos.nil?%>
+		$(document).scrollTop(<%=@y_pos%>);
+	<%end%>
+	
 	});
 </script>
 

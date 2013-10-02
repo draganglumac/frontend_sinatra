@@ -64,7 +64,10 @@
 		setTimeout(
 		function () {
 			if (not_modal)
-			location.reload(1); 
+			{
+				$.cookie("dashboard_y_pos", $(window).scrollTop());
+				location.reload(1);
+			}
 		}, 
 		15000
 		);

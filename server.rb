@@ -178,6 +178,7 @@ end
 
 #system dashboard
 get '/dashboard' do
+  @y_pos = @cookies['dashboard_y_pos'] 
   @current_jobs = Hound.get_jobs
 
   @projects = {}

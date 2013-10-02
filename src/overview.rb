@@ -8,9 +8,6 @@ module Overview
 
     get '/overview' do
       @y_pos = @cookies['overview_y_pos']
-      @cookies.each do |k, v|
-        puts "@cookies[#{k}] = #{v}"
-      end
 			@machines = AutomationStack::Infrastructure::Machine.all
       @active_jobs = {}
       jobs = AutomationStack::Infrastructure::Job.all

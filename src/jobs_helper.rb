@@ -4,11 +4,16 @@ require 'hound'
 class Jobhelper
 
   def self.replace_symbols(string,target_machine)
-    phone_endpoint = Hound.get_device_ip_from_type_and_machine(1,target_machine).first['ip']
-    pad_endpoint = Hound.get_device_ip_from_type_and_machine(2,target_machine).first['ip']
+    phones = Hound.get_device_ip_from_type_and_machine(1,target_machine)
+    pads =  Hound.get_device_ip_from_type_and_machine(2,target_machine)
+    phone_endpoint = phones.nil? ? '' : phones.first['ip'] 
+    pad_endpoint = pads.nil? ? '' : pads.first['ip']
     puts "Phone endpoint for target machine #{target_machine} is #{phone_endpoint} and Pad endpoint is #{pad_endpoint}"
-    phone_serial = Hound.get_device_serial_from_type_and_machine(1,target_machine).first['serial_number']
-    pad_serial = Hound.get_device_serial_from_type_and_machine(2,target_machine).first['serial_number']
+    
+    phones = Hound.get_device_serial_from_type_and_machine(1,target_machine)
+    pads = Hound.get_device_serial_from_type_and_machine(2,target_machine)
+    phone_serial = phones.nil? ? '' : phones.first['serial_number']
+    pad_serial = pads.nil? ? '' : pads.first['serial_number']
     puts "Phone serial for target machine #{target_machine} is #{phone_serial} and Pad serial is #{pad_serial}#"
 
     if string.include?("$PAD_ENDPOINT")

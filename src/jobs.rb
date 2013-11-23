@@ -203,7 +203,7 @@ module Jobs
             end
 
             canonical_string = the_template.first.commands
-            string = Jobhelper.replace_symbols(canonical_string,machine_id.first.machine_id)
+            string = Jobhelper.replace_symbols(canonical_string,machine_id.first.machine_id,current_device.serial_number,current_device.ip)
 
             job = AutomationStack::Infrastructure::Job.new
             job.name = the_project.name + '-' + current_device.name

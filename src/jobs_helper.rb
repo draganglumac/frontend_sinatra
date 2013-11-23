@@ -3,31 +3,25 @@ require 'hound'
 
 class Jobhelper
 
-  def self.replace_symbols(string,target_machine)
+  def self.replace_symbols(string,target_machine,device_serial='',device_endpoint='')
     phones = Hound.get_device_ip_from_type_and_machine(1,target_machine)
-    pads =  Hound.get_device_ip_from_type_and_machine(2,target_machine)
     phone_endpoint = phones.nil? ? '' : phones.first['ip'] 
+    pads =  Hound.get_device_ip_from_type_and_machine(2,target_machine)
     pad_endpoint = pads.nil? ? '' : pads.first['ip']
     puts "Phone endpoint for target machine #{target_machine} is #{phone_endpoint} and Pad endpoint is #{pad_endpoint}"
     
     phones = Hound.get_device_serial_from_type_and_machine(1,target_machine)
-    pads = Hound.get_device_serial_from_type_and_machine(2,target_machine)
     phone_serial = phones.nil? ? '' : phones.first['serial_number']
+    pads = Hound.get_device_serial_from_type_and_machine(2,target_machine)
     pad_serial = pads.nil? ? '' : pads.first['serial_number']
     puts "Phone serial for target machine #{target_machine} is #{phone_serial} and Pad serial is #{pad_serial}#"
 
-    if string.include?("$PAD_ENDPOINT")
-      string.gsub!("$PAD_ENDPOINT",pad_endpoint)
-    end
-    if string.include?("$PHONE_ENDPOINT")
-      string.gsub!("$PHONE_ENDPOINT",phone_endpoint)
-    end
-    if string.include?("$PHONE_SERIAL")
-      string.gsub!("$PHONE_SERIAL",phone_serial)
-    end
-    if string.include?("$PAD_SERIAL")
-      string.gsub!("$PAD_SERIAL",pad_serial)
-    end
+    string.gsub!("$PAD_ENDPOINT",pad_endpoint) if string.include?("$PAD_ENDPOINT")
+    string.gsub!("$PHONE_ENDPOINT",phone_endpoint) if string.include?("$PHONE_ENDPOINT")
+    string.gsub!("$PHONE_SERIAL",phone_serial) if string.include?("$PHONE_SERIAL")
+    string.gsub!("$PAD_SERIAL",pad_serial) if string.include?("$PAD_SERIAL")
+    string.gsub!("$DEVICE_SERIAL",device_serial) if string.include?("$DEVICE_SERIAL")
+    string.gsub!("$DEVICE_ENDPOINT",device_endpoint) if string.include?("$DEVICE_ENDPOINT")
 
     return string
   end
@@ -267,7 +261,7 @@ module JobsHelpers
         job.interval = interval
 
         canonical_string =  template.commands.dup
-        string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
+        string = Jobhelper.replace_symbols(canonical_string,job.machine_id,job.device.serial_number,job.device.ip)	
         job.command = strip_carriage_retruns(string)
         job.status = 'NOT STARTED'
 
@@ -482,7 +476,7 @@ module JobsHelpers
 
   def update_job_commands_after_template_update(job)
     canonical_string =  job.template.commands.dup
-    string = Jobhelper.replace_symbols(canonical_string,job.machine_id)	
+    string = Jobhelper.replace_symbols(canonical_string,job.machine_id,job.device.serial_number,job.device.ip)	
     job.command = strip_carriage_retruns(string)
   end
 

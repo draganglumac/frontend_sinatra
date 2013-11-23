@@ -20,4 +20,26 @@ get '/api/project/lastrun/:name' do
 	end
 	
 	return "UNKNOWN"
-end	
+end
+
+get '/api/project/jobs/:project_name' do
+  project = AutomationStack::Infrastructure::Project.find(:name => params[:project_name])
+  return "Unknown project name. If you have spaces in project name \
+  make sure you replace them with + in the api URL." if project.nil?
+  
+  proj_id = project.id
+  proj_name = project.name
+  puts "proj_id = #{proj_id}"
+  jobs_for_project = AutomationStack::Infrastructure::Job.where(:project_id => proj_id)
+  jobs = []
+  jobs_for_project.each do |job|
+    job_details = {}
+    job_details['id'] = job.id
+    job_details['device'] = job.name.gsub("#{proj_name}-", '')
+    job_details['status'] = job.status
+    job_details['last_run'] = job.TIMESTAMP
+    jobs << job_details
+  end
+
+  return jobs.to_json
+end 

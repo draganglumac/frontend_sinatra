@@ -18,18 +18,20 @@
 
 			<div id="env-vars-<%=tab_number%>" class="accordion-body collapse">
 				<div class="accordion-inner" style="border-color: orange;">
-					<p>The following are the variables which you can put into your script and which will be resolved automatically to the device on which the job runs for each job in the project.
-					<p>IP addresses:
-					<ul>
-						<li>$PHONE_ENDPOINT</li>
-						<li>$PAD_ENDPOINT
-					</ul>
-					<p>Serial addresses:
-					<ul>
-						<li>$PHONE_SERIAL</li>
-						<li>$PAD_SERIAL</li>
-					</ul>
-					<p>e.g. "DEVICE_ENDPOINT=http://$PHONE_ENDPOINT cucumber"
+                  <p>The following are the variables which you can put into your script and which will be resolved automatically to the device on which the job runs for each job in the project.
+                  <p>IP addresses:
+                  <ul>
+                    <li>$PHONE_ENDPOINT - IP address of the phone if node has a phone and a tablet attached</li>
+                    <li>$PAD_ENDPOINT - IP address of the tablet if node has a phone and a tablet attached</li>
+                    <li>$DEVICE_ENDPOINT - resolves to IP address of the device on which the job runs</li>
+                  </ul>
+                  <p>Serial addresses:
+                  <ul>
+                    <li>$PHONE_SERIAL - serial number or UDID of the phone if node has a phone and a tablet attached</li>
+                    <li>$PAD_SERIAL - serial number or UDID of the tablet if node has a phone and a tablet attached</li>
+                    <li>$DEVICE_ENDPOINT - resolves to the serial nubmer of UDID of the device on which the job runs</li>
+                  </ul>
+                  <p>e.g. "DEVICE_HTTP=http://$DEVICE_ENDPOINT cucumber"
 				</div>
 			</div>
 		</div>

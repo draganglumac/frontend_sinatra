@@ -9,7 +9,7 @@ class Jobhelper
     pads =  Hound.get_device_ip_from_type_and_machine(2,target_machine)
     pad_endpoint = pads.first.nil? ? '' : pads.first['ip']
     puts "Phone endpoint for target machine #{target_machine} is #{phone_endpoint} and Pad endpoint is #{pad_endpoint}"
-    
+
     phones = Hound.get_device_serial_from_type_and_machine(1,target_machine)
     phone_serial = phones.first.nil? ? '' : phones.first['serial_number']
     pads = Hound.get_device_serial_from_type_and_machine(2,target_machine)
@@ -483,6 +483,7 @@ module JobsHelpers
   def update_jobs(params, proj)
     old_device_ids_for_jobs = devices_used_by_project(proj)
     old_device_ids_for_jobs_not_deleted = []
+
     params.keys.each do | pline |
       if pline.include? "SELECTED_DEVICE"
         current_device = pline.split("=").last
@@ -497,9 +498,31 @@ module JobsHelpers
       end
     end
 
+    trigger = params["ltrigger"]
+    update_trigger_and_recurrence = false
+    if not trigger.empty?
+      recurrence = params["is_recurrent"].to_i
+      trigger << '.000000'
+      trigger_time = Time.parse(trigger).to_i
+      if trigger_time < Time.new.to_i
+        trigger_time += 60 * 60 * 24
+      end
+      update_trigger_and_recurrence = true
+    end
+
     jobs = AutomationStack::Infrastructure::Job.where(:project_id => proj.id)
     jobs.each do |jobbie|
       update_job_commands_after_template_update(jobbie)
+      if update_trigger_and_recurrence
+        jobbie.recursion = recurrence
+        if recurrence == 0
+          jobbie.interval = 0
+        else
+          interval = params["seconds_multiplier"].to_i * params["seconds"].to_i
+          jobbie.interval = interval < 900 ? 900 : interval
+        end        
+        jobbie.trigger_time = trigger_time
+      end
       jobbie.save
     end
 
